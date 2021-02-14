@@ -35,14 +35,17 @@ class UpdateScene extends CustomScene {
         if (file) {
             this._fileCount ++;
             this.UpdateDownloadInfo(file.filename)
-            const outstream = $fs.createWriteStream(file.filename);
             $axios({
                 url: `https://${Update.raw_host}${Update.raw_path}/main/${file.filename}`,
                 method: 'GET',
                 responseType: 'arraybuffer'
             }).then(resp => {
-                $fs.writeFileSync(file.filename, Buffer.from(resp.data));
-                this.ProcessDownload();
+                if (resp.status !== 200) {
+                    throw new Error(`网络连接错误: ${resp.status} ${resp.statusText}`);
+                } else {
+                    $fs.writeFileSync(file.filename, Buffer.from(resp.data));
+                    this.ProcessDownload();
+                }
             });
         } else {
             $fs.writeFileSync('data/version.json', `{"time": ${Date.now()}}`);

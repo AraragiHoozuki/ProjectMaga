@@ -41,11 +41,11 @@ class UpdateScene extends CustomScene {
                 method: 'GET',
                 responseType: 'arratBuffer'
             }).then(resp => {
-                $fs.writeFile(file.filename, resp.data);
+                $fs.writeFileSync(file.filename, resp.data);
                 this.ProcessDownload();
             });
         } else {
-            $fs.writeFile('data/version.json', `{"time": "${Date.now()}"}`);
+            $fs.writeFileSync('data/version.json', `{"time": ${Date.now()}}`);
             SceneManager.goto(MainScene);
         }
     }

@@ -1,0 +1,62 @@
+{
+    "ES_SALAMANDER_2_LV10": {
+        "iname": "ES_SALAMANDER_2_LV10",
+        "enemies": [
+            {
+                "iname": "ENC_SALAMANDER",
+                "level": 10,
+                "x": 500,
+                "y": 400
+            },
+            {
+                "iname": "ENC_SALAMANDER",
+                "level": 10,
+                "x": 800,
+                "y": 400
+            }
+        ],
+        "drops": [
+            {"iname": "IT_MONEY", "amount": 100, "probability": 100}
+        ],
+        "bgm": "",
+        "btl_back1": "GrassMaze",
+        "btl_back2": "GrassMaze"
+    },
+    "ES_MEMORY_BOOK_1_LV10": {
+        "iname": "ES_MEMORY_BOOK_1_LV10",
+        "enemies": [
+            {
+                "iname": "ENC_MEMORY_TOME",
+                "level": 10,
+                "x": 650,
+                "y": 300
+            }
+        ],
+        "drops": [
+            {"iname": "IT_MONEY", "amount": 500, "probability": 100}
+        ],
+        "bgm": "",
+        "btl_back1": "GrassMaze",
+        "btl_back2": "GrassMaze"
+    },
+    "ES_DVASIA_CHALLENGE_EASY": {
+        "iname": "ES_DVASIA_CHALLENGE_EASY",
+        "enemies": [
+            {
+                "iname": "ENC_DVASIA_CHALLENGE_EASY",
+                "level": 20,
+                "x": 650,
+                "y": 500
+            }
+        ],
+        "drops": [
+            {"iname": "IT_KAKERA_PLC_DVASIA", "amount": 3, "probability": 100},
+            {"iname": "IT_KAKERA_PLC_DVASIA", "amount": 2, "probability": 50},
+            {"iname": "IT_KAKERA_PLC_DVASIA", "amount": 2, "probability": 25},
+            {"iname": "IT_KAKERA_PLC_DVASIA", "amount": 3, "probability": 10}
+        ],
+        "bgm": "",
+        "btl_back1": "GrassMaze",
+        "btl_back2": "GrassMaze"
+    }
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Player",
+  "description": "",
+  "type": "object",
+  "patternProperties": {
+    "^[A-Z0-9_]*$":{
+      "properties": {
+        "iname":{"type": "string"},
+        "name":{"type": "string"},
+        "model": {"type": "string"},
+        "inilevel": {"type": "integer"},
+        "race": {"type": "string"},
+        "tags": {"type": "array", "items": {
+          "type": "string"
+        }},
+        "wept": {"type": "integer"},
+        "gender": {"type": "integer"},
+        "profile": {"type": "string"},
+        "iniparam": {
+          "type": "array",
+          "items": {"type": "number"},
+          "maxItems": 8,
+          "minItems": 8,
+          "description": "[hp, mp, str, int, def, mnd, spd, luk]"
+        },
+        "maxparam": {
+          "type": "array",
+          "items": {"type": "number"},
+          "maxItems": 8,
+          "minItems": 8,
+          "description": "[hp, mp, str, int, def, mnd, spd, luk]"
+        },
+        "skills": {"type": "array", "items": {
+          "type": "string"
+        }},
+        "joinMsg": {"type": "string",
+          "description": "message to be shown when joins party"
+        }
+      },
+      "required": ["iname", "name", "model", "inilevel", "race", "tags", "wept", "gender", "profile", "iniparam", "maxparam", "skills"]
+    }
+  }
+}

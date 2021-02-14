@@ -1,0 +1,40 @@
+{
+    "ENC_UNICORN": {
+        "iname": "ENC_UNICORN",
+        "name": "独角兽",
+        "model": "Unicorn",
+        "inilevel": 10,
+        "iniparam": [1000, 140, 10, 5000, 10, 10, 10, 10],
+        "maxparam": [10000, 670, 10, 8000, 10, 10, 140, 10],
+        "skills": ["SK_FIREBALL"]
+    },
+    "ENC_SALAMANDER": {
+        "iname": "ENC_SALAMANDER",
+        "name": "沙拉曼达",
+        "model": "Salamander",
+        "inilevel": 10,
+        "iniparam": [600, 200, 60, 60, 25, 42, 34, 10],
+        "maxparam": [7500, 800, 900, 1100, 566, 715, 130, 10],
+        "skills": ["SK_SALAMANDER_BREATH"]
+    },
+    "ENC_MEMORY_TOME": {
+        "iname": "ENC_MEMORY_TOME",
+        "name": "记忆之书",
+        "model": "Evilbook",
+        "inilevel": 10,
+        "iniparam": [250, 400, 20, 70, 25, 42, 34, 10],
+        "maxparam": [9500, 1500, 500, 1350, 366, 715, 122, 10],
+        "skills": ["SK_MAGIC_CONVERSION","SK_DARK_STRIKE"],
+        "ai": ""
+    },
+    "ENC_DVASIA_CHALLENGE_EASY": {
+        "iname": "ENC_DVASIA_CHALLENGE_EASY",
+        "name": "DVASIA",
+        "model": "dvasia",
+        "inilevel": 20,
+        "iniparam": [250, 400, 20, 40, 25, 42, 34, 10],
+        "maxparam": [16500, 1500, 500, 1500, 366, 715, 122, 10],
+        "skills": ["SK_MAGIC_CONVERSION","SK_DARK_STRIKE","SK_DVASIA_DARK_SPHERE","SK_DVASIA_SHOCKED"],
+        "ai": "DvasiaBossEasy"
+    }
+}

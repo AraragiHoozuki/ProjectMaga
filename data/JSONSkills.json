@@ -1,0 +1,533 @@
+{
+  "$schema": "./schemas/SkillsSchema.json",
+  "SK_WAIT": {
+    "iname": "SK_WAIT",
+    "name": "待机",
+    "script": "Skill_Wait",
+    "icon": "passive",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [0],
+    "cpcost": [0],
+    "ctcost": [600],
+    "lucost": [0],
+    "specials": [
+    ]
+  },
+  "SK_PARAM": {
+    "iname": "SK_PARAM",
+    "name": "属性变化·测试",
+    "script": "Skill_ParamUp",
+    "icon": "fire",
+    "passive": true,
+    "modifiers": ["Modifier_ParamUp"],
+    "manacost": [0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "PLUS_STR",
+        "values": [25]
+      },
+      {
+        "name": "SPLUS_CRITICAL_CHANCE",
+        "values": [25]
+      }
+    ]
+  },
+  "SK_FIREBALL": {
+    "iname": "SK_FIREBALL",
+    "name": "火球",
+    "script": "Skill_FireBall",
+    "icon": "pyro_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [15],
+    "cpcost": [0],
+    "ctcost": [800],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "scale",
+        "values": [100]
+      }
+    ]
+  },
+  "SK_DISDAIN_CLAW": {
+    "iname": "SK_DISDAIN_CLAW",
+    "name": "侮蔑的炎爪",
+    "script": "Skill_DisdainClaw",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_DisdainClaw"],
+    "manacost": [0, 0, 0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0, 10, 30],
+    "specials": [
+      {
+        "name": "receive_damage_percent",
+        "values": [10]
+      },
+      {
+        "name": "damage_scale",
+        "values": [150, 160, 170]
+      }
+    ]
+  },
+  "SK_DESTROYING_FLAME": {
+    "iname": "SK_DESTROYING_FLAME",
+    "name": "破坏之炎",
+    "script": "Skill_DestroyingFlame",
+    "icon": "pyro_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [40],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [120]
+      }
+    ]
+  },
+  "SK_SCARLET_LEGACY": {
+    "iname": "SK_SCARLET_LEGACY",
+    "name": "绯红的传承",
+    "script": "Skill_ScarletLegacy",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_ScarletLegacy"],
+    "manacost": [0, 0, 0, 0, 0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0, 15, 30, 60, 120],
+    "specials": [
+      {
+        "name": "SPLUS_ASSIST_PYRO",
+        "values": [10, 20, 30, 40, 50]
+      },
+      {
+        "name": "SPLUS_RESIST_HYDRO",
+        "values": [10, 20, 30, 40, 50]
+      },
+      {
+        "name": "SPLUS_CRITICAL_DAMAGE",
+        "values": [20, 30, 50, 80, 100]
+      },
+      {
+        "name": "pyro_absorb_prob",
+        "values": [10, 30, 50, 70, 90]
+      }
+    ]
+  },
+  "SK_MAJO_MEMORY": {
+    "iname": "SK_MAJO_MEMORY",
+    "name": "魔女的记忆",
+    "script": "Skill_MajoMemory",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_MajoMemory"],
+    "manacost": [0, 0, 0, 0, 0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0, 20, 50, 100, 150],
+    "specials": [
+      {
+        "name": "resist_per_damage",
+        "values": [5, 10, 15, 20, 25]
+      },
+      {
+        "name": "mana_recover_rate",
+        "values": [5, 6, 7, 8, 9]
+      },
+      {
+        "name": "int_mnd_per_turn",
+        "values": [10, 13, 18, 20, 25]
+      },
+      {
+        "name": "max_stack",
+        "values": [5]
+      }
+    ]
+  },
+  "SK_FIRE_LANCE_3": {
+    "iname": "SK_FIRE_LANCE_3",
+    "name": "火焰枪",
+    "script": "Skill_FireLance3",
+    "icon": "pyro_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [30, 50, 80, 90, 100, 120, 150],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0, 10, 20, 30, 50, 80, 100],
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [65, 75, 85, 95, 120, 140, 160]
+      }
+    ]
+  },
+  "SK_DRAGON_BREATH": {
+    "iname": "SK_DRAGON_BREATH",
+    "name": "龙息术",
+    "script": "Skill_DragonBreath",
+    "icon": "pyro_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [80, 120, 160, 200, 300],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0, 20, 30, 40, 100],
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [195, 240, 280, 320, 500]
+      },
+      {
+        "name": "SPLUS_RESIST_PYRO",
+        "values": [-30, -35, -40, -45, -50]
+      }
+    ]
+  },
+  "SK_SALAMANDER_BREATH": {
+    "iname": "SK_SALAMANDER_BREATH",
+    "name": "沙拉曼达吐息",
+    "script": "Skill_DragonBreath",
+    "icon": "pyro_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [30],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [140]
+      },
+      {
+        "name": "SPLUS_RESIST_PYRO",
+        "values": [-25]
+      }
+    ]
+  },
+  "SK_AGNIS_CUSTODIA": {
+    "iname": "SK_AGNIS_CUSTODIA",
+    "name": "阿格尼斯的庇护",
+    "script": "Skill_AgnisCustodia",
+    "icon": "pyro_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [20, 30, 40, 50, 60],
+    "cpcost": [0],
+    "ctcost": [800],
+    "lucost": [0, 10, 20, 30, 50],
+    "specials": [
+      {
+        "name": "SPLUS_RESIST_PYRO",
+        "values": [10, 20, 30, 40, 50]
+      },
+      {
+        "name": "SPLUS_RESIST_HYDRO",
+        "values": [10, 20, 30, 40, 50]
+      },
+      {
+        "name": "damage_scale",
+        "values": [50, 75, 100, 125, 150]
+      }
+    ]
+  },
+  "SK_AHURAMAZDA_HUG": {
+    "iname": "SK_AHURAMAZDA_HUG",
+    "name": "焱神之拥",
+    "script": "Skill_AhuramazdaHug",
+    "icon": "pyro_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [200, 500, 800],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0, 300, 500],
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [350, 550, 800]
+      },
+      {
+        "name": "quantity_bonus",
+        "values": [10, 20, 30]
+      }
+    ]
+  },
+  "SK_DARK_STRIKE": {
+    "iname": "SK_DARK_STRIKE",
+    "name": "黑暗冲击",
+    "script": "Skill_DarkStrike",
+    "icon": "necro_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [30, 40, 60],
+    "cpcost": [0],
+    "ctcost": [800],
+    "lucost": [0, 25, 50],
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [175, 225, 280]
+      }
+    ]
+  },
+  "SK_SUPER_REGENERATE": {
+    "iname": "SK_SUPER_REGENERATE",
+    "name": "超再生",
+    "script": "Skill_SuperRegenerate",
+    "icon": "necro_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [30, 40, 50, 60, 70],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0, 10, 20, 30, 500],
+    "specials": [
+      {
+        "name": "heal_scale",
+        "values": [150, 180, 220, 250, 280]
+      },
+      {
+        "name": "bonus_scale_per_hp_percent_lost",
+        "values": [0.6, 0.8, 1, 1.2, 1.4]
+      }
+    ]
+  },
+  "SK_SACRIFICE": {
+    "iname": "SK_SACRIFICE",
+    "name": "奉献的喜悦",
+    "script": "Skill_Sacrifice",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_Sacrifice"],
+    "manacost": [0, 0, 0, 0, 0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0, 30, 50, 70, 100],
+    "specials": [
+      {
+        "name": "self_heal_scale",
+        "values": [25, 30, 35, 40, 50]
+      }
+    ]
+  },
+  "SK_SUPREMUS_LUX": {
+    "iname": "SK_SUPREMUS_LUX",
+    "name": "至高之光",
+    "script": "Skill_SupremusLux",
+    "icon": "divine_magic",
+    "passive": false,
+    "modifiers": ["Modifier_SupremusLux_TotalHeal"],
+    "manacost": [200, 400, 600],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0, 200, 500],
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [200, 235, 270]
+      },
+      {
+        "name": "bonus_scale_per_heal",
+        "values": [0.05, 0.1, 0.18]
+      }
+    ]
+  },
+  "SK_HEALING_RAIN": {
+    "iname": "SK_HEALING_RAIN",
+    "name": "治愈之雨",
+    "script": "Skill_HealingRain",
+    "icon": "hydro_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [100, 160, 240, 300],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0, 50, 75, 100],
+    "specials": [
+      {
+        "name": "heal_scale",
+        "values": [120, 140, 180, 240]
+      },
+      {
+        "name": "bonus_scale_per_heal",
+        "values": [0.05, 0.1, 0.18]
+      }
+    ]
+  },
+  "SK_MAGIC_CONVERSION": {
+    "iname": "SK_MAGIC_CONVERSION",
+    "name": "魔力转换",
+    "script": "Skill_MagicConversion",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_MagicConversion"],
+    "manacost": [0, 0, 0, 0, 0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0, 50, 100, 150, 200],
+    "specials": [
+      {
+        "name": "conv_rate",
+        "values": [10, 20, 30, 40, 50]
+      },
+      {
+        "name": "duration",
+        "values": [3]
+      }
+    ]
+  },
+  "SK_INORI": {
+    "iname": "SK_INORI",
+    "name": "祈祷",
+    "script": "Skill_Inori",
+    "icon": "none_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [80, 120, 200, 300, 300],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0, 10, 20, 100, 150],
+    "specials": [
+      {
+        "name": "mana_amount",
+        "values": [100, 150, 250, 400, 600]
+      }
+    ]
+  },
+  "SK_AURA": {
+    "iname": "SK_AURA",
+    "name": "灵光",
+    "script": "Skill_Aura",
+    "icon": "none_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [50, 50, 50, 50, 50],
+    "cpcost": [0],
+    "ctcost": [800],
+    "lucost": [0, 10, 20, 30, 50],
+    "specials": [
+      {
+        "name": "SCALE_INT",
+        "values": [20, 30, 40, 50, 75]
+      },
+      {
+        "name": "duration",
+        "values": [4, 5, 6, 7, 7]
+      }
+    ]
+  },
+  "SK_MANA_GENERATE": {
+    "iname": "SK_MANA_GENERATE",
+    "name": "法力提取",
+    "script": "Skill_ManaGenerate",
+    "icon": "none_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [0, 0, 0, 0, 0],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0, 10, 20, 30, 50],
+    "specials": [
+      {
+        "name": "hp_cost_rate",
+        "values": [20, 25, 30, 30, 30]
+      },
+      {
+        "name": "mana_conversion_rate",
+        "values": [50, 75, 100, 130, 160]
+      }
+    ]
+  },
+  "SK_CHRONO_WAVE": {
+    "iname": "SK_CHRONO_WAVE",
+    "name": "时间波动",
+    "script": "Skill_ChronoWave",
+    "icon": "none_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [250, 375, 500],
+    "cpcost": [0],
+    "ctcost": [800],
+    "lucost": [0, 200, 400],
+    "specials": [
+      {
+        "name": "steps",
+        "values": [3, 5, 7]
+      }
+    ]
+  },
+  "SK_DVASIA_DARK_SPHERE": {
+    "iname": "SK_DVASIA_DARK_SPHERE",
+    "name": "黑域",
+    "script": "Skill_DvasiaDarkSphere",
+    "icon": "necro_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [400],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [700]
+      }
+    ]
+  },
+  "SK_DVASIA_SHOCKED": {
+    "iname": "SK_DVASIA_SHOCKED",
+    "name": "震惊！居然撑过去了",
+    "script": "Skill_DvasiaShocked",
+    "icon": "none_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [0],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "SCALE_INT",
+        "values": [-90]
+      },
+      {
+        "name": "SCALE_MND",
+        "values": [-90]
+      }
+    ]
+  },
+  "SK_EQ_PARAM_DE_SENECTUTE": {
+    "iname": "SK_EQ_PARAM_DE_SENECTUTE",
+    "name": "论老年",
+    "script": "Skill_ParamUp",
+    "icon": "passive",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "PLUS_INT",
+        "values": [50]
+      },
+      {
+        "name": "PLUS_MND",
+        "values": [25]
+      }
+    ]
+  }
+}

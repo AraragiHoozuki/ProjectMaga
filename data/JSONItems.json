@@ -1,0 +1,22 @@
+{
+    "IT_MONEY": {
+        "iname": "IT_MONEY",
+        "name": "金钱",
+        "icon": "rmb",
+        "description": "金钱余额，可以用在各种地方",
+        "type": 1,
+        "slot": 0,
+        "wept": 0,
+        "skills": []
+    },
+    "IT_WP_DE_SENECTUTE": {
+        "iname": "IT_WP_DE_SENECTUTE",
+        "name": "论老年",
+        "icon": "grimoire_tome",
+        "description": "",
+        "type": 0,
+        "slot": 0,
+        "wept": 3,
+        "skills": []
+    }
+}

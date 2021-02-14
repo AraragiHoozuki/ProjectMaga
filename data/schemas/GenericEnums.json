@@ -1,0 +1,274 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "GenerirEnums",
+    "description": "",
+    "type": "object",
+    "definitions": {
+        "ParaType": {
+            "oneOf": [
+                {"const": 0, "description": "MHP"},
+                {"const": 1, "description": "MMP"},
+                {"const": 2, "description": "STR"},
+                {"const": 3, "description": "INT"},
+                {"const": 4, "description": "DEF"},
+                {"const": 5, "description": "MND"},
+                {"const": 6, "description": "SPD"},
+                {"const": 7, "description": "CRI"},
+                {"const": 8, "description": "EVA"},
+                {"const": 10, "description": "HealPower"},
+                {"const": 11, "description": "HealReceive"},
+                {"const": 12, "description": "MpCostRate"},
+                {"const": 13, "description": "MpCostFix"},
+                {"const": 14, "description": "ResistFire"},
+                {"const": 15, "description": "ResistWater"},
+                {"const": 16, "description": "ResistAir"},
+                {"const": 17, "description": "ResistEarth"},
+                {"const": 18, "description": "ResistDark"},
+                {"const": 19, "description": "ResistDivine"},
+                {"const": 20, "description": "ResistSlash"},
+                {"const": 21, "description": "ResistImpact"},
+                {"const": 22, "description": "ResistPierce"},
+                {"const": 23, "description": "ResistPsyche"},
+                {"const": 24, "description": "ResistMagic"},
+                {"const": 25, "description": "ResistPhysical"},
+                {"const": 26, "description": "ChantSpeedRate"},
+                {"const": 27, "description": "CpCostRate"},
+                {"const": 28, "description": "CpCostFix"},
+                {"const": 29, "description": "CpGainRate"},
+                {"const": 30, "description": "CpGainFix"},
+                {"const": 31, "description": "GuardRate"},
+                {"const": 32, "description": "GuardCutRate"},
+                {"const": 33, "description": "GuardCutFix"},
+                {"const": 34, "description": "GuardDeny"},
+                {"const": 35, "description": "BuffDuration"},
+                {"const": 36, "description": "DebeffDuration"}
+            ]
+        },
+        "Gender": {
+            "oneOf": [
+                {"const": 0, "description": "♀"},
+                {"const": 1, "description": "♂"},
+                {"const": 2, "description": "?"}
+            ]
+        },
+        "WeaponType": {
+            "oneOf": [
+                {"const": 0, "description": "Sword"},
+                {"const": 1, "description": "Grimoire"},
+                {"const": 2, "description": "Staff"},
+                {"const": 3, "description": "Bow"},
+                {"const": 4, "description": "Lance"}
+            ]
+        },
+        "SkillType": {
+            "oneOf": [
+                {"const": 0, "description": "Spell"},
+                {"const": 1, "description": "Craft"},
+                {"const": 2, "description": "Passive"}
+            ]
+        },
+        "StateAddMode": {
+            "oneOf": [
+                {"const": 0, "description": "Refresh"},
+                {"const": 1, "description": "Override"},
+                {"const": 2, "description": "Coexist"}
+            ]
+        },
+        "ConditionType": {
+            "oneOf": [
+                {"const": 0, "description": "Always"},
+                {"const": 1, "description": "Random"},
+                {"const": 2, "description": "Turn"},
+                {"const": 3, "description": "Param"},
+                {"const": 4, "description": "Hp"},
+                {"const": 5, "description": "HpRate"},
+                {"const": 6, "description": "Mp"},
+                {"const": 7, "description": "MpRate"},
+                {"const": 8, "description": "Ct"},
+                {"const": 9, "description": "EquippedWeaponType"},
+                {"const": 10, "description": "StateAffected"},
+                {"const": 11, "description": "DamageSide"},
+                {"const": 12, "description": "DamageAttackType"},
+                {"const": 13, "description": "DamageElement"},
+                {"const": 14, "description": "DamageReceivType"},
+                {"const": 15, "description": "DamagePhysicalType"},
+                {"const": 16, "description": "ElementResistLessThanAnother"},
+                {"const": 17, "description": "DamageSkillType"},
+                {"const": 18, "description": "ActionSkillType"}
+            ]
+        },
+        "OperatorType": {
+            "oneOf": [
+                {"const": 0, "description": "Equal"},
+                {"const": 1, "description": "Less"},
+                {"const": 2, "description": "LessOrEqual"},
+                {"const": 3, "description": "Greater"},
+                {"const": 4, "description": "GreaterOrEqual"},
+                {"const": 5, "description": "NotEqual"},
+                {"const": 6, "description": "IsDividable"}
+            ]
+        },
+        "Condition": {
+            "type": "object",
+            "properties": {
+                "type": {"$ref": "#/definitions/ConditionType"},
+                "operator": {"$ref": "#/definitions/OperatorType"},
+                "criteria":  {},
+                "params": {"type": "object"}
+            },
+            "required": ["type", "operator", "criteria"]
+        },
+        "EffectType": {
+            "oneOf": [
+                {"const": -1, "description": "No Effect"},
+                {"const": 0, "description": "Damage"},
+                {"const": 1, "description": "Heal"},
+                {"const": 2, "description": "AddState"},
+                {"const": 3, "description": "Purge"},
+                {"const": 4, "description": "StateTurnChange"},
+                {"const": 5, "description": "SkillScaleChange"},
+                {"const": 6, "description": "DamageElementChange"},
+                {"const": 7, "description": "DamageDefenseChange"},
+                {"const": 8, "description": "DamageReceiveChange"},
+                {"const": 9, "description": "DamageControlChange"},
+                {"const": 10, "description": "CTModify"},
+                {"const": 11, "description": "CTSet"},
+                {"const": 12, "description": "MpChange"},
+                {"const": 13, "description": "ElementReplace"},
+                {"const": 14, "description": "HpChange"},
+                {"const": 15, "description": "CriticalChanceChange"},
+                {"const": 16, "description": "CriticalDamageChange"},
+                {"const": 17, "description": "CpChange"},
+                {"const": 18, "description": "Reaction"}
+            ]
+        },
+        "ItemType": {
+            "oneOf": [
+                {"const": 0, "description": "KEY"},
+                {"const": 1, "description": "MATERIAL"},
+                {"const": 2, "description": "EQUIP"},
+                {"const": 3, "description": "TICKET"}
+            ]
+        },
+        "EquipType": {
+            "oneOf": [
+                {"const": 0, "description": "Weapon"},
+                {"const": 1, "description": "Armor"},
+                {"const": 2, "description": "Accessory"}
+            ]
+        },
+        "CalcType": {
+            "oneOf": [
+                {"const": 0, "description": "Plus"},
+                {"const": 1, "description": "Scale"},
+                {"const": 2, "description": "Special"}
+            ]
+        },
+        "Timing": {
+            "oneOf": [
+                {"const": 0, "description": "DamageElemnt"},
+                {"const": 1, "description": "DamageDefense"},
+                {"const": 2, "description": "DamageReceive"},
+                {"const": 3, "description": "DamageControl"},
+                {"const": 4, "description": "DamageAfter"},
+                {"const": 5, "description": "SkillScale"},
+                {"const": 6, "description": "BattleStart"},
+                {"const": 7, "description": "TurnStart"},
+                {"const": 8, "description": "ActionEnd"},
+                {"const": 9, "description": "ElementResist"},
+                {"const": 10, "description": "CriticalChanceCalc"},
+                {"const": 11, "description": "CriticalDamageCalc"},
+                {"const": 12, "description": "Guard"},
+                {"const": 13, "description": "ActionEndTarget"}
+            ]
+        },
+        "DamageWeaponType": {
+            "oneOf": [
+                {"const": 0, "description": "Fix"},
+                {"const": 1, "description": "Str"},
+                {"const": 2, "description": "Int"},
+                {"const": 3, "description": "Def"},
+                {"const": 4, "description": "Mnd"},
+                {"const": 5, "description": "Spd"},
+                {"const": 6, "description": "Cri"},
+                {"const": 7, "description": "Hp"},
+                {"const": 8, "description": "Mp"}
+            ]
+        },
+        "ElementType": {
+            "oneOf": [
+                {"const": 0, "description": "None"},
+                {"const": 1, "description": "Fire"},
+                {"const": 2, "description": "Water"},
+                {"const": 3, "description": "Air"},
+                {"const": 4, "description": "Earth"},
+                {"const": 5, "description": "Dark"},
+                {"const": 6, "description": "Divine"}
+            ]
+        },
+        "ReceiveType": {
+            "oneOf": [
+                {"const": 0, "description": "None"},
+                {"const": 1, "description": "Slash"},
+                {"const": 2, "description": "Impact"},
+                {"const": 3, "description": "Pierce"},
+                {"const": 4, "description": "Physio"},
+                {"const": 5, "description": "Psyche"},
+                {"const": 6, "description": "Chaos"}
+            ]
+        },
+        "Param_EffectDamage": {
+            "type": "object",
+            "properties": {
+                "weapon": {"$ref": "#/definitions/DamageWeaponType"},
+                "scale": {"type": "integer"},
+                "element": {"$ref": "#/definitions/ElementType"},
+                "physical": {"type": "integer"},
+                "receiveType": {"$ref": "#/definitions/ReceiveType"}
+            },
+            "required": ["weapon", "scale", "element", "physical", "receiveType"]
+        },
+        "Param_AddState": {
+            "type": "object",
+            "properties": {
+                "iname": {"type": "string"},
+                "duration": {"type": "integer"}
+            },
+            "required": ["iname"]
+        },
+        "Param_Heal": {
+            "type": "object",
+            "properties": {
+                "healType": {"type": "integer"},
+                "base": {"$ref": "#/definitions/ParaType"},
+                "scale": {"type": "integer"}
+            },
+            "required": ["healType", "base", "scale"]
+        },
+        "Param_Normal": {
+            "type": "object",
+            "properties": {
+                "scale": {"type": "integer"},
+                "fix": {"type": "integer"}
+            },
+            "required": ["plus", "scale"]
+        },
+        "Modifier": {
+            "type": "object",
+            "properties": {
+                "iname": {"type": "string"},
+                "values": {"type": "array"}
+            },
+            "required": ["iname", "values"]
+        },
+        "Trigger": {
+            "type": "object",
+            "properties": {
+                "iname": {"type": "string"},
+                "values": {"type": "array"}
+            },
+            "required": ["iname", "values"]
+        },
+        "properties": {}
+    }
+}

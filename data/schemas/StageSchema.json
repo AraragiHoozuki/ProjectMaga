@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Stage",
+  "description": "",
+  "type": "object",
+  "patternProperties": {
+    "^[A-Z0-9_]*$":{
+      "properties": {
+        "iname":{"type": "string"},
+        "name":{"type": "string"},
+        "location": {"type": "string"},
+        "onetime": {"type": "boolean", "description": "true: you can only clear this stage one time"},
+        "previous_stages": {"type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "unlock_location": {"type": "string"},
+        "battles": {"type": "array", "items": {
+          "type": "string"
+        }},
+        "story": {"type": "string"},
+        "joins": {"type": "array", "items": {
+          "type": "string"
+        }, "description": "iname of characters that will join after stage clear"}
+      },
+      "required": ["iname", "name", "location", "onetime", "previous_stages", "battles", "story"]
+    }
+  }
+}

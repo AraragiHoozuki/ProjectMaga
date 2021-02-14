@@ -1,0 +1,20 @@
+{
+  "World": {
+    "iname": "World",
+    "bgm": "bgm_town_general_modern",
+    "Landmarks": {
+      "LM_PRIME_CASTLE": {
+        "iname": "LM_PRIME_CASTLE",
+        "Position": [2250, 600]
+      },
+      "LM_BARUOKI": {
+        "iname": "LM_BARUOKI",
+        "Position": [1211, 769]
+      },
+      "LM_ESMERALD_FOREST": {
+        "iname": "LM_ESMERALD_FOREST",
+        "Position": [2295, 720]
+      }
+    }
+  }
+}

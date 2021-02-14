@@ -3,13 +3,10 @@
     "main": "index.html",
     "chromium-args": "--force-color-profile=srgb",
     "window": {
-        "title": "另一个猫：穿越时空的伊甸",
+        "title": "ProjectMaga测试版",
         "width": 1280,
         "height": 720,
         "position": "center",
         "icon": "icon/icon.png"
-    },
-    "devDependencies": {
-        "axios": "^0.21.1"
     }
 }

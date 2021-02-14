@@ -384,7 +384,7 @@ class Action {
                 this._state ++;
                 break;
             case Action.STATE.ANIMATION:
-                BattleFlow.scene.Toast(`${this._user.name}: ${this._skill.name}`);
+                BattleFlow.scene.Toast(`${this._user.name}: ${this._skill.name}`, this._user instanceof PlayerChar?Colors.Green:Colors.Red);
                 this._skill.OnSkillAnimation(this);
                 this._state ++;
                 break;

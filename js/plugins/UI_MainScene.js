@@ -80,7 +80,7 @@ class MainScene extends CustomScene {
 		let stages = Object.values($dataStages).filter(stg => stg.location === iname && $gameParty.IsStageAccessible(stg.iname));
 		let w = new StageListWindow(dx, dy, Graphics.width - 2 * dx, Graphics.height - 2 * dy, '', 0, 'wd_title_white', 'wd_back_cmn');
 		w.SetList(stages);
-		this.Dialog(w, true, true, this.OnStageConfirm.bind(this), false);
+		this.Dialog(w, w._data.length > 0, true, this.OnStageConfirm.bind(this), false);
 		w.Select(0);
 	}
 

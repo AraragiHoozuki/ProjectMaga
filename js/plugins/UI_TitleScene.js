@@ -16,11 +16,11 @@ Scene_Title.prototype.processTouch = function() {
 			DataManager.loadGame(0);
 			SoundManager.playLoad();
 			this.fadeOutAll();
-			SceneManager.goto(UpdateScene);
+			SceneManager.goto($dataVersion.time > 0? UpdateScene:MainScene);
 		} else {
 			DataManager.setupNewGame();
 			this.fadeOutAll();
-			SceneManager.goto(UpdateScene);
+			SceneManager.goto($dataVersion.time > 0? UpdateScene:MainScene);
 		}
 	}
 

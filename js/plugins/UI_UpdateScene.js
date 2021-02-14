@@ -39,9 +39,9 @@ class UpdateScene extends CustomScene {
             $axios({
                 url: `https://${Update.raw_host}${Update.raw_path}/main/${file.filename}`,
                 method: 'GET',
-                responseType: 'arratBuffer'
+                responseType: 'arraybuffer'
             }).then(resp => {
-                $fs.writeFileSync(file.filename, resp.data);
+                $fs.writeFileSync(file.filename, Buffer.from(resp.data));
                 this.ProcessDownload();
             });
         } else {

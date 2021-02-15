@@ -31,6 +31,7 @@ class Modifier_ParamUp extends Modifier {
 }
 
 class Modifier_EquipParamUp extends Modifier_ParamUp {
+	_duration = -1;
 	IsHidden() {
 		return true;
 	}

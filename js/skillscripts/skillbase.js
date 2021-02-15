@@ -101,6 +101,9 @@ class Skill {
      */
     SetOwner(chr) {
         this._owner = chr;
+        for (let mod of this.intrinsicModifiers) {
+            mod._owner = chr;
+        }
     }
 
     CanPayCost() {

@@ -131,6 +131,7 @@ class Party extends CharSet {
             }
             if (!(SceneManager._scene instanceof MainScene)) SceneManager.goto(MainScene);
             this._currentStage = undefined;
+            DataManager.saveGame(0);
         }
     }
     //#endregion

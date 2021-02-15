@@ -36,5 +36,15 @@
         "maxparam": [16500, 1500, 500, 1500, 366, 715, 122, 10],
         "skills": ["SK_MAGIC_CONVERSION","SK_DARK_STRIKE","SK_DVASIA_DARK_SPHERE","SK_DVASIA_SHOCKED"],
         "ai": "DvasiaBossEasy"
+    },
+    "ENC_MECHASHPERE": {
+        "iname": "ENC_MECHASHPERE",
+        "name": "万能球",
+        "model": "Mechasphere",
+        "inilevel": 20,
+        "iniparam": [4800, 1000, 180, 180, 80, 80, 50, 30],
+        "maxparam": [4800, 1000, 180, 180, 80, 80, 50, 30],
+        "skills": ["SK_POLYMORPH","SK_RUSH_STRIKE","SK_MANA_VOID_SHIELD"],
+        "ai": "MechaSphere"
     }
 }

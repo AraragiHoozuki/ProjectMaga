@@ -22,3 +22,24 @@ class Skill_DvasiaDarkSphere extends Skill {
         }
     }
 }
+
+class Skill_RushStrike extends Skill {
+    GetDescription() {
+        return `对目标敌人造成${this.GetSpecialValue('damage_scale')}%的无属性·打击攻击·物理伤害`;
+    }
+
+    OnSkillAnimation(action) {
+        super.OnSkillAnimation(action);
+        for (let chr of action._targets) {
+            BattleFlow.PlayAnimation(2, chr);
+        }
+    }
+
+    OnSkillEffect(action) {
+        super.OnSkillEffect(action);
+        let value = this.owner.GetParam(ParamType.STR) * this.GetSpecialValue('damage_scale')/100;
+        for (let chr of action._targets) {
+            BattleFlow.ApplyDamage(this, chr, value, Damage.ELEMENT.NONE, Damage.ATTACK_TYPE.BLOW);
+        }
+    }
+}

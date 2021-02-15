@@ -18,5 +18,15 @@
         "slot": 0,
         "wept": 3,
         "skills": []
+    },
+    "IT_WP_RUBY_STAFF": {
+        "iname": "IT_WP_RUBY_STAFF",
+        "name": "红曜石",
+        "icon": "staff_generic",
+        "description": "镶有红宝石的法杖。智慧+50，魔防+25",
+        "type": 0,
+        "slot": 0,
+        "wept": 2,
+        "skills": ["SK_EQ_PARAM_RUBY"]
     }
 }

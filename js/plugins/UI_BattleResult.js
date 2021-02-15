@@ -27,9 +27,9 @@ class BattleResultScene extends CustomScene {
 		for (let e of $gameTroop.members) {
 			$gameParty.battleMembers.forEach(c => {
 				if (e.level >= c.level) {
-					c.GainExp(10 * (1.1 ** (e.level - c.level)));
+					c.GainExp(30 * (1.1 ** (e.level - c.level)));
 				} else {
-					c.GainExp(10 * (0.9 ** (c.level - e.level)));
+					c.GainExp(20 * (0.9 ** (c.level - e.level)));
 				}
 			});
 		}

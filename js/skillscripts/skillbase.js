@@ -190,7 +190,7 @@ class Skill {
     OnSkillStart(action) {
         if (this.data.voice) {
             AudioManager.PlayUnique(this.owner.model, this.data.voice);
-        } else {
+        } else if (this.iname !== 'SK_WAIT'){
             AudioManager.PlayAttack(this.owner.model);
         }
     }

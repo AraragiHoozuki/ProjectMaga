@@ -15,4 +15,14 @@ class AI {
 			BattleFlow.PushAction(en.activeSkills.find(s => s.iname === 'SK_DVASIA_DARK_SPHERE'), $gameParty.battleMembers.filter(c=>c.IsAlive()).randomChoice());
 		}
 	}
+
+	static MechaSphere(en) {
+		switch (true) {
+			case (en.turnCount - 4)%5 === 0:
+				BattleFlow.PushAction(en.activeSkills.find(s => s.iname === 'SK_MANA_VOID_SHIELD'), en);
+				break;
+			default:
+				BattleFlow.PushAction(en.activeSkills.find(s => s.iname === 'SK_RUSH_STRIKE'), $gameParty.battleMembers.filter(c=>c.IsAlive()).randomChoice());
+		}
+	}
 }

@@ -17,7 +17,6 @@ class Skill_DvasiaShocked extends Skill {
         }
     }
 }
-
 class Modifier_DvasiaShocked extends Modifier_ParamUp {
     _duration = -1;
     GetDescription() {

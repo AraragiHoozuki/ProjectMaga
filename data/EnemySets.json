@@ -19,8 +19,8 @@
             {"iname": "IT_MONEY", "amount": 100, "probability": 100}
         ],
         "bgm": "",
-        "btl_back1": "GrassMaze",
-        "btl_back2": "GrassMaze"
+        "btl_back1": "Cobblestones1",
+        "btl_back2": "Castle3"
     },
     "ES_MEMORY_BOOK_1_LV10": {
         "iname": "ES_MEMORY_BOOK_1_LV10",
@@ -36,8 +36,8 @@
             {"iname": "IT_MONEY", "amount": 500, "probability": 100}
         ],
         "bgm": "",
-        "btl_back1": "GrassMaze",
-        "btl_back2": "GrassMaze"
+        "btl_back1": "Cobblestones1",
+        "btl_back2": "Castle3"
     },
     "ES_DVASIA_CHALLENGE_EASY": {
         "iname": "ES_DVASIA_CHALLENGE_EASY",
@@ -56,7 +56,25 @@
             {"iname": "IT_KAKERA_PLC_DVASIA", "amount": 3, "probability": 10}
         ],
         "bgm": "",
-        "btl_back1": "GrassMaze",
-        "btl_back2": "GrassMaze"
+        "btl_back1": "Cobblestones1",
+        "btl_back2": "Castle3"
+    },
+    "ES_MECHASPHERE": {
+        "iname": "ES_MECHASPHERE",
+        "enemies": [
+            {
+                "iname": "ENC_MECHASHPERE",
+                "level": 20,
+                "x": 650,
+                "y": 300
+            }
+        ],
+        "drops": [
+            {"iname": "IT_KAKERA_PLC_ROSELIA", "amount": 20, "probability": 100},
+            {"iname": "IT_WP_RUBY_STAFF", "amount": 1, "probability": 100}
+        ],
+        "bgm": "",
+        "btl_back1": "Space",
+        "btl_back2": "DarkSpace"
     }
 }

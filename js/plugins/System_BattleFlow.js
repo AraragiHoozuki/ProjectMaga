@@ -256,12 +256,15 @@ class BattleFlow {
      * @param {Skill} skill
      * @param {Character} target
      * @param {string} name
+     * @param {number} duration
      */
-    static ApplyModifier(skill, target, name) {
+    static ApplyModifier(skill, target, name, duration= undefined) {
         if (!target.HasAcquiredModifier(name, skill)) {
             let cla = eval(name);
+            /** @type Modifier */
             let mod = new cla(target, skill);
             target.AcquireModifier(mod);
+            if (duration) mod._duration = duration;
         }
 
     }
@@ -272,7 +275,7 @@ class BattleFlow {
      * @param {number} n
      */
     static StackModifier(skill, target, name, n=1) {
-        if (!target.HasAcquiredModifier(name)) {
+        if (target.HasAcquiredModifier(name)) {
             target.GetAcquiredModifier(name).Stack(n);
         } else {
             this.ApplyModifier(skill, target, name);
@@ -589,10 +592,47 @@ class Damage {
         this._value = Math.floor(this._value);
     }
 
+    _damageModifies = {
+        /** @type number[]*/
+        plus: [],
+        /** @type number[]*/
+        scale: [],
+        /** @type number[]*/
+        cap: []
+    }
+    ApplyControl() {
+        for (const p of this._damageModifies.plus) {
+            this._value += p;
+            if (this._value < 0) {
+                this._value = 0;
+                return;
+            }
+        }
+        for (const s of this._damageModifies.scale) {
+            this._value += this.value * s/100;
+        }
+        for (const c of this._damageModifies.cap) {
+            this._value = Math.min(this._value, c);
+        }
+    }
+
+    /**
+     * @param {number} plus
+     * @param {number} scale
+     * @param {number} cap
+     */
+    RegisterControl(plus = 0, scale = undefined, cap = undefined) {
+        if (plus) this._damageModifies.plus.push(plus);
+        if (scale) this._damageModifies.scale.push(scale);
+        if (cap !== undefined) this._damageModifies.cap.push(cap);
+    }
+
     Apply() {
         if (this.type === Damage.TYPE.HP) {
             if (this._value >= 0) {
                 this.victim.OnBeforeTakeDamage(this);
+                this.ApplyControl();
+                this.CalcFinal();
             }
             this.victim.AddHp( - this._value);
             BattleFlow.PopupDamage(this);

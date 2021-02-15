@@ -138,7 +138,7 @@
     "specials": [
       {
         "name": "resist_per_damage",
-        "values": [5, 10, 15, 20, 25]
+        "values": [5, 6, 7, 8, 9]
       },
       {
         "name": "mana_recover_rate",
@@ -514,7 +514,7 @@
     "script": "Skill_ParamUp",
     "icon": "passive",
     "passive": false,
-    "modifiers": [],
+    "modifiers": ["Modifier_ParamUp"],
     "manacost": [0],
     "cpcost": [0],
     "ctcost": [0],
@@ -527,6 +527,94 @@
       {
         "name": "PLUS_MND",
         "values": [25]
+      }
+    ]
+  },
+  "SK_EQ_PARAM_RUBY": {
+    "iname": "SK_EQ_PARAM_RUBY",
+    "name": "红曜石",
+    "script": "Skill_ParamUp",
+    "icon": "passive",
+    "passive": false,
+    "modifiers": ["Modifier_ParamUp"],
+    "manacost": [0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "PLUS_INT",
+        "values": [50]
+      },
+      {
+        "name": "PLUS_MND",
+        "values": [25]
+      }
+    ]
+  },
+  "SK_POLYMORPH": {
+    "iname": "SK_POLYMORPH",
+    "name": "多态",
+    "script": "Skill_Polymorph",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_Polymorph"],
+    "manacost": [0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [300]
+      },
+      {
+        "name": "heal_scale",
+        "values": [240]
+      }
+    ]
+  },
+  "SK_RUSH_STRIKE": {
+    "iname": "SK_RUSH_STRIKE",
+    "name": "冲撞",
+    "script": "Skill_RushStrike",
+    "icon": "none_blow",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [0, 0, 0, 0, 0],
+    "cpcost": [15, 15, 15, 10, 10],
+    "ctcost": [1000],
+    "lucost": [0, 20, 40, 60, 80],
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [200, 240, 280, 320, 360]
+      }
+    ]
+  },
+  "SK_MANA_VOID_SHIELD": {
+    "iname": "SK_MANA_VOID_SHIELD",
+    "name": "法力虚空护盾",
+    "script": "Skill_ManaVoidShield",
+    "icon": "none_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [75, 75, 75],
+    "cpcost": [0],
+    "ctcost": [800],
+    "lucost": [0, 50, 75],
+    "specials": [
+      {
+        "name": "duration",
+        "values": [4, 4, 4]
+      },
+      {
+        "name": "reduce_pct_per_mana_void",
+        "values": [1, 1.2, 1.5]
+      },
+      {
+        "name": "scale_per_mana_void",
+        "values": [2, 3, 4]
       }
     ]
   }

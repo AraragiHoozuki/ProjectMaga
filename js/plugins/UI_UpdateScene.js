@@ -11,7 +11,7 @@ class UpdateScene extends CustomScene {
         } else {
             let files = [];
             for (const file of filelist) {
-                if(!file.filename.startsWith('.')&&!files.includes(file.filename)&&(file.status==='added'||file.status==='modified')) {
+                if(!file.filename.startsWith('.')&&!files.includes(file.filename)&&(file.status==='added'||file.status==='modified'||file.status==='renamed')) {
                     files.push(file);
                 }
             }
@@ -44,6 +44,7 @@ class UpdateScene extends CustomScene {
                     throw new Error(`网络连接错误: ${resp.status} ${resp.statusText}`);
                 } else {
                     $fs.writeFileSync(file.filename, Buffer.from(resp.data));
+                    if (file.status === 'rename') $fs.unlinkSync(file.previous_filename);
                     this.ProcessDownload();
                 }
             });

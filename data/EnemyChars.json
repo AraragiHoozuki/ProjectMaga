@@ -64,7 +64,7 @@
         "inilevel": 20,
         "iniparam": [400, 300, 25, 45, 21, 55, 29, 10],
         "maxparam": [14500, 1950, 455, 1320, 340, 960, 135, 50],
-        "skills": ["SK_SUPER_REGENERATE","SK_HEALING_RAIN"],
+        "skills": ["SK_SUPER_REGENERATE","SK_HEALING_RAIN","SK_SUICIDE"],
         "ai": "NazaretHealer"
     }
 }

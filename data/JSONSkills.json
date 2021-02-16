@@ -330,6 +330,20 @@
       }
     ]
   },
+  "SK_SUICIDE": {
+    "iname": "SK_SUICIDE",
+    "name": "自杀",
+    "script": "Skill_Suicide",
+    "icon": "passive",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [0],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0],
+    "specials": [
+    ]
+  },
   "SK_SUPER_REGENERATE": {
     "iname": "SK_SUPER_REGENERATE",
     "name": "超再生",

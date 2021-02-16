@@ -4,7 +4,7 @@ class Skill_Inori extends Skill {
     }
 
     GetDescription() {
-        return `回复目标${this.GetSpecialValue('mana_amount')}点法力。`;
+        return `回复目标${this.GetSpecialValue('mana_amount')}点法力(对自己使用无效)`;
     }
 
     OnSkillAnimation(action) {

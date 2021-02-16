@@ -63,12 +63,16 @@ class AI {
 	}
 
 	static NazaretHealer(en) {
-		switch(en.turnCount%7) {
-			case 3: case 5:
-				AI.UseSkill(en, 'SK_SUPER_REGENERATE', $gameTroop.MinParamByName('hprate'));
-				break;
-			default:
-				AI.UseSkill(en, 'SK_HEALING_RAIN');
+		if ($gameTroop.battleMembers.filter(en => en.IsAlive()).length === 1) {
+			AI.UseSkill(en, 'SK_SUICIDE');
+		} else  {
+			switch(en.turnCount%7) {
+				case 3: case 5:
+					AI.UseSkill(en, 'SK_SUPER_REGENERATE', $gameTroop.MinParamByName('hprate'));
+					break;
+				default:
+					AI.UseSkill(en, 'SK_HEALING_RAIN');
+			}
 		}
 	}
 }

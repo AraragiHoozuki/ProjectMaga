@@ -11,7 +11,7 @@ class UpdateScene extends CustomScene {
         } else {
             let files = [];
             for (const file of filelist) {
-                if(!file.filename.startsWith('.')&&!files.includes(file.filename)&&(file.status==='added'||file.status==='modified'||file.status==='renamed')) {
+                if(!file.filename.startsWith('.')&&!files.includes(file.filename)&&(file.status==='added'||file.status==='modified'||file.status==='renamed'||file.status==='removed')) {
                     files.push(file);
                 }
             }
@@ -35,19 +35,24 @@ class UpdateScene extends CustomScene {
         if (file) {
             this._fileCount ++;
             this.UpdateDownloadInfo(file.filename)
-            $axios({
-                url: `https://${Update.raw_host}${Update.raw_path}/main/${file.filename}`,
-                method: 'GET',
-                responseType: 'arraybuffer'
-            }).then(resp => {
-                if (resp.status !== 200) {
-                    throw new Error(`网络连接错误: ${resp.status} ${resp.statusText}`);
-                } else {
-                    $fs.writeFileSync(file.filename, Buffer.from(resp.data));
-                    if (file.status === 'rename') $fs.unlinkSync(file.previous_filename);
-                    this.ProcessDownload();
-                }
-            });
+            if (file.status === 'removed') {
+                if ($fs.existsSync(file.filename)) $fs.unlinkSync(file.filename);
+                this.ProcessDownload();
+            } else {
+                $axios({
+                    url: `https://${Update.raw_host}${Update.raw_path}/main/${file.filename}`,
+                    method: 'GET',
+                    responseType: 'arraybuffer'
+                }).then(resp => {
+                    if (resp.status !== 200) {
+                        throw new Error(`网络连接错误: ${resp.status} ${resp.statusText}`);
+                    } else {
+                        $fs.writeFileSync(file.filename, Buffer.from(resp.data));
+                        if (file.status === 'rename') $fs.unlinkSync(file.previous_filename);
+                        this.ProcessDownload();
+                    }
+                });
+            }
         } else {
             $fs.writeFileSync('data/version.json', `{"time": ${Date.now()}}`);
             SceneManager.goto(MainScene);

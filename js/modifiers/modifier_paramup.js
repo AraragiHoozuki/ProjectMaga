@@ -1,4 +1,8 @@
 class Modifier_ParamUp extends Modifier {
+	GetDescription() {
+		return '属性变化';
+	}
+
 	GetPrimaryStatusPlus() {
 		let values = [];
 		for (let sp of this._skill.data.specials) {

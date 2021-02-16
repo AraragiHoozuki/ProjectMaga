@@ -422,7 +422,7 @@ class BattleDetailWindow extends ScrollWindow {
 		s += '状态: \n';
 		let mods = this._chr.allModifiers.filter(m => !m.IsHidden());
 		for (let mod of mods) {
-			s += `◆来自技能 \\#881dc5${mod.skill.name}\\#ffffff(${mod.durationText}): ${mod.GetDescription()}\n`;
+			s += `◆来自技能 \\#881dc5${mod.skill.name}\\#ffffff(${mod.durationText}${mod.CanStack()?`, ${mod.stack}/${mod.stackMax}层`:''}): ${mod.GetDescription()}\n`;
 		}
 		this.DrawTextEx(s, 0, 0, this.contentWidth);
 	}

@@ -23,10 +23,20 @@
         "iname": "IT_WP_RUBY_STAFF",
         "name": "红曜石",
         "icon": "staff_generic",
-        "description": "镶有红宝石的法杖。智慧+50，魔防+25",
+        "description": "镶有红宝石的法杖\n智慧+50\n魔防+25",
         "type": 0,
         "slot": 0,
         "wept": 2,
         "skills": ["SK_EQ_PARAM_RUBY"]
+    },
+    "IT_ACC_NAZARET_BRACER": {
+        "iname": "IT_ACC_NAZARET_BRACER",
+        "name": "那萨雷特护腕",
+        "icon": "bracer_generic",
+        "description": "那萨雷特士兵的制式装备\n魔防+36",
+        "type": 0,
+        "slot": 2,
+        "wept": -1,
+        "skills": ["SK_EQ_PARAM_NAZARET_BRACER"]
     }
 }

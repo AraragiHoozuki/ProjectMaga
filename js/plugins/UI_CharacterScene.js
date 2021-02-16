@@ -140,7 +140,7 @@ class CharacterDetailScene extends MenuBaseScene {
 			const dy = 100;
 			let w = new ItemListWindow(Graphics.width/2, dy, Graphics.width/2 - dx, Graphics.height - 2 * dy, '', 0, undefined, 'wd_back_cmn');
 			let slots = (this._equipWindow.index === 2 || this._equipWindow.index === 3)? [2] : [this._equipWindow.index];
-			w.SetFilter(Item.Type.EQUIP, slots);
+			w.SetFilter(Item.Type.EQUIP, slots, slots[0]===0?[CharacterDetailScene.character.data.wept]:[]);
 			w.MakeList();
 			this.Dialog(w, true, true, this.OnEquipDialogReturn.bind(this));
 			this._tempInfoWindow = new InfoWindow(dx, dy, Graphics.width/2-dx, Graphics.height-2*dy, 0, '', 0, undefined, 'wd_back_dark');

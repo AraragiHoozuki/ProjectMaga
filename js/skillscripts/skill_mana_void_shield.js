@@ -23,7 +23,7 @@ class Skill_ManaVoidShield extends Skill {
 class Modifier_ManaVoidShield extends Modifier {
     _duration  = 3;
     GetDescription() {
-        return '能根据环境快速调整自身状态，在不变地环境中会如鱼得水';
+        return `受到魔法伤害时，伤害根据攻击者的法力值获得伤害减免，每缺失1%的法力获得${this.GetSpecialValue('reduce_pct_per_mana_void')}%的伤害减免，并对攻击者造成伤害`;
     }
 
     OnBeforeTakeDamage(damage) {

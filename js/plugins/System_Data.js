@@ -103,6 +103,24 @@ DataManager.makeSavefileInfo = function() {
     return info;
 };
 
+DataManager.extractSaveContents = function(contents) {
+    $gameSystem = contents.system;
+    $gameScreen = contents.screen;
+    $gameTimer = contents.timer;
+    $gameSwitches = contents.switches;
+    $gameVariables = contents.variables;
+    $gameSelfSwitches = contents.selfSwitches;
+    $gameActors = contents.actors;
+    $gameParty = contents.party;
+    $gameMap = contents.map;
+    $gamePlayer = contents.player;
+
+    for (const chr of $gameParty.members) {
+        chr.InitParam();
+        chr.RefreshStatus();
+    }
+};
+
 DataManager.correctDataErrors = function() {
     //$gameParty.removeInvalidMembers();
 };

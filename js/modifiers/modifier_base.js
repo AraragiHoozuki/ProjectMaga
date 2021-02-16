@@ -1,5 +1,15 @@
 class Modifier {
 	/**
+	 * Enum for modifier flags
+	 * @readonly
+	 * @enum {number}
+	 */
+	static FLAG = {
+		NONE: 0,
+		IMMORTALITY: 0b1,
+		GUTS: 0b10
+	}
+	/**
 	 * @param {Character} owner
 	 * @param {Skill} skill
 	 */
@@ -20,6 +30,18 @@ class Modifier {
 	get owner() {return this._owner;}
 	get applier() {return this._skill.owner;}
 
+	/** @type Modifier.FLAG */
+	_flags = Modifier.FLAG.NONE;
+
+	/**
+	 * @param {Modifier.FLAG} flag
+	 * @returns {boolean}
+	 */
+	HasFlag(flag) {
+		return (this._flags&flag) === flag
+	}
+
+
 	/**
 	 * whether the modifier will be shown in UI or not
 	 * @returns {boolean}
@@ -37,8 +59,9 @@ class Modifier {
 	}
 
 	_stack = 1;
+	_stackMax = this._stack;
 	get stack() {return this._stack;}
-	get stackMax() {return 1;}
+	get stackMax() {return this._stackMax;}
 	CanStack() {
 		return this.stackMax > 1;
 	}
@@ -166,6 +189,13 @@ class Modifier {
 	 * @param {Damage} damage
 	 */
 	OnTakeHealing(damage) {
+
+	}
+
+	/**
+	 * @param {boolean} IsImmortalGuts
+	 */
+	OnGuts(IsImmortalGuts) {
 
 	}
 

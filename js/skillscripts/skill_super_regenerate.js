@@ -5,7 +5,7 @@ class Skill_SuperRegenerate extends Skill {
     }
 
     GetDescription() {
-        return `◆回复目标${this.GetSpecialValue('heal_scale')}%智慧的生命，随目标生命值下降提高效果。`;
+        return `◆回复目标${this.GetSpecialValue('heal_scale')}%智慧的生命，随目标生命值下降提高效果`;
     }
 
     OnSkillAnimation(action) {

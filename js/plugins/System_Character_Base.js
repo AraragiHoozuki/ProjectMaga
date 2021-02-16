@@ -51,7 +51,9 @@ const SecParamType = {
     ASSIST_PHYSICAL: 26,
     RESIST_PHYSICAL: 27,
     ASSIST_MAGICAL: 28,
-    RESIST_MAGICAL: 29
+    RESIST_MAGICAL: 29,
+
+    CP_AUTO_REGEN: 30
 }
 
 class Status {
@@ -338,14 +340,33 @@ class Character {
         this._paramChanged = true;
     }
 
+
+    IsImmortal() {
+        return this.allModifiers.some(mod =>  mod.HasFlag(Modifier.FLAG.IMMORTALITY));
+    }
+
+    GetGutsModifier() {
+        return this.acquiredModifiers.find(mod => mod.HasFlag(Modifier.FLAG.GUTS));
+    }
+
     Refresh() {  
         this._hp = Math.min(Math.max(this._hp, 0), this.GetParam(ParamType.MHP));
         this._mana = Math.min(Math.max(this._mana, 0), this.GetParam(ParamType.MMA));
         this._cp = Math.min(Math.max(this._cp, 0), Character.MAXCP);
         this._ct = Math.max(this._ct, 0);
         if (this.hp <= 0) {
-            this.Die();
-            this.OnDeath();
+            let mod;
+            if (this.IsImmortal()) {
+                this._hp = 1;
+                this.OnGuts(true);
+            } else if ((mod = this.GetGutsModifier()) !== undefined) {
+                this._hp = 1;
+                mod.Stack(-1);
+                this.OnGuts(false);
+            } else {
+                this.Die();
+                this.OnDeath();
+            }
         }
     }
 
@@ -608,6 +629,21 @@ class Character {
     //#endregion
 
     //#region Battle events
+    /**
+     * @param {boolean} include
+     * @returns {CharSet}
+     */
+    AllySet() {
+        return this instanceof PlayerChar?$gameParty:$gameTroop;
+    }
+
+    /**
+     * @returns {CharSet}
+     */
+    EnemySet() {
+        return this instanceof PlayerChar?$gameTroop:$gameParty;
+    }
+
     _turn = 0;
     get turnCount() {return this._turn;}
     OnBattleStart() {
@@ -624,6 +660,7 @@ class Character {
 
     OnTurnStart() {
         this._turn ++;
+        this.AddCp(this.GetParam(SecParamType.CP_AUTO_REGEN, true) + 5);
         this.validModifiers.forEach(mod => mod.OnTurnStart());
     }
 
@@ -647,6 +684,7 @@ class Character {
     OnTakeDamage(damage) {
         AudioManager.PlayDamaged(this.model, damage.absValue > this.mhp * 0.5);
         this.validModifiers.forEach(mod => mod.OnTakeDamage(damage));
+        this.AddCp(5 + 30 * damage.absValue / this.mhp);
     }
 
     /**
@@ -669,6 +707,13 @@ class Character {
      */
     OnDealHealing(damage) {
         this.validModifiers.forEach(mod => mod.OnDealHealing(damage));
+    }
+
+    /**
+     * @param {boolean} IsImmortalGuts - guts trigger buy immortality > true; by gtus > false
+     */
+    OnGuts(IsImmortalGuts) {
+        this.validModifiers.forEach(mod => mod.OnGuts(IsImmortalGuts));
     }
 
     OnDeath() {
@@ -852,10 +897,21 @@ class EnemyChar extends Character {
     /** @returns {CharJSON} */
     get data() { return $dataENC[this._iname];}
 
+    _aiFlags = {};
+    get aiFlags() { return this._aiFlags;}
+
+    /**
+     * @param {string} name
+     * @param {number} n
+     */
+    SetAiFlag(name, n) {
+        this._aiFlags[name] = n;
+    }
+
 
     InitSkills() {
         for (let sk of this.data.skills) {
-            this.LearnSkill(sk);
+            this.LearnSkill(sk, Math.ceil(this.level/20));
         }
     }
 

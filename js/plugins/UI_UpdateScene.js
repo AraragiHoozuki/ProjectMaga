@@ -26,7 +26,7 @@ class UpdateScene extends CustomScene {
         const w = new CustomWindow(100, 200, Graphics.boxWidth - 200, Graphics.boxHeight - 400, '', 0);
         this._window = w;
         this.addChild(w);
-        w.DrawText('正在检查更新(若有更新请再更新完成后重启游戏)...', 0, w.height/2-32, w.width, 'center');
+        w.DrawText('正在检查更新(若有更新请在更新完成后重启游戏)...', 0, w.height/2-32, w.width, 'center');
     }
 
     _fileCount = 0;

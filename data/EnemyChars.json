@@ -46,5 +46,25 @@
         "maxparam": [4800, 1000, 180, 180, 80, 80, 50, 30],
         "skills": ["SK_POLYMORPH","SK_RUSH_STRIKE","SK_MANA_VOID_SHIELD"],
         "ai": "MechaSphere"
+    },
+    "ENC_NAZARET_SABER": {
+        "iname": "ENC_NAZARET_SABER",
+        "name": "纳萨莱特剑士",
+        "model": "nazaret_saber",
+        "inilevel": 20,
+        "iniparam": [500, 100, 55, 24, 33, 29, 32, 10],
+        "maxparam": [21500, 450, 1455, 620, 725, 605, 155, 50],
+        "skills": ["SK_SLASH","SK_BRAVE","SK_GOD_WITHIN"],
+        "ai": "NazaretSaber"
+    },
+    "ENC_NAZARET_HEALER": {
+        "iname": "ENC_NAZARET_HEALER",
+        "name": "纳萨莱特治疗师",
+        "model": "nazaret_healer",
+        "inilevel": 20,
+        "iniparam": [400, 300, 25, 45, 21, 55, 29, 10],
+        "maxparam": [14500, 1950, 455, 1320, 340, 960, 135, 50],
+        "skills": ["SK_SUPER_REGENERATE","SK_HEALING_RAIN"],
+        "ai": "NazaretHealer"
     }
 }

@@ -162,6 +162,7 @@ class Skill {
     /** @param {number} val */
     SetLevel(val) {
         if (this._level !== val) {
+            val = Math.min(Math.max(val, 1), this.maxLevel);
             this._level = val;
             this.owner.MarkParamChange();
         }

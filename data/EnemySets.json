@@ -22,6 +22,29 @@
         "btl_back1": "Cobblestones1",
         "btl_back2": "Castle3"
     },
+    "ES_SALAMANDER_2_LV20": {
+        "iname": "ES_SALAMANDER_2_LV20",
+        "enemies": [
+            {
+                "iname": "ENC_SALAMANDER",
+                "level": 20,
+                "x": 500,
+                "y": 400
+            },
+            {
+                "iname": "ENC_SALAMANDER",
+                "level": 20,
+                "x": 800,
+                "y": 400
+            }
+        ],
+        "drops": [
+            {"iname": "IT_MONEY", "amount": 300, "probability": 100}
+        ],
+        "bgm": "",
+        "btl_back1": "Cobblestones1",
+        "btl_back2": "Castle3"
+    },
     "ES_MEMORY_BOOK_1_LV10": {
         "iname": "ES_MEMORY_BOOK_1_LV10",
         "enemies": [
@@ -76,5 +99,29 @@
         "bgm": "",
         "btl_back1": "Space",
         "btl_back2": "DarkSpace"
+    },
+    "ES_ESMERALD_FOREST_NAZARET_TEAM": {
+        "iname": "ES_ESMERALD_FOREST_NAZARET_TEAM",
+        "enemies": [
+            {
+                "iname": "ENC_NAZARET_SABER",
+                "level": 20,
+                "x": 500,
+                "y": 400
+            },
+            {
+                "iname": "ENC_NAZARET_HEALER",
+                "level": 20,
+                "x": 800,
+                "y": 400
+            }
+        ],
+        "drops": [
+            {"iname": "IT_MONEY", "amount": 300, "probability": 100},
+            {"iname": "IT_ACC_NAZARET_BRACER", "amount": 1, "probability": 100}
+        ],
+        "bgm": "",
+        "btl_back1": "GrassMaze",
+        "btl_back2": "Forest"
     }
 }

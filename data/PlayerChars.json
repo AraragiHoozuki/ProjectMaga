@@ -4,15 +4,15 @@
         "iname": "PLC_SARA",
         "name": "莎拉",
         "model": "sara",
-        "inilevel": 10,
+        "inilevel": 15,
         "race": "人类",
         "tags": ["魔女"],
         "wept": 3,
         "gender": 0,
         "profile": "",
         "iniparam": [440, 200, 13, 65, 12, 24, 39, 10],
-        "maxparam": [13422, 3670, 342, 1320, 277, 516, 133, 45],
-        "skills": ["SK_SACRIFICE", "SK_SUPER_REGENERATE", "SK_HEALING_RAIN","SK_SUPREMUS_LUX"]
+        "maxparam": [15422, 3670, 342, 1320, 277, 516, 133, 45],
+        "skills": ["SK_ALBION_LEGACY","SK_SACRIFICE","SK_SUPER_REGENERATE","SK_HEALING_RAIN","SK_SUPREMUS_LUX","SK_MEGAMI_ETO_TIKAI"]
     },
     "PLC_DVASIA": {
         "iname": "PLC_DVASIA",

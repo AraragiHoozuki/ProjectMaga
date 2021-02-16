@@ -5,8 +5,54 @@ class CharSet {
 
     /** @returns {Character[]} */
     get members() { return []; }
+    /** @returns {Character[]} */
     get battleMembers() {return [];}
 
+    /**
+     * @param {string} param_name
+     * @param {Character} exclude
+     */
+    MaxParamByName(param_name, exclude= undefined) {
+        let list = this.battleMembers.filter(chr=>chr.IsAlive());
+        if (exclude !== undefined) list.remove(exclude);
+        if (list.length < 1) return undefined;
+        let max = list[0];
+        for (const chr of list) {
+            if (param_name === 'hprate') {
+                if (chr.hprate > max.hprate) {
+                    max = chr;
+                }
+            } else {
+                if (chr.GetParamByName(param_name) > max.GetParamByName(param_name)) {
+                    max = chr;
+                }
+            }
+        }
+        return max;
+    }
+
+    /**
+     * @param {string} param_name
+     * @param {Character} exclude
+     */
+    MinParamByName(param_name, exclude = undefined) {
+        let list = this.battleMembers.filter(chr=>chr.IsAlive());
+        if (exclude !== undefined) list.remove(exclude);
+        if (list.length < 1) return undefined;
+        let min = list[0];
+        for (const chr of list) {
+            if (param_name === 'hprate') {
+                if (chr.hprate < min.hprate) {
+                    min = chr;
+                }
+            } else {
+                if (chr.GetParamByName(param_name) < min.GetParamByName(param_name)) {
+                    min = chr;
+                }
+            }
+        }
+        return min;
+    }
 
     OnBattleStart() {
         this.battleMembers.forEach(char => char.OnBattleStart());
@@ -37,6 +83,8 @@ class Party extends CharSet {
     IsAllDead() {
         return this.battleMembers.every(c => !c.IsAlive())
     }
+
+
 
     /**
      * no real usage, only for compatibility of built-in codes

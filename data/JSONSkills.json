@@ -54,6 +54,24 @@
       }
     ]
   },
+  "SK_SLASH": {
+    "iname": "SK_SLASH",
+    "name": "斩击",
+    "script": "Skill_Slash",
+    "icon": "none_slash",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [0, 0, 0, 0, 0],
+    "cpcost": [0, 0, 0, 0, 0],
+    "ctcost": [1000],
+    "lucost": [0, 5, 10, 20, 30],
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [125, 135, 150, 165, 180]
+      }
+    ]
+  },
   "SK_DISDAIN_CLAW": {
     "iname": "SK_DISDAIN_CLAW",
     "name": "侮蔑的炎爪",
@@ -121,6 +139,36 @@
       {
         "name": "pyro_absorb_prob",
         "values": [10, 30, 50, 70, 90]
+      }
+    ]
+  },
+  "SK_ALBION_LEGACY": {
+    "iname": "SK_ALBION_LEGACY",
+    "name": "黎明的传承",
+    "script": "Skill_AlbionLegacy",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_AlbionLegacy"],
+    "manacost": [0, 0, 0, 0, 0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0, 15, 30, 60, 120],
+    "specials": [
+      {
+        "name": "SPLUS_ASSIST_HEAL",
+        "values": [20, 30, 40, 50, 75]
+      },
+      {
+        "name": "SPLUS_RESIST_NECRO",
+        "values": [10, 20, 30, 40, 50]
+      },
+      {
+        "name": "SPLUS_CRITICAL_CHANCE",
+        "values": [20, 25, 30, 35, 40]
+      },
+      {
+        "name": "heal_scale",
+        "values": [100, 130, 160, 190, 240]
       }
     ]
   },
@@ -428,6 +476,84 @@
       }
     ]
   },
+  "SK_BRAVE": {
+    "iname": "SK_BRAVE",
+    "name": "勇气",
+    "script": "Skill_Brave",
+    "icon": "none_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [50, 50, 50, 50, 50],
+    "cpcost": [0],
+    "ctcost": [800],
+    "lucost": [0, 10, 20, 30, 50],
+    "specials": [
+      {
+        "name": "SCALE_STR",
+        "values": [20, 30, 40, 50, 75]
+      },
+      {
+        "name": "duration",
+        "values": [4, 5, 6, 7, 7]
+      }
+    ]
+  },
+  "SK_MEGAMI_ETO_TIKAI": {
+    "iname": "SK_MEGAMI_ETO_TIKAI",
+    "name": "誓言",
+    "script": "Skill_MegamiEtoTikai",
+    "icon": "divine_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [200, 400, 600],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0, 150, 300],
+    "specials": [
+      {
+        "name": "guts_time",
+        "values": [1, 2, 3]
+      },
+      {
+        "name": "SCALE_STR",
+        "values": [25, 50, 100]
+      },
+      {
+        "name": "SCALE_INT",
+        "values": [25, 50, 100]
+      }
+    ]
+  },
+  "SK_GOD_WITHIN": {
+    "iname": "SK_GOD_WITHIN",
+    "name": "就算只剩下一个人……",
+    "script": "Skill_GodWithin",
+    "icon": "none_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "SCALE_STR",
+        "values": [100]
+      },
+      {
+        "name": "SCALE_SPD",
+        "values": [50]
+      },
+      {
+        "name": "SPLUS_CRITICAL_CHANCE",
+        "values": [50]
+      },
+      {
+        "name": "duration",
+        "values": [10]
+      }
+    ]
+  },
   "SK_MANA_GENERATE": {
     "iname": "SK_MANA_GENERATE",
     "name": "法力提取",
@@ -508,50 +634,6 @@
       }
     ]
   },
-  "SK_EQ_PARAM_DE_SENECTUTE": {
-    "iname": "SK_EQ_PARAM_DE_SENECTUTE",
-    "name": "论老年",
-    "script": "Skill_ParamUp",
-    "icon": "passive",
-    "passive": false,
-    "modifiers": ["Modifier_EquipParamUp"],
-    "manacost": [0],
-    "cpcost": [0],
-    "ctcost": [0],
-    "lucost": [0],
-    "specials": [
-      {
-        "name": "PLUS_INT",
-        "values": [50]
-      },
-      {
-        "name": "PLUS_MND",
-        "values": [25]
-      }
-    ]
-  },
-  "SK_EQ_PARAM_RUBY": {
-    "iname": "SK_EQ_PARAM_RUBY",
-    "name": "红曜石",
-    "script": "Skill_ParamUp",
-    "icon": "passive",
-    "passive": false,
-    "modifiers": ["Modifier_EquipParamUp"],
-    "manacost": [0],
-    "cpcost": [0],
-    "ctcost": [0],
-    "lucost": [0],
-    "specials": [
-      {
-        "name": "PLUS_INT",
-        "values": [50]
-      },
-      {
-        "name": "PLUS_MND",
-        "values": [25]
-      }
-    ]
-  },
   "SK_POLYMORPH": {
     "iname": "SK_POLYMORPH",
     "name": "多态",
@@ -615,6 +697,68 @@
       {
         "name": "scale_per_mana_void",
         "values": [2, 3, 4]
+      }
+    ]
+  },
+  "SK_EQ_PARAM_DE_SENECTUTE": {
+    "iname": "SK_EQ_PARAM_DE_SENECTUTE",
+    "name": "论老年",
+    "script": "Skill_ParamUp",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_EquipParamUp"],
+    "manacost": [0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "PLUS_INT",
+        "values": [50]
+      },
+      {
+        "name": "PLUS_MND",
+        "values": [25]
+      }
+    ]
+  },
+  "SK_EQ_PARAM_RUBY": {
+    "iname": "SK_EQ_PARAM_RUBY",
+    "name": "红曜石",
+    "script": "Skill_ParamUp",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_EquipParamUp"],
+    "manacost": [0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "PLUS_INT",
+        "values": [50]
+      },
+      {
+        "name": "PLUS_MND",
+        "values": [25]
+      }
+    ]
+  },
+  "SK_EQ_PARAM_NAZARET_BRACER": {
+    "iname": "SK_EQ_PARAM_NAZARET_BRACER",
+    "name": "那萨雷特护腕",
+    "script": "Skill_ParamUp",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_EquipParamUp"],
+    "manacost": [0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0],
+    "specials": [
+      {
+        "name": "PLUS_MND",
+        "values": [36]
       }
     ]
   }

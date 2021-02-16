@@ -26,11 +26,11 @@ const Names = {
 		ASSIST_SLASH: "斩属性",
 		ASSIST_PIERCE: "突属性",
 		ASSIST_BLOW: "打属性",
-		ASSIST_MAGIC: "魔法属性",
+		ASSIST_MAGIC: "魔属性",
 		RESIST_SLASH: "斩耐性",
 		RESIST_PIERCE: "突耐性",
 		RESIST_BLOW: "打耐性",
-		RESIST_MAGIC: "魔法耐性",
+		RESIST_MAGIC: "魔耐性",
 
 		CRITICAL_CHANCE: "暴击率加成",
 		CRITICAL_DAMAGE: "暴击伤害加成",
@@ -39,7 +39,9 @@ const Names = {
 		ASSIST_PHYSICAL: "物理加成",
 		RESIST_PHYSICAL: "物理耐性",
 		ASSIST_MAGICAL: "魔法加成",
-		RESIST_MAGICAL: "魔法耐性"
+		RESIST_MAGICAL: "魔法耐性",
+
+		CP_AUTO_REGEN: "CP自动回复"
 	},
 	EquipSlots: ['武器', '防具', '饰品', '饰品'],
 	ItemTypes: ['装备', '材料', '票券', '剧情'],

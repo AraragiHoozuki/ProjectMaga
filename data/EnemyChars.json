@@ -11,11 +11,11 @@
     "ENC_SALAMANDER": {
         "iname": "ENC_SALAMANDER",
         "name": "沙拉曼达",
-        "model": "Salamander",
+        "model": "350201501",
         "inilevel": 10,
         "iniparam": [600, 200, 60, 60, 25, 42, 34, 10],
         "maxparam": [7500, 800, 900, 1100, 566, 715, 130, 10],
-        "skills": ["SK_SALAMANDER_BREATH"]
+        "skills": ["SK_SLASH"]
     },
     "ENC_MEMORY_TOME": {
         "iname": "ENC_MEMORY_TOME",

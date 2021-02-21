@@ -4,6 +4,8 @@ const toast = function(msg, color) {
 	}
 };
 
+const $scene = () => SceneManager._scene;
+
 
 
 class CustomScene extends Scene_Base {

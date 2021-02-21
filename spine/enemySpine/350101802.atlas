@@ -1,0 +1,27 @@
+
+350101802.png
+size: 512,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: false
+  xy: 2, 2
+  size: 160, 190
+  orig: 160, 190
+  offset: 0, 0
+  index: -1
+wing_1
+  rotate: false
+  xy: 164, 21
+  size: 176, 171
+  orig: 176, 171
+  offset: 0, 0
+  index: -1
+wing_4
+  rotate: false
+  xy: 342, 29
+  size: 140, 163
+  orig: 140, 163
+  offset: 0, 0
+  index: -1

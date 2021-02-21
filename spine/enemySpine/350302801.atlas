@@ -1,0 +1,104 @@
+
+350302801.png
+size: 1024,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+arm_1
+  rotate: false
+  xy: 277, 282
+  size: 306, 165
+  orig: 306, 165
+  offset: 0, 0
+  index: -1
+arm_2
+  rotate: false
+  xy: 585, 312
+  size: 240, 135
+  orig: 240, 135
+  offset: 0, 0
+  index: -1
+body
+  rotate: false
+  xy: 2, 3
+  size: 189, 210
+  orig: 189, 210
+  offset: 0, 0
+  index: -1
+claw_1
+  rotate: false
+  xy: 351, 2
+  size: 166, 120
+  orig: 166, 120
+  offset: 0, 0
+  index: -1
+claw_3
+  rotate: true
+  xy: 735, 222
+  size: 88, 105
+  orig: 88, 105
+  offset: 0, 0
+  index: -1
+feeler_1
+  rotate: true
+  xy: 519, 25
+  size: 94, 132
+  orig: 94, 132
+  offset: 0, 0
+  index: -1
+feeler_2
+  rotate: true
+  xy: 561, 121
+  size: 100, 131
+  orig: 100, 131
+  offset: 0, 0
+  index: -1
+finger_1
+  rotate: true
+  xy: 842, 224
+  size: 91, 124
+  orig: 91, 124
+  offset: 0, 0
+  index: -1
+finger_2
+  rotate: true
+  xy: 827, 317
+  size: 130, 168
+  orig: 130, 168
+  offset: 0, 0
+  index: -1
+finger_3
+  rotate: false
+  xy: 585, 223
+  size: 148, 87
+  orig: 148, 87
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 2, 215
+  size: 273, 232
+  orig: 273, 232
+  offset: 0, 0
+  index: -1
+hip
+  rotate: true
+  xy: 694, 122
+  size: 98, 108
+  orig: 98, 108
+  offset: 0, 0
+  index: -1
+wing_1
+  rotate: false
+  xy: 351, 124
+  size: 208, 156
+  orig: 208, 156
+  offset: 0, 0
+  index: -1
+wing_2
+  rotate: true
+  xy: 193, 4
+  size: 209, 156
+  orig: 209, 156
+  offset: 0, 0
+  index: -1

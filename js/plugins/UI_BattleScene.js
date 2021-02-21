@@ -8,7 +8,7 @@ class BattleScene extends CustomScene {
 		this.CreateSpriteset();
 		this.CreateFaceList();
 		this.CreateSkillList();
-		this.CreateCharSelector();
+		//this.CreateCharSelector(); created when spine load complete
 		this.CreateDetailWindow();
 	}
 
@@ -32,7 +32,7 @@ class BattleScene extends CustomScene {
 	/** @type BattleSkillListWindow */
 	_skillList;
 	CreateSkillList() {
-		this._skillList = new BattleSkillListWindow(0, Graphics.height - 180, Graphics.width, 180, '', 0);
+		this._skillList = new BattleSkillListWindow(BattleFaceList.FaceWidth, Graphics.height - 180, Graphics.width - BattleFaceList.FaceWidth, BattleFaceList.FaceHeight, '', 0);
 		this.addChild(this._skillList);
 		this._skillList.Close();
 		this._skillList.SetClickHandler(this.OnSkillConfirm.bind(this));
@@ -198,9 +198,9 @@ class BattleCharFace extends PIXI.Container {
 	}
 
 	update() {
-		if (BattleFlow.IsInputting() && this.character === BattleFlow.character && $gameParty.battleMembers.length > 0) {
-			this._face.move(0, - 10);
-			this._bar.move(0, this.height - 20);
+		if (BattleFlow.IsInputting() && this.character === BattleFlow.character) {
+			this._face.move(-(this.parent.x + this.x), 0);
+			this._bar.move(-(this.parent.x + this.x), this.height - 10);
 		} else {
 			this._face.move(0, 0);
 			this._bar.move(0, this.height - 10);
@@ -241,11 +241,6 @@ class BattleFaceList extends PIXI.Container {
 		for (let child of this.children) {
 			if (child.update) child.update();
 		}
-		if (BattleFlow.IsInputting()) {
-			this.y = this._y0 - 120;
-		} else {
-			this.y = this._y0;
-		}
 	}
 
 	Refresh() {
@@ -285,18 +280,11 @@ class BattleSelectCursor extends Sprite {
 		this.visible = true;
 		this._showTime = 80;
 		let x, y;
-		if (!this._isEnemy) {
-
-			x = this._attachPoint.x + this._attachPoint.parent.x + this._attachPoint.width/2 - this.width /2;
-			y = this._attachPoint.y + this._attachPoint.parent.y + this._attachPoint.height/2 - this.height /2;
-
-		} else {
-			let e = this._attachPoint;
-			let w, h;
-			[x, y, w, h] = [e.battleSprite.x, e.battleSprite.y, e.battleSprite.width, e.battleSprite.height];
-			x = x - this.width/2;
-			y = y - h/2 - this.height;
-		}
+		let e = this._attachPoint;
+		let w, h;
+		[x, y, w, h] = [e.battleSprite.x, e.battleSprite.y, e.battleSprite.width, e.battleSprite.height];
+		x = x - this.width/2;
+		y = y - h/3 - this.height;
 		this.SetPosition(x, y);
 	}
 
@@ -366,15 +354,17 @@ class BattleSelector extends PIXI.Container {
 	}
 
 	GetClickedPlayer() {
-		let scene = SceneManager._scene;
-		if (scene instanceof BattleScene && scene._faceList) {
-			let list = scene._faceList;
-			let pos = list.worldTransform.applyInverse(new Point(TouchInput.x, TouchInput.y));
-			for (let face of list._faces) {
-				if (pos.x >= face.x && pos.y >= face.y && pos.x < face.x + face.width && pos.y < face.y + face.height) {
-					this._actorCursor.AttachTo(face);
-					return 0;
-				}
+		let x0 = TouchInput.x;
+		let y0 = TouchInput.y;
+		for (const a of this._actors) {
+			let [x, y, w, h] = [a.battleSprite.x, a.battleSprite.y, a.battleSprite.width, a.battleSprite.height];
+			w = w/2;
+			h = h/1.5;
+			x -= w/2;
+			y -= h;
+			if (x0 >= x && y0 >= y && x0 < x + w && y0 < y + h) {
+				this._actorCursor.AttachTo(a);
+				return 0;
 			}
 		}
 		return -1;
@@ -387,6 +377,8 @@ class BattleSelector extends PIXI.Container {
 			let e = this._enemies[this._enemies.length - i - 1];
 			if (!e.isAlive()) continue;
 			let [x, y, w, h] = [e.battleSprite.x, e.battleSprite.y, e.battleSprite.width, e.battleSprite.height];
+			w = w/2;
+			h = h/1.5;
 			x -= w/2;
 			y -= h;
 			if (x0 >= x && y0 >= y && x0 < x + w && y0 < y + h) {
@@ -436,6 +428,59 @@ Spriteset_Battle.prototype.initialize = function() {
 	/** @type Sprite_Damage[] */
 	this._damages = [];
 };
+
+Spriteset_Battle.prototype.createLowerLayer = function() {
+	Spriteset_Base.prototype.createLowerLayer.call(this);
+	this.createBackground();
+	this.createBattleback();
+	this.createBattleField();
+	this.createSpines().then(()=>{});
+};
+
+Spriteset_Battle.prototype.createSpines = async function() {
+	this._spineContainer = new PIXI.Container();
+	this.addChild(this._spineContainer);
+	let x = Graphics.width - 400;
+	let y = 350;
+	for (const chr of $gameParty.battleMembers) {
+		let ctrl = new BtlSprCtrl();
+		let spine;
+		if (chr.weapon_slot) {
+			spine = await ctrl.Load(chr.model, undefined, chr.weapon_model, chr.weapon_slot);
+		} else {
+			spine = await ctrl.Load(chr.model, undefined);
+		}
+
+		this._spineContainer.addChild(spine);
+		spine.x = x;
+		spine.y = y;
+		x += 75;
+		y += 75;
+		chr.SetBattleSprite(spine);
+		$scene().addChild(ctrl);
+	}
+	x = 400;
+	y = 350;
+	this._hpGauges = [];
+	for (const chr of $gameTroop.battleMembers) {
+		let ctrl = new BtlSprCtrl();
+		let spine = await ctrl.Load(chr.model, 'spine/enemySpine/');
+		this._spineContainer.addChild(spine);
+		spine.x = x;
+		spine.y = y;
+		$scene().addChild(ctrl);
+		const hg = new HpGauge(x - 60, y, 120, 4,  'ProgressBarHP_Empty', 'ProgressBarHP_Filling', 'gauge_back_filling_hp');
+		hg.SetCharacter(chr);
+		this._hpGauges.push(hg);
+		this.addChild(hg);
+		x -= 120;
+		y += 75;
+		chr.SetBattleSprite(spine);
+
+	}
+	BattleFlow.scene.CreateCharSelector();
+};
+
 /**
  * @param {Sprite_Damage} damage
  */
@@ -460,36 +505,23 @@ Spriteset_Battle.prototype.isDamagePopuping = function() {
 
 Spriteset_Battle.prototype.update = function() {
 	Spriteset_Base.prototype.update.call(this);
-	this.updateActors();
 	this.updateBattleback();
 	this.updateAnimations();
 	this.updateDamages();
+	this.UpdateHpGauges();
 };
 
-Spriteset_Battle.prototype.createEnemies = function() {
-	let enemies = $gameTroop.members;
-	let sprites = [];
-	for (let enemy of enemies) {
-		let sprite = new Sprite_Enemy(enemy);
-		enemy.SetSprite(sprite);
-		sprites.push(sprite);
+Spriteset_Battle.prototype.UpdateHpGauges = function() {
+	if (this._hpGauges) {
+		for(const g of this._hpGauges) {
+			g.SetValue(g.chr.hp, g.chr.mhp);
+		}
 	}
-	sprites.sort(this.compareEnemySprite.bind(this));
-	for (const sprite of sprites) {
-		this._battleField.addChild(sprite);
-	}
-	this._enemySprites = sprites;
 };
 
-Spriteset_Battle.prototype.updateActors = function() {
-	const members = $gameParty.battleMembers;
-	for (let i = 0; i < this._actorSprites.length; i++) {
-		this._actorSprites[i].setBattler(members[i]);
-	}
-};
 
 Spriteset_Battle.prototype.isBusy = function() {
-	return this.isAnimationPlaying() || this.isEffecting();
+	return this.isDamagePopuping() || this._spineContainer.children.some(spine => spine.controller.isAnimationPlaying());
 };
 
 Sprite_Battler.prototype.updateVisibility = function() {

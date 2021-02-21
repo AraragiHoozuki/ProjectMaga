@@ -11,7 +11,7 @@ Scene_Title.prototype.createText = function() {
 };
 
 Scene_Title.prototype.processTouch = function() {
-	if (TouchInput.isTriggered()) {
+	if (TouchInput.isClicked()) {
 		if (DataManager.isAnySavefileExists()) {
 			DataManager.loadGame(0);
 			SoundManager.playLoad();

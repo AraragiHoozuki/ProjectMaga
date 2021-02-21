@@ -8,7 +8,8 @@ class BattleFlow {
         THINKING: 0,
         INPUTTING: 1,
         ACTION_LOOP: 2,
-        ACTION_RESOLVE: 3
+        ACTION_PREPARE: 3,
+        ACTION_RESOLVE: 4
     };
 
     /** @type BattleScene */
@@ -67,6 +68,8 @@ class BattleFlow {
 
     static BattleStart() {
         BattleFlow._phase = BattleFlow.PHASE.THINKING;
+        BattleFlow._endPoint = false;
+        BattleFlow._endLoopTime = 0;
         $gameSystem.onBattleStart();
         $gameParty.OnBattleStart();
         $gameTroop.OnBattleStart();
@@ -101,6 +104,9 @@ class BattleFlow {
                 case BattleFlow.PHASE.ACTION_LOOP:
                     BattleFlow.UpdateActionLoop();
                     break;
+                case BattleFlow.PHASE.ACTION_PREPARE:
+                    BattleFlow.UpdateActionPrepare();
+                    break;
                 case BattleFlow.PHASE.ACTION_RESOLVE:
                     BattleFlow.UpdateActionResolve();
                     break;
@@ -114,6 +120,8 @@ class BattleFlow {
         return $gameParty.IsAllDead() || $gameTroop.IsAllDead();
     }
 
+    static _endPoint = false;
+    static _endLoopTime = 0;
     static BattleEnd() {
         if (!this._spriteset.isBusy()) {
             if ($gameParty.IsAllDead()) {
@@ -122,9 +130,16 @@ class BattleFlow {
                 AudioManager.stopBgm();
                 SceneManager.goto(Scene_Gameover);
             } else if ($gameTroop.IsAllDead()) {
-                $gameParty.OnBattleEnd();
-                this._actions = [];
-                SceneManager.push(BattleResultScene);
+                if (!this._endPoint) {
+                    this._endPoint = true;
+                    $gameParty.OnBattleEnd();
+                    this._actions = [];
+                }
+                this._endLoopTime ++;
+                if(TouchInput.isClicked()||this._endLoopTime >= 200) {
+                    SceneManager.push(BattleResultScene);
+                }
+
             }
         }
     }
@@ -188,15 +203,24 @@ class BattleFlow {
         if (!this._action) {
             BattleFlow._phase = BattleFlow.PHASE.THINKING;
         } else {
-            BattleFlow._phase = BattleFlow.PHASE.ACTION_RESOLVE;
+            BattleFlow._phase = BattleFlow.PHASE.ACTION_PREPARE;
         }
     }
 
+    static UpdateActionPrepare() {
+        this._action.Prepare();
+        if (this._action._state > Action.STATE.ANIMATION) this._phase = BattleFlow.PHASE.ACTION_RESOLVE;
+        this.ActionPoints = this._action._skill.actionPoints.clone();
+    }
+
+    static ActionPoints = [];
     static UpdateActionResolve() {
-        if (!this._spriteset.isBusy() && !this._spriteset.isDamagePopuping()) {
-            this._action.Resolve();
-            if (this._action._state > Action.STATE.END) {
-                BattleFlow._phase = BattleFlow.PHASE.ACTION_LOOP;
+        if (this.ActionPoints.length < 1) {
+            BattleFlow._phase = BattleFlow.PHASE.ACTION_LOOP;
+        } else {
+            if (this._action._user.battleSprite.state.tracks[0].time >= this.ActionPoints[0]) {
+                this.ActionPoints.shift();
+                this._action._skill.OnSkillEffect(this._action);
             }
         }
     }
@@ -223,14 +247,8 @@ class BattleFlow {
      */
     static PopupDamage(damage) {
         let sp = new Sprite_Damage();
-        if (damage.victim instanceof PlayerChar) {
-            let pt = damage.victim.battleFace.worldTransform.apply(new Point(BattleFaceList.FaceWidth / 2, 0))
-            sp.x = pt.x;
-            sp.y = pt.y - 30;
-        } else if (damage.victim instanceof EnemyChar) {
-            sp.x = damage.victim.battleSprite.x;
-            sp.y = damage.victim.battleSprite.y - damage.victim.battleSprite.width/2;
-        }
+        sp.x = damage.victim.battleSprite.x;
+        sp.y = damage.victim.battleSprite.y - damage.victim.battleSprite.width/3;
         sp.x += Math.randomInt(80) - 40;
         sp.y += Math.randomInt(80) - 40;
         sp.setup(damage);
@@ -372,7 +390,7 @@ class Action {
         return targets;
     }
 
-    Resolve() {
+    Prepare() {
         if (!this._user.IsAlive()) {
             this._state = Action.STATE.END + 1;
             return;
@@ -389,14 +407,6 @@ class Action {
             case Action.STATE.ANIMATION:
                 BattleFlow.scene.Toast(`${this._user.name}: ${this._skill.name}`, this._user instanceof PlayerChar?Colors.Green:Colors.Red);
                 this._skill.OnSkillAnimation(this);
-                this._state ++;
-                break;
-            case Action.STATE.EFFECT:
-                this._skill.OnSkillEffect(this);
-                this._state ++;
-                break;
-            case Action.STATE.END:
-                if (!this.IsReaction()) this._user.OnActionEnd(this);
                 this._state ++;
                 break;
             default:

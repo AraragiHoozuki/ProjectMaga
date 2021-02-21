@@ -1,0 +1,146 @@
+
+350200104.png
+size: 2048,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+arm_l
+  rotate: false
+  xy: 1682, 398
+  size: 149, 110
+  orig: 149, 110
+  offset: 0, 0
+  index: -1
+arm_r
+  rotate: false
+  xy: 1682, 302
+  size: 122, 94
+  orig: 122, 94
+  offset: 0, 0
+  index: -1
+belly
+  rotate: true
+  xy: 1503, 339
+  size: 169, 177
+  orig: 169, 177
+  offset: 0, 0
+  index: -1
+chest
+  rotate: false
+  xy: 2, 225
+  size: 500, 283
+  orig: 500, 283
+  offset: 0, 0
+  index: -1
+ear_l
+  rotate: false
+  xy: 985, 258
+  size: 200, 250
+  orig: 200, 250
+  offset: 0, 0
+  index: -1
+ear_r
+  rotate: true
+  xy: 1187, 262
+  size: 115, 232
+  orig: 115, 232
+  offset: 0, 0
+  index: -1
+forearm_l
+  rotate: false
+  xy: 277, 10
+  size: 125, 72
+  orig: 125, 72
+  offset: 0, 0
+  index: -1
+forearm_r
+  rotate: false
+  xy: 1833, 398
+  size: 111, 110
+  orig: 111, 110
+  offset: 0, 0
+  index: -1
+hand
+  rotate: false
+  xy: 1680, 242
+  size: 66, 58
+  orig: 66, 58
+  offset: 0, 0
+  index: -1
+hand_l
+  rotate: false
+  xy: 1946, 395
+  size: 96, 113
+  orig: 96, 113
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 504, 243
+  size: 479, 265
+  orig: 479, 265
+  offset: 0, 0
+  index: -1
+head_parts
+  rotate: false
+  xy: 277, 84
+  size: 213, 139
+  orig: 213, 139
+  offset: 0, 0
+  index: -1
+leg_l
+  rotate: false
+  xy: 1421, 286
+  size: 80, 91
+  orig: 80, 91
+  offset: 0, 0
+  index: -1
+leg_r
+  rotate: false
+  xy: 1925, 306
+  size: 107, 87
+  orig: 107, 87
+  offset: 0, 0
+  index: -1
+thigh_l
+  rotate: false
+  xy: 1806, 310
+  size: 117, 86
+  orig: 117, 86
+  offset: 0, 0
+  index: -1
+thigh_r
+  rotate: true
+  xy: 1503, 246
+  size: 91, 93
+  orig: 91, 93
+  offset: 0, 0
+  index: -1
+toe_l
+  rotate: false
+  xy: 404, 2
+  size: 89, 80
+  orig: 89, 80
+  offset: 0, 0
+  index: -1
+toe_r
+  rotate: false
+  xy: 1598, 253
+  size: 80, 84
+  orig: 80, 84
+  offset: 0, 0
+  index: -1
+wepon
+  rotate: true
+  xy: 1187, 379
+  size: 129, 314
+  orig: 129, 314
+  offset: 0, 0
+  index: -1
+wepon2
+  rotate: true
+  xy: 2, 18
+  size: 205, 273
+  orig: 205, 273
+  offset: 0, 0
+  index: -1

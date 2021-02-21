@@ -1958,7 +1958,7 @@ SceneManager.update = function(deltaTime) {
     try {
         const n = this.determineRepeatNumber(deltaTime);
         for (let i = 0; i < n; i++) {
-            this.updateMain();
+            this.updateMain(deltaTime);
         }
     } catch (e) {
         this.catchException(e);

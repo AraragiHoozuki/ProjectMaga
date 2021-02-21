@@ -62,8 +62,8 @@ class CharSet {
         this.battleMembers.forEach(chr => chr.OnBattleEnd());
     }
 }
-
-
+/** Party */
+var $gameParty;
 class Party extends CharSet {
     /** @type Item[] */
     _items = [];
@@ -111,7 +111,7 @@ class Party extends CharSet {
     }
 
     GameStart() {
-        this.MemberJoin('PLC_ROSELIA');
+        this.MemberJoin('PLC_TYRFINGR');
         //this.GetItem('IT_WP_AHURAMAZDA_STAFF', 1);
         //this.GetItem('IT_KAKERA_PLC_ROSELIA', 999);
     }
@@ -179,6 +179,7 @@ class Party extends CharSet {
             }
             if (!(SceneManager._scene instanceof MainScene)) SceneManager.goto(MainScene);
             this._currentStage = undefined;
+            $gameParty.ClearBattleSprite();
             DataManager.saveGame(0);
         }
     }
@@ -229,16 +230,22 @@ class Party extends CharSet {
         }
     }
 
+    ClearBattleSprite() {
+        for (const chr of this.members) {
+            chr.ClearBattleSprite(undefined);
+        }
+    }
+
     OnBattleStart() {
         super.OnBattleStart();
         let chr = this.battleMembers[Math.floor(Math.random() * this.battleMembers.length)];
-        AudioManager.PlayEncounter(chr.model);
+        AudioManager.PlayEncounter(chr.voice);
     }
 
     OnBattleEnd() {
         super.OnBattleEnd();
-        let chr = this.battleMembers[Math.floor(Math.random() * this.battleMembers.length)];
-        AudioManager.PlayWin(chr.model, chr.hprate <= 25);
+        let chr = this.battleMembers.randomChoice();
+        AudioManager.PlayWin(chr.voice, chr.hprate <= 25);
     }
 }
 

@@ -1,0 +1,55 @@
+
+350101701.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: false
+  xy: 2, 480
+  size: 628, 464
+  orig: 628, 464
+  offset: 0, 0
+  index: -1
+effects/beam_1
+  rotate: false
+  xy: 632, 616
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+effects/beam_2
+  rotate: false
+  xy: 882, 928
+  size: 128, 16
+  orig: 128, 16
+  offset: 0, 0
+  index: -1
+pyramid_1
+  rotate: false
+  xy: 2, 216
+  size: 268, 262
+  orig: 268, 262
+  offset: 0, 0
+  index: -1
+pyramid_2
+  rotate: false
+  xy: 632, 746
+  size: 248, 198
+  orig: 248, 198
+  offset: 0, 0
+  index: -1
+pyramid_3
+  rotate: false
+  xy: 2, 2
+  size: 229, 212
+  orig: 229, 212
+  offset: 0, 0
+  index: -1
+pyramid_4
+  rotate: false
+  xy: 272, 266
+  size: 229, 212
+  orig: 229, 212
+  offset: 0, 0
+  index: -1

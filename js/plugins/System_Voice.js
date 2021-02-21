@@ -1,3 +1,11 @@
+AudioManager.PlaySe = function(name) {
+    AudioManager.playSe({
+        name: name,
+        pitch: 100,
+        volume: 200
+    });
+};
+
 /** @type string[] */
 AudioManager._voicefiles = [];
 AudioManager.LoadVoices = function(fs, path) {
@@ -88,9 +96,9 @@ AudioManager.PlayWin= function(model, IsBarely = false) {
  */
 AudioManager.PlayDamaged = function(model, IsBig = false) {
     if (IsBig) {
-        AudioManager.PlayRandomVoice(model, 'damaged');
-    } else {
         AudioManager.PlayRandomVoice(model, 'damaged_big');
+    } else {
+        AudioManager.PlayRandomVoice(model, 'damaged');
     }
 }
 
@@ -99,6 +107,13 @@ AudioManager.PlayDamaged = function(model, IsBig = false) {
  */
 AudioManager.PlayHealed = function(model) {
     AudioManager.PlayRandomVoice(model, 'healed');
+}
+
+/**
+ * @param {string} model
+ */
+AudioManager.PlayDeath = function(model) {
+    AudioManager.PlayRandomVoice(model, 'retire');
 }
 
 /**

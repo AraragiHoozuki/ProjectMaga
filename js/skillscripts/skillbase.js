@@ -16,6 +16,11 @@ var $dataSkills;
  * @property {[number]} cpcost - cp cost of the skill
  * @property {[number]} ctcost - ct cost of the skill
  * @property {[number]} lucost - lv up cost of the skill
+ * @property {string} lwf - lwf effect name
+ * @property {boolean} global - lwf effect is global or target only
+ * @property {string} animation - spine animation name
+ * @property {number[]} actionPoints - spine animation points
+ * @property {string} sound - sound effect
  * @property {[string]} modifiers - intrinsic modifiers of the skill
  * @property {string} animation - animation id
  * @property {string} voice - voice event name(default is 'attack')
@@ -92,6 +97,15 @@ class Skill {
         }
     }
 
+    get animation() {return this.data.animation;}
+    get actionPoints() {return this.data.actionPoints;}
+    get sound() {return this.data.sound;}
+    get lwf() {return this.data.lwf;}
+
+    IsEffectGlobal() {
+        return this.data.global === true;
+    }
+
     IsPassive() {
         return this.data.passive === true;
     }
@@ -155,6 +169,15 @@ class Skill {
         }
     }
 
+    /**
+     * Get the special value of this skill by name and level
+     * @param {string} name - special value name
+     * @param {number} level - skill level
+     */
+    GSV(name, level = this.level) {
+        return this.GetSpecialValue(name, level)
+    }
+
     GetDescription() {
         return '原始技能';
     }
@@ -193,9 +216,9 @@ class Skill {
      */
     OnSkillStart(action) {
         if (this.data.voice) {
-            AudioManager.PlayUnique(this.owner.model, this.data.voice);
+            AudioManager.PlayUnique(this.owner.voice, this.data.voice);
         } else if (this.iname !== 'SK_WAIT'){
-            AudioManager.PlayAttack(this.owner.model);
+            AudioManager.PlayAttack(this.owner.voice);
         }
     }
     OnSkillCost() {

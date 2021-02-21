@@ -1,0 +1,279 @@
+
+350905412.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+arm_1
+  rotate: false
+  xy: 1259, 389
+  size: 236, 270
+  orig: 236, 270
+  offset: 0, 0
+  index: -1
+arm_2
+  rotate: false
+  xy: 985, 398
+  size: 272, 261
+  orig: 272, 261
+  offset: 0, 0
+  index: -1
+belly
+  rotate: true
+  xy: 1147, 661
+  size: 254, 280
+  orig: 254, 280
+  offset: 0, 0
+  index: -1
+belt_acc_0
+  rotate: false
+  xy: 676, 1210
+  size: 153, 363
+  orig: 153, 363
+  offset: 0, 0
+  index: -1
+belt_acc_1
+  rotate: false
+  xy: 1497, 399
+  size: 137, 265
+  orig: 137, 265
+  offset: 0, 0
+  index: -1
+belt_acc_2
+  rotate: false
+  xy: 1636, 415
+  size: 131, 249
+  orig: 131, 249
+  offset: 0, 0
+  index: -1
+chest
+  rotate: true
+  xy: 669, 325
+  size: 334, 314
+  orig: 334, 314
+  offset: 0, 0
+  index: -1
+chestcover_1
+  rotate: false
+  xy: 1839, 764
+  size: 207, 235
+  orig: 207, 235
+  offset: 0, 0
+  index: -1
+chestcover_2
+  rotate: false
+  xy: 963, 103
+  size: 112, 131
+  orig: 112, 131
+  offset: 0, 0
+  index: -1
+effect/effect_beam
+  rotate: false
+  xy: 1440, 1452
+  size: 51, 51
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+effect/effect_blur
+  rotate: false
+  xy: 579, 599
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+effect/effect_blur_2
+  rotate: false
+  xy: 1077, 114
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+effect/effect_eye_light
+  rotate: false
+  xy: 1068, 712
+  size: 51, 51
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+effect/effect_robot_particle_0000
+  rotate: false
+  xy: 1440, 1505
+  size: 80, 120
+  orig: 80, 120
+  offset: 0, 0
+  index: -1
+effect/effect_robot_particle_0001
+  rotate: true
+  xy: 676, 1128
+  size: 80, 120
+  orig: 80, 120
+  offset: 0, 0
+  index: -1
+effect/effect_robot_particle_0002
+  rotate: true
+  xy: 946, 683
+  size: 80, 120
+  orig: 80, 120
+  offset: 0, 0
+  index: -1
+effect/effect_robot_particle_0003
+  rotate: false
+  xy: 1769, 544
+  size: 80, 120
+  orig: 80, 120
+  offset: 0, 0
+  index: -1
+effect/effect_robot_particle_0004
+  rotate: false
+  xy: 1769, 422
+  size: 80, 120
+  orig: 80, 120
+  offset: 0, 0
+  index: -1
+face
+  rotate: false
+  xy: 985, 236
+  size: 196, 160
+  orig: 196, 160
+  offset: 0, 0
+  index: -1
+hand_1
+  rotate: true
+  xy: 831, 1627
+  size: 419, 717
+  orig: 419, 717
+  offset: 0, 0
+  index: -1
+hand_2
+  rotate: true
+  xy: 831, 1181
+  size: 444, 607
+  orig: 444, 607
+  offset: 0, 0
+  index: -1
+hand_effegt_1
+  rotate: false
+  xy: 579, 661
+  size: 267, 434
+  orig: 267, 434
+  offset: 0, 0
+  index: -1
+hand_effegt_2
+  rotate: false
+  xy: 848, 765
+  size: 297, 414
+  orig: 297, 414
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 963, 2
+  size: 120, 99
+  orig: 120, 99
+  offset: 0, 0
+  index: -1
+hip_acc_1
+  rotate: true
+  xy: 453, 2
+  size: 55, 393
+  orig: 55, 393
+  offset: 0, 0
+  index: -1
+hip_acc_2
+  rotate: true
+  xy: 1429, 666
+  size: 70, 393
+  orig: 70, 393
+  offset: 0, 0
+  index: -1
+laser_1
+  rotate: false
+  xy: 1183, 309
+  size: 74, 87
+  orig: 74, 87
+  offset: 0, 0
+  index: -1
+laser_2
+  rotate: true
+  xy: 1085, 2
+  size: 110, 86
+  orig: 110, 86
+  offset: 0, 0
+  index: -1
+leg
+  rotate: true
+  xy: 1440, 1001
+  size: 433, 547
+  orig: 433, 547
+  offset: 0, 0
+  index: -1
+neck
+  rotate: true
+  xy: 848, 661
+  size: 102, 96
+  orig: 102, 96
+  offset: 0, 0
+  index: -1
+shoulder_1
+  rotate: true
+  xy: 1147, 917
+  size: 262, 291
+  orig: 262, 291
+  offset: 0, 0
+  index: -1
+shoulder_2
+  rotate: true
+  xy: 669, 67
+  size: 256, 292
+  orig: 256, 292
+  offset: 0, 0
+  index: -1
+thigh
+  rotate: false
+  xy: 2, 547
+  size: 575, 548
+  orig: 575, 548
+  offset: 0, 0
+  index: -1
+upperarm_1
+  rotate: false
+  xy: 2, 1097
+  size: 672, 476
+  orig: 672, 476
+  offset: 0, 0
+  index: -1
+upperarm_2
+  rotate: true
+  xy: 2, 2
+  size: 543, 449
+  orig: 543, 449
+  offset: 0, 0
+  index: -1
+upperarmback_1
+  rotate: true
+  xy: 1550, 1436
+  size: 610, 453
+  orig: 610, 453
+  offset: 0, 0
+  index: -1
+wing_1_1
+  rotate: false
+  xy: 2, 1575
+  size: 827, 471
+  orig: 827, 471
+  offset: 0, 0
+  index: -1
+wing_1_2
+  rotate: true
+  xy: 453, 59
+  size: 486, 214
+  orig: 486, 214
+  offset: 0, 0
+  index: -1
+wing_2
+  rotate: true
+  xy: 1440, 738
+  size: 261, 397
+  orig: 261, 397
+  offset: 0, 0
+  index: -1

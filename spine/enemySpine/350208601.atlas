@@ -1,0 +1,62 @@
+
+350208601.png
+size: 512,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: false
+  xy: 138, 114
+  size: 122, 139
+  orig: 122, 139
+  offset: 0, 0
+  index: -1
+cotton
+  rotate: false
+  xy: 2, 2
+  size: 113, 86
+  orig: 113, 86
+  offset: 0, 0
+  index: -1
+ear1
+  rotate: false
+  xy: 298, 203
+  size: 79, 50
+  orig: 79, 50
+  offset: 0, 0
+  index: -1
+ear2
+  rotate: false
+  xy: 298, 145
+  size: 68, 56
+  orig: 68, 56
+  offset: 0, 0
+  index: -1
+effect_cotton
+  rotate: false
+  xy: 379, 211
+  size: 38, 42
+  orig: 38, 42
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 2, 90
+  size: 134, 163
+  orig: 134, 163
+  offset: 0, 0
+  index: -1
+leg
+  rotate: false
+  xy: 262, 133
+  size: 34, 120
+  orig: 34, 120
+  offset: 0, 0
+  index: -1
+string
+  rotate: false
+  xy: 138, 93
+  size: 24, 19
+  orig: 24, 19
+  offset: 0, 0
+  index: -1

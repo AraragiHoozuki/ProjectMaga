@@ -51,13 +51,20 @@ class Skill_Slash extends Skill {
 
     OnSkillAnimation(action) {
         super.OnSkillAnimation(action);
-        for (let chr of action._targets) {
-            BattleFlow.PlayAnimation(7, chr);
-        }
+        this.owner.controller.SetSkillAnimation(this.animation);
+
     }
 
     OnSkillEffect(action) {
         super.OnSkillEffect(action);
+        if (this.IsEffectGlobal()) {
+            LWFUtils.PlayLwf('lwf/battleLwf/', this.lwf, 0, 0);
+        } else {
+            for (let chr of action._targets) {
+                LWFUtils.PlayLwf('lwf/battleLwf/', this.lwf, chr.battleSprite.x, chr.battleSprite.y - 50);
+            }
+        }
+        AudioManager.PlaySe(this.sound);
         let value = this.owner.GetParam(ParamType.STR) * this.GetSpecialValue('damage_scale')/100;
         for (let chr of action._targets) {
             BattleFlow.ApplyDamage(this, chr, value, Damage.ELEMENT.NONE, Damage.ATTACK_TYPE.SLASH);

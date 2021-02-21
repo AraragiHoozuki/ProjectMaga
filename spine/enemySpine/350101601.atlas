@@ -1,0 +1,41 @@
+
+350101601.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+fin_1
+  rotate: false
+  xy: 262, 294
+  size: 180, 183
+  orig: 180, 183
+  offset: 0, 0
+  index: -1
+fin_2
+  rotate: false
+  xy: 262, 116
+  size: 176, 176
+  orig: 176, 176
+  offset: 0, 0
+  index: -1
+fin_3
+  rotate: false
+  xy: 235, 2
+  size: 117, 112
+  orig: 117, 112
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 2, 220
+  size: 258, 257
+  orig: 258, 257
+  offset: 0, 0
+  index: -1
+tin
+  rotate: false
+  xy: 2, 36
+  size: 231, 182
+  orig: 231, 182
+  offset: 0, 0
+  index: -1

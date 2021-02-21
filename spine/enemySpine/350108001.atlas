@@ -1,0 +1,153 @@
+
+350108001.png
+size: 1024,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+berry
+  rotate: true
+  xy: 291, 58
+  size: 88, 81
+  orig: 88, 81
+  offset: 0, 0
+  index: -1
+chest
+  rotate: false
+  xy: 2, 122
+  size: 167, 132
+  orig: 167, 132
+  offset: 0, 0
+  index: -1
+foot_1
+  rotate: true
+  xy: 291, 2
+  size: 54, 83
+  orig: 54, 83
+  offset: 0, 0
+  index: -1
+foot_2
+  rotate: false
+  xy: 978, 177
+  size: 37, 77
+  orig: 37, 77
+  offset: 0, 0
+  index: -1
+forearm_1
+  rotate: false
+  xy: 138, 16
+  size: 47, 104
+  orig: 47, 104
+  offset: 0, 0
+  index: -1
+forearm_2
+  rotate: false
+  xy: 374, 59
+  size: 47, 103
+  orig: 47, 103
+  offset: 0, 0
+  index: -1
+hand_1
+  rotate: false
+  xy: 600, 153
+  size: 58, 31
+  orig: 58, 31
+  offset: 0, 0
+  index: -1
+hand_2
+  rotate: false
+  xy: 476, 84
+  size: 59, 34
+  orig: 59, 34
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 187, 57
+  size: 102, 89
+  orig: 102, 89
+  offset: 0, 0
+  index: -1
+head_open
+  rotate: false
+  xy: 348, 164
+  size: 123, 90
+  orig: 123, 90
+  offset: 0, 0
+  index: -1
+lowerfoot_1
+  rotate: false
+  xy: 376, 7
+  size: 46, 50
+  orig: 46, 50
+  offset: 0, 0
+  index: -1
+lowerfoot_2
+  rotate: true
+  xy: 558, 118
+  size: 47, 38
+  orig: 47, 38
+  offset: 0, 0
+  index: -1
+neck
+  rotate: false
+  xy: 2, 4
+  size: 134, 116
+  orig: 134, 116
+  offset: 0, 0
+  index: -1
+shin_1
+  rotate: true
+  xy: 423, 84
+  size: 78, 51
+  orig: 78, 51
+  offset: 0, 0
+  index: -1
+shin_2
+  rotate: false
+  xy: 187, 21
+  size: 69, 34
+  orig: 69, 34
+  offset: 0, 0
+  index: -1
+tail
+  rotate: false
+  xy: 171, 148
+  size: 175, 106
+  orig: 175, 106
+  offset: 0, 0
+  index: -1
+thigh_1
+  rotate: true
+  xy: 473, 167
+  size: 87, 125
+  orig: 87, 125
+  offset: 0, 0
+  index: -1
+thigh_2
+  rotate: true
+  xy: 743, 198
+  size: 56, 124
+  orig: 56, 124
+  offset: 0, 0
+  index: -1
+tin
+  rotate: false
+  xy: 476, 120
+  size: 80, 45
+  orig: 80, 45
+  offset: 0, 0
+  index: -1
+upperarm_1
+  rotate: true
+  xy: 869, 172
+  size: 82, 107
+  orig: 82, 107
+  offset: 0, 0
+  index: -1
+upperarm_2
+  rotate: true
+  xy: 600, 186
+  size: 68, 141
+  orig: 68, 141
+  offset: 0, 0
+  index: -1

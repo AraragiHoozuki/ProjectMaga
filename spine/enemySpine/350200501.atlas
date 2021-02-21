@@ -1,0 +1,41 @@
+
+350200501.png
+size: 1024,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body_1
+  rotate: true
+  xy: 263, 2
+  size: 234, 237
+  orig: 234, 237
+  offset: 0, 0
+  index: -1
+body_2
+  rotate: true
+  xy: 669, 130
+  size: 106, 176
+  orig: 106, 176
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 502, 103
+  size: 165, 133
+  orig: 165, 133
+  offset: 0, 0
+  index: -1
+leaf_1
+  rotate: false
+  xy: 2, 23
+  size: 259, 213
+  orig: 259, 213
+  offset: 0, 0
+  index: -1
+leaf_2
+  rotate: false
+  xy: 847, 117
+  size: 124, 119
+  orig: 124, 119
+  offset: 0, 0
+  index: -1

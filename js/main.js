@@ -4,11 +4,17 @@
 
 const scriptUrls = [
     "js/libs/pixi.js",
-    //"js/libs/pixi-spine.js",
+    "js/libs/pixi-spine.js",
+    "js/libs/spriteUtilities.js",
+    "js/libs/SkeletonBinary.js",
+    "js/libs/lwf.js",
+
+
     "js/libs/pako.min.js",
     "js/libs/localforage.min.js",
-    "js/libs/effekseer.min.js",
+     "js/libs/effekseer.min.js",
     "js/libs/vorbisdecoder.js",
+
     "js/rmmz_core.js",
     "js/rmmz_managers.js",
     "js/rmmz_objects.js",

@@ -1,4 +1,4 @@
-class Button extends PIXI.Container {
+class Button extends Clickable {
 	/**
 	 *
 	 * @param text {string}
@@ -13,7 +13,7 @@ class Button extends PIXI.Container {
 	 * @param  {Paddings} pressed_texture_pd
 	 */
 	constructor(text, image, x, y, w, h, pressed_image = image + '_hover' , pd= new Paddings(), pressed_pd = new Paddings(), pressed_texture_pd = new Paddings()) {
-		super();
+		super(x, y, w, h);
 		this.x = x;
 		this.y = y;
 		this.width = w;
@@ -106,61 +106,21 @@ class Button extends PIXI.Container {
 		this.y = y;
 	}
 
-	update() {
-		if (this.visible && this.active) {
-			this.UpdateTouching();
-			this.UpdateHover();
-			this.ProcessRelease();
-		}
+
+	OnPress() {
+		super.OnPress();
+		this._pressedSprite.visible = true;
 	}
 
-	/**
-	 * Check if the mouse cursor is over this window
-	 * @returns {boolean}
-	 */
-	IsMouseOver() {
-		let pos = this._imageSprite.worldTransform.applyInverse(new Point(TouchInput.x, TouchInput.y));
-		return pos.x >= 0 && pos.x <= this.width && pos.y >= 0 && pos.y <= this.height;
+	OnRelease() {
+		super.OnRelease();
+		this._pressedSprite.visible = false;
 	}
 
-	/**
-	 * @returns {boolean}
-	 */
-	IsPressed() {
-		return TouchInput.isPressed() && this.IsMouseOver();
-	}
-
-	/** @type boolean */
-	_touching = false;
-	UpdateTouching() {
-		if (this.active && this.visible) {
-			if (TouchInput.isTriggered() && this.IsMouseOver()) {
-				this._touching = true;
-			}
-		} else {
-			this._touching = false;
-		}
-	}
-
-	UpdateHover() {
-		if (this.active && this.visible)  {
-			if (this._touching) {
-				this._pressedSprite.visible = true;
-			} else {
-				this._pressedSprite.visible = false;
-			}
-		}
-	}
-
-	ProcessRelease() {
-		if (this.active && this.visible) {
-			if (TouchInput.isReleased() && this._touching) {
-				if (this.IsMouseOver() && this._touching) {
-					this.OnClick();
-				}
-				this._touching = false;
-			}
-		}
+	OnLongPressRelease(isClick) {
+		super.OnLongPressRelease(isClick);
+		this.OnRelease();
+		if (isClick) this.OnClick();
 	}
 
 	/**
@@ -183,6 +143,7 @@ class Button extends PIXI.Container {
 		this._clickSe = name;
 	}
 	OnClick() {
+		super.OnClick();
 		if (this._clickHandler) {
 			AudioManager.playSe({name: this._clickSe, pitch: 100, volume: 200});
 			this._clickHandler();

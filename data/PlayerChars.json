@@ -1,5 +1,4 @@
 {
-    "$schema": "./schemas/PlayerCharsSchema.json",
     "PLC_SARA": {
         "iname": "PLC_SARA",
         "name": "莎拉",
@@ -32,15 +31,35 @@
     "PLC_ROSELIA": {
         "iname": "PLC_ROSELIA",
         "name": "罗赛利亚",
-        "model": "roselia",
-        "inilevel": 10,
+        "model": "104010042",
+        "voice": "miiyu_anotherstyle01",
+        "inilevel": 100,
         "race": "半神",
         "tags": ["BBA", "魔女"],
         "wept": 2,
+        "wep_model": "211010461",
+        "wep_slot": "weapon_sword",
         "gender": 0,
         "profile": "「魔女」的早期成员，在组织面临灭亡的危机时被秘密保护起来陷入了沉睡，等到醒来时却发现自己已经处在一座破旧、空荡的城堡之中。魔女究竟是什么？又为什么会被赶尽杀绝？在这个“后魔女时代”，一切都似乎需要亲自去寻找答案。",
         "iniparam": [600, 120, 22, 50, 26, 37, 38, 20],
         "maxparam": [21455, 3150, 680, 1550, 425, 820, 132, 80],
-        "skills": ["SK_SCARLET_LEGACY", "SK_MAJO_MEMORY", "SK_FIRE_LANCE_3", "SK_DRAGON_BREATH", "SK_AGNIS_CUSTODIA", "SK_AHURAMAZDA_HUG"]
+        "skills": ["SK_SLASH"]
+    },
+    "PLC_TYRFINGR": {
+        "iname": "PLC_TYRFINGR",
+        "name": "提尔芬格",
+        "model": "104010121",
+        "voice": "thillelille",
+        "inilevel": 10,
+        "race": "人",
+        "tags": ["魔剑"],
+        "wept": 0,
+        "wep_model": "211010461",
+        "wep_slot": "",
+        "gender": 0,
+        "profile": "",
+        "iniparam": [600, 120, 75, 45, 26, 32, 42, 30],
+        "maxparam": [21455, 600, 1790, 890, 725, 620, 155, 120],
+        "skills": ["SK_TYRFINGR_KENMOTU","SK_SLASH"]
     }
 }

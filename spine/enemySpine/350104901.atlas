@@ -1,0 +1,118 @@
+
+350104901.png
+size: 1024,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+arm_1
+  rotate: true
+  xy: 675, 164
+  size: 88, 107
+  orig: 88, 107
+  offset: 0, 0
+  index: -1
+arm_2
+  rotate: false
+  xy: 779, 270
+  size: 89, 107
+  orig: 89, 107
+  offset: 0, 0
+  index: -1
+body
+  rotate: false
+  xy: 2, 253
+  size: 256, 249
+  orig: 256, 249
+  offset: 0, 0
+  index: -1
+body_acc
+  rotate: false
+  xy: 2, 2
+  size: 256, 249
+  orig: 256, 249
+  offset: 0, 0
+  index: -1
+body_acc_2
+  rotate: false
+  xy: 260, 253
+  size: 256, 249
+  orig: 256, 249
+  offset: 0, 0
+  index: -1
+cloak
+  rotate: false
+  xy: 260, 2
+  size: 256, 249
+  orig: 256, 249
+  offset: 0, 0
+  index: -1
+effect/effect_grass02
+  rotate: false
+  xy: 883, 400
+  size: 24, 22
+  orig: 24, 22
+  offset: 0, 0
+  index: -1
+effect/effect_grass03
+  rotate: true
+  xy: 1003, 468
+  size: 34, 19
+  orig: 34, 19
+  offset: 0, 0
+  index: -1
+effect/effect_grass04
+  rotate: false
+  xy: 883, 424
+  size: 118, 78
+  orig: 118, 78
+  offset: 0, 0
+  index: -1
+eye_close
+  rotate: false
+  xy: 518, 15
+  size: 37, 34
+  orig: 37, 34
+  offset: 0, 0
+  index: -1
+hand_1
+  rotate: false
+  xy: 675, 379
+  size: 102, 123
+  orig: 102, 123
+  offset: 0, 0
+  index: -1
+hand_2
+  rotate: false
+  xy: 518, 51
+  size: 102, 123
+  orig: 102, 123
+  offset: 0, 0
+  index: -1
+head_acc
+  rotate: false
+  xy: 518, 340
+  size: 155, 162
+  orig: 155, 162
+  offset: 0, 0
+  index: -1
+head_acc_2
+  rotate: false
+  xy: 518, 176
+  size: 155, 162
+  orig: 155, 162
+  offset: 0, 0
+  index: -1
+upperarm_1
+  rotate: false
+  xy: 675, 254
+  size: 102, 123
+  orig: 102, 123
+  offset: 0, 0
+  index: -1
+upperarm_2
+  rotate: false
+  xy: 779, 379
+  size: 102, 123
+  orig: 102, 123
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,139 @@
+
+350200202.png
+size: 2048,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: false
+  xy: 2, 505
+  size: 416, 487
+  orig: 416, 487
+  offset: 0, 0
+  index: -1
+body_sub
+  rotate: false
+  xy: 420, 543
+  size: 440, 449
+  orig: 440, 449
+  offset: 0, 0
+  index: -1
+cloth
+  rotate: true
+  xy: 317, 220
+  size: 283, 233
+  orig: 283, 233
+  offset: 0, 0
+  index: -1
+foot_L
+  rotate: false
+  xy: 552, 191
+  size: 98, 93
+  orig: 98, 93
+  offset: 0, 0
+  index: -1
+foot_R
+  rotate: false
+  xy: 1918, 750
+  size: 118, 104
+  orig: 118, 104
+  offset: 0, 0
+  index: -1
+forearm_L
+  rotate: false
+  xy: 1094, 434
+  size: 154, 196
+  orig: 154, 196
+  offset: 0, 0
+  index: -1
+forearm_R
+  rotate: true
+  xy: 317, 11
+  size: 207, 228
+  orig: 207, 228
+  offset: 0, 0
+  index: -1
+hand_L
+  rotate: false
+  xy: 1425, 527
+  size: 134, 153
+  orig: 134, 153
+  offset: 0, 0
+  index: -1
+hand_R
+  rotate: false
+  xy: 832, 262
+  size: 209, 203
+  orig: 209, 203
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 1225, 682
+  size: 365, 310
+  orig: 365, 310
+  offset: 0, 0
+  index: -1
+head_side
+  rotate: false
+  xy: 862, 632
+  size: 361, 360
+  orig: 361, 360
+  offset: 0, 0
+  index: -1
+leg_L
+  rotate: true
+  xy: 1918, 856
+  size: 136, 128
+  orig: 136, 128
+  offset: 0, 0
+  index: -1
+leg_R
+  rotate: false
+  xy: 1250, 522
+  size: 173, 158
+  orig: 173, 158
+  offset: 0, 0
+  index: -1
+tin
+  rotate: true
+  xy: 1592, 678
+  size: 314, 324
+  orig: 314, 324
+  offset: 0, 0
+  index: -1
+underfoot_L
+  rotate: false
+  xy: 1250, 428
+  size: 120, 92
+  orig: 120, 92
+  offset: 0, 0
+  index: -1
+underfoot_R
+  rotate: true
+  xy: 1918, 651
+  size: 97, 106
+  orig: 97, 106
+  offset: 0, 0
+  index: -1
+upperarm_L
+  rotate: true
+  xy: 862, 467
+  size: 163, 230
+  orig: 163, 230
+  offset: 0, 0
+  index: -1
+upperarm_R
+  rotate: false
+  xy: 552, 286
+  size: 278, 255
+  orig: 278, 255
+  offset: 0, 0
+  index: -1
+weapon_L
+  rotate: false
+  xy: 2, 2
+  size: 313, 501
+  orig: 313, 501
+  offset: 0, 0
+  index: -1

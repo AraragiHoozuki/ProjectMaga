@@ -1,0 +1,62 @@
+
+350205503.png
+size: 1024,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: false
+  xy: 752, 189
+  size: 242, 281
+  orig: 242, 281
+  offset: 0, 0
+  index: -1
+head_1
+  rotate: false
+  xy: 2, 237
+  size: 380, 233
+  orig: 380, 233
+  offset: 0, 0
+  index: -1
+head_2
+  rotate: false
+  xy: 2, 2
+  size: 380, 233
+  orig: 380, 233
+  offset: 0, 0
+  index: -1
+leg_1
+  rotate: true
+  xy: 384, 2
+  size: 96, 109
+  orig: 96, 109
+  offset: 0, 0
+  index: -1
+leg_2
+  rotate: true
+  xy: 495, 2
+  size: 96, 109
+  orig: 96, 109
+  offset: 0, 0
+  index: -1
+mouth
+  rotate: false
+  xy: 752, 108
+  size: 108, 79
+  orig: 108, 79
+  offset: 0, 0
+  index: -1
+tongue_1
+  rotate: false
+  xy: 384, 286
+  size: 366, 184
+  orig: 366, 184
+  offset: 0, 0
+  index: -1
+tongue_2
+  rotate: false
+  xy: 384, 100
+  size: 366, 184
+  orig: 366, 184
+  offset: 0, 0
+  index: -1

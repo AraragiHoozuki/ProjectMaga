@@ -1,0 +1,244 @@
+
+350200301.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+goat_chest
+  rotate: false
+  xy: 324, 768
+  size: 278, 252
+  orig: 278, 252
+  offset: 0, 0
+  index: -1
+goat_head
+  rotate: false
+  xy: 354, 547
+  size: 151, 219
+  orig: 151, 219
+  offset: 0, 0
+  index: -1
+goat_leg_01
+  rotate: true
+  xy: 706, 557
+  size: 85, 140
+  orig: 85, 140
+  offset: 0, 0
+  index: -1
+goat_leg_02
+  rotate: true
+  xy: 345, 4
+  size: 63, 93
+  orig: 63, 93
+  offset: 0, 0
+  index: -1
+goat_shoulder
+  rotate: true
+  xy: 354, 423
+  size: 122, 144
+  orig: 122, 144
+  offset: 0, 0
+  index: -1
+goat_thigh_01
+  rotate: false
+  xy: 378, 258
+  size: 141, 163
+  orig: 141, 163
+  offset: 0, 0
+  index: -1
+goat_thigh_02
+  rotate: false
+  xy: 763, 644
+  size: 102, 116
+  orig: 102, 116
+  offset: 0, 0
+  index: -1
+goat_toe_01
+  rotate: false
+  xy: 282, 29
+  size: 61, 51
+  orig: 61, 51
+  offset: 0, 0
+  index: -1
+goat_toe_02
+  rotate: true
+  xy: 863, 793
+  size: 57, 42
+  orig: 57, 42
+  offset: 0, 0
+  index: -1
+goat_undermane
+  rotate: false
+  xy: 364, 69
+  size: 152, 187
+  orig: 152, 187
+  offset: 0, 0
+  index: -1
+goat_uppermane
+  rotate: false
+  xy: 604, 852
+  size: 305, 168
+  orig: 305, 168
+  offset: 0, 0
+  index: -1
+goat_wing_close
+  rotate: false
+  xy: 2, 704
+  size: 320, 316
+  orig: 320, 316
+  offset: 0, 0
+  index: -1
+goat_wing_open
+  rotate: true
+  xy: 2, 264
+  size: 438, 181
+  orig: 438, 181
+  offset: 0, 0
+  index: -1
+lion_arm_01
+  rotate: false
+  xy: 521, 366
+  size: 182, 139
+  orig: 182, 139
+  offset: 0, 0
+  index: -1
+lion_arm_02
+  rotate: false
+  xy: 655, 94
+  size: 94, 112
+  orig: 94, 112
+  offset: 0, 0
+  index: -1
+lion_berry
+  rotate: false
+  xy: 507, 507
+  size: 197, 141
+  orig: 197, 141
+  offset: 0, 0
+  index: -1
+lion_chest
+  rotate: false
+  xy: 185, 264
+  size: 191, 156
+  orig: 191, 156
+  offset: 0, 0
+  index: -1
+lion_hand_01
+  rotate: false
+  xy: 157, 10
+  size: 123, 70
+  orig: 123, 70
+  offset: 0, 0
+  index: -1
+lion_hand_02
+  rotate: true
+  xy: 748, 264
+  size: 104, 75
+  orig: 104, 75
+  offset: 0, 0
+  index: -1
+lion_head
+  rotate: false
+  xy: 157, 82
+  size: 205, 180
+  orig: 205, 180
+  offset: 0, 0
+  index: -1
+lion_hip
+  rotate: false
+  xy: 518, 86
+  size: 135, 120
+  orig: 135, 120
+  offset: 0, 0
+  index: -1
+lion_jaw
+  rotate: false
+  xy: 521, 208
+  size: 161, 156
+  orig: 161, 156
+  offset: 0, 0
+  index: -1
+lion_mane
+  rotate: false
+  xy: 2, 20
+  size: 153, 242
+  orig: 153, 242
+  offset: 0, 0
+  index: -1
+lion_upperarm_01
+  rotate: false
+  xy: 706, 464
+  size: 127, 91
+  orig: 127, 91
+  offset: 0, 0
+  index: -1
+lion_upperarm_02
+  rotate: false
+  xy: 705, 370
+  size: 127, 92
+  orig: 127, 92
+  offset: 0, 0
+  index: -1
+snake_01_a
+  rotate: true
+  xy: 185, 422
+  size: 280, 167
+  orig: 280, 167
+  offset: 0, 0
+  index: -1
+snake_01_b
+  rotate: true
+  xy: 911, 803
+  size: 217, 111
+  orig: 217, 111
+  offset: 0, 0
+  index: -1
+snake_01_head
+  rotate: true
+  xy: 440, 9
+  size: 58, 87
+  orig: 58, 87
+  offset: 0, 0
+  index: -1
+snake_01_jaw
+  rotate: true
+  xy: 529, 14
+  size: 70, 83
+  orig: 70, 83
+  offset: 0, 0
+  index: -1
+snake_02_a
+  rotate: false
+  xy: 604, 762
+  size: 257, 88
+  orig: 257, 88
+  offset: 0, 0
+  index: -1
+snake_02_b
+  rotate: false
+  xy: 507, 650
+  size: 254, 110
+  orig: 254, 110
+  offset: 0, 0
+  index: -1
+snake_02_head
+  rotate: true
+  xy: 684, 258
+  size: 106, 62
+  orig: 106, 62
+  offset: 0, 0
+  index: -1
+snake_02_jaw
+  rotate: false
+  xy: 667, 5
+  size: 52, 87
+  orig: 52, 87
+  offset: 0, 0
+  index: -1
+snake_02_tongue
+  rotate: true
+  xy: 614, 2
+  size: 82, 51
+  orig: 82, 51
+  offset: 0, 0
+  index: -1

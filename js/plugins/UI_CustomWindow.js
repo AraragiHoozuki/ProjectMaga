@@ -1,4 +1,5 @@
-class CustomWindow extends PIXI.Container {
+
+class CustomWindow extends Clickable {
     _width = 0;
     _height = 0;
     _title = '';
@@ -73,44 +74,26 @@ class CustomWindow extends PIXI.Container {
      * @returns {Paddings}
      */
     get paddings() { return this._contentPaddings; }
-
-
-    /**
-     * @returns {boolean}
-     */
-    get active() { return this._active;}
-    Activate() { this._active = true;}
-    Deactivate() { this._active = false;}
-
-    /**
-     * @returns {boolean}
-     */
-    IsOpenAndActive() { return this.active && this.visible; }
-
     //#region Options
     /**
      * [left, right, top, bottom]
-     * @returns {number[]}
+     * @returns {Paddings}
      */
-    get ContentBorders() {
-        return [12, 12, 12, 12];
+    get BackBorders() {
+        return new Paddings(12);
     }
     /**
      * [left, right, top, bottom]
-     * @returns {number[]}
+     * @returns {Paddings}
      */
     get TitleBorders() {
-        return [12, 12, 12, 0];
+        return new Paddings(12, 12, 12, 0);
     }
     //#endregion
 
     //#region Basic Methods
     update() {
-        for (let child of this.children) {
-            if (child.update) {
-                child.update();
-            }
-        }
+        super.update();
     }
 
     /**
@@ -182,15 +165,15 @@ class CustomWindow extends PIXI.Container {
     OnTitleTextureLoaded() {
         if (this._titleHeight > 0) {
             let b = new Bitmap(this.width, this._titleHeight + 12);
-            b.DrawTexture(this.titleTexture, 10, 0, this.width - 20, this._titleHeight + 12, ...this.TitleBorders);
-            b.drawText(this._title, 0, 0, this.width, this._titleHeight + 12, 'center');
+            b.DrawTexture(this.titleTexture, 0, 0, this.width, this._titleHeight + 4, this.TitleBorders.left, this.TitleBorders.right, this.TitleBorders.top, this.TitleBorders.bottom);
+            b.drawText(this._title, 0, 0, this.width, this._titleHeight + 4, 'center');
             this._titleSprite.bitmap = b;
         }
     }
 
     OnBackTextureLoaded() {
         let b = new Bitmap(this.width, this.height - this._titleHeight);
-        b.DrawTexture(this.backTexture, 0, 0, this.width, this.height - this._titleHeight, ...this.ContentBorders);
+        b.DrawTexture(this.backTexture, 0, 0, this.width, this.height - this._titleHeight, this.BackBorders.left, this.BackBorders.right, this.BackBorders.top, this.BackBorders.bottom);
         this._backSprite.bitmap = b;
     }
 
@@ -214,7 +197,7 @@ class CustomWindow extends PIXI.Container {
      * @returns {boolean}
      */
     IsMouseOver() {
-        let pos = this._contentSprite.worldTransform.applyInverse(new Point(TouchInput.x, TouchInput.y));
+        const pos = this._contentSprite.worldTransform.applyInverse(new Point(TouchInput.x, TouchInput.y));
         return pos.x >= 0 && pos.x <= this.width && pos.y >= 0 && pos.y <= this.height;
     }
     //#endregion
@@ -443,7 +426,6 @@ class ScrollWindow extends CustomWindow {
     _scrollOrigin = 0;
     _scrollMax = 0;
     _scrollMin = 0;
-    _scrollerHeight = 0;
     _inertia = 0;
     _lastY = 0;
 
@@ -469,12 +451,11 @@ class ScrollWindow extends CustomWindow {
 
     update() {
         super.update();
-        this.UpdateTouching();
-        this.ProcessScroll();
+        this.UpdateInertia();
+        this.UpdateScroll();
         this.UpdateBorderBouncing();
         this.UpdateContentScroll();
         this.UpdateScrollBar();
-        this.ProcessRelease();
     }
 
     //#region Scroll
@@ -483,51 +464,28 @@ class ScrollWindow extends CustomWindow {
     /*** @returns {number} */
     get scrollPadding() { return 12; }
 
-    UpdateTouching() {
-        if (this.IsOpenAndActive()) {
-            if (TouchInput.isTriggered() && this.IsMouseOver()) {
-                this._touched = true;
-                this._touching = true;
-                this._scrollOrigin = TouchInput.y;
-            }
-            if (TouchInput.isPressed() && this.IsMouseOver()) {
-                // if (!this._touching) {
-                //     this._touching = true;
-                // }
-            } else {
-                this._touching = false;
-                if (this._inertia > 1 || this._inertia < -1) {
-                    this._scroll += this._inertia;
-                    this._inertia = this._inertia * ScrollWindow.inertiaAttenuation;
-                }
-            }
-        } else {
-            this._touching = false;
+    UpdateInertia() {
+        if (!this.IsPressed() && (this._inertia > 1 || this._inertia < -1)) {
+            this._scroll += this._inertia;
+            this._inertia = this._inertia * ScrollWindow.inertiaAttenuation;
         }
     }
 
-    ProcessRelease() {
-        if (this.IsOpenAndActive()) {
-            if (!this._touching && this._touched) {
-                this._scroll += this._scrolling;
-                this._scrolling = 0;
-                this._touched = false;
-            }
-        } else {
-            this._touching = false;
+    UpdateScroll() {
+        if (this.IsPressed()) {
+            const y = TouchInput.y;
+            this._scrolling = y - this._pressPoint.y;
+            this._inertia = y - this._lastY;
+            this._lastY = y;
         }
     }
 
-    ProcessScroll() {
-        if (this.IsOpenAndActive()) {
-            if (this._touching){
-                let y = TouchInput.y;
-                this._scrolling = y - this._scrollOrigin;
-                this._inertia = y - this._lastY;
-                this._lastY = y;
-            }
-        }
+    OnRelease() {
+        this._scroll += this._scrolling;
+        this._scrolling = 0;
     }
+
+
 
     UpdateBorderBouncing() {
         if (this._scroll > this._scrollMax) {
@@ -758,7 +716,7 @@ class ScrollListWindow extends ScrollWindow {
      * @returns {number}
      */
     GetPointIndex(x, y) {
-        let pt = this._contentSprite.worldTransform.applyInverse(new Point(x, y));
+        const pt = this._contentSprite.worldTransform.applyInverse(new Point(x, y));
         x = pt.x;
         y = pt.y - (this.scroll > 0? 0: this.scroll);
         let col = Math.floor(x / (this.itemWidth + this.spacingX));
@@ -767,29 +725,20 @@ class ScrollListWindow extends ScrollWindow {
         return (index >= 0 && index < this.listLength)? index : -1;
     }
 
+    UpdateInertia() {
+        super.UpdateInertia();
+        this.UpdateSelecting();
+    }
+
     UpdateSelecting() {
-        if (this.IsOpenAndActive() && this._touching) {
+        if (this.IsPressed()) {
             let index = this.GetPointIndex(TouchInput.x, TouchInput.y);
             this.Select(index);
         }
     }
 
-    UpdateTouching() {
-        super.UpdateTouching();
-        this.UpdateSelecting();
-    }
-
-    ProcessRelease() {
-        if (this.IsOpenAndActive()) {
-            if (!this._touching && this._touched) {
-                this._scroll += this._scrolling;
-                if (Math.abs(TouchInput.y - this._scrollOrigin) <= 15 && this.index > -1) this.OnClick();
-                this._scrolling = 0;
-                this._touched = false;
-            }
-        } else {
-            this._touching = false;
-        }
+    OnClick() {
+        if (this.index > -1) this.OnConfirm();
     }
 
     IsItemEnabled() {
@@ -807,7 +756,6 @@ class ScrollListWindow extends ScrollWindow {
         this._selectHandler = method;
     }
     OnSelect() {
-        //SoundManager.playCursor();
         if(this._selectHandler) {
             this._selectHandler();
         }
@@ -820,15 +768,16 @@ class ScrollListWindow extends ScrollWindow {
     SetClickHandler(method) {
         this._clickHandler = method;
     }
-    OnClick() {
-    if (this.IsItemEnabled()) {
-        SoundManager.playOk();
-        if(this._clickHandler) {
-            this._clickHandler();
+
+    OnConfirm() {
+        if (this.IsItemEnabled()) {
+            SoundManager.playOk();
+            if(this._clickHandler) {
+                this._clickHandler();
+            }
+        } else {
+            SoundManager.playBuzzer();
         }
-    } else {
-        SoundManager.playBuzzer();
-    }
     }
     //#endregion
 }
@@ -852,7 +801,6 @@ class CharacterListWindow extends ScrollListWindow {
         }
     }
 }
-
 
 
 class ItemListWindow extends ScrollListWindow {
@@ -1007,8 +955,7 @@ class BattleSkillListWindow extends ScrollListWindow {
         let name = `${this._data[index].name} (\\#307ff5${this._data[index].manacost}\\#ffffff・\\#f49f51${this._data[index].cpcost}\\#ffffff・\\#888878${this._data[index].ctcost}\\#ffffff)`
         let r = this.GetItemRect(index);
         let i_r = new Rectangle(r.x, r.y, r.height, r.height);
-        this.DrawTexture('img/ui/', 'cell_cmn', r.x, r.y, r.width, r.height, new Paddings(10));
-        this.DrawImageInRect('img/ui/', 'wd_back_cmn',0, 0, i_r, new Paddings(7));
+        this.DrawTexture('img/ui/', this._data[index].CanUse()?'cell_cmn':'cell_gray', r.x, r.y, r.width, r.height, new Paddings(10));
         this.DrawImageInRect('img/icons/skill/', this._data[index].icon,0, 0, i_r, new Paddings(10));
         this.DrawTextEx(name, r.x + i_r.width, r.y + r.height/3.5, r.width - r.height);
         if (this.index === index) {
@@ -1159,5 +1106,19 @@ class InfoWindow extends ScrollWindow {
      */
     Draw(s) {
         this.DrawTextEx(s, 0, 0, this.contentWidth);
+    }
+}
+
+class TitledInfoWindow extends InfoWindow {
+    constructor(x, y, w, h, title, title_height, title_bg = 'wd_title_titled', bg = 'wd_back_titled') {
+        super(x, y, w, h, 0, title, title_height, title_bg, bg);
+    }
+
+    get TitleBorders() {
+        return new Paddings(4, 0, 4, 0);
+    }
+
+    get BackBorders() {
+        return new Paddings(4, 0, 4, 4);
     }
 }

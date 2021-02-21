@@ -1,0 +1,62 @@
+
+350100501.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: false
+  xy: 2, 168
+  size: 287, 339
+  orig: 287, 339
+  offset: 0, 0
+  index: -1
+effect
+  rotate: false
+  xy: 291, 196
+  size: 191, 15
+  orig: 191, 15
+  offset: 0, 0
+  index: -1
+effect_2
+  rotate: false
+  xy: 364, 143
+  size: 51, 51
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+eye_light
+  rotate: true
+  xy: 291, 131
+  size: 63, 71
+  orig: 63, 71
+  offset: 0, 0
+  index: -1
+wing_2
+  rotate: true
+  xy: 2, 8
+  size: 158, 177
+  orig: 158, 177
+  offset: 0, 0
+  index: -1
+wing_3
+  rotate: false
+  xy: 291, 321
+  size: 171, 186
+  orig: 171, 186
+  offset: 0, 0
+  index: -1
+wing_5
+  rotate: false
+  xy: 181, 2
+  size: 102, 164
+  orig: 102, 164
+  offset: 0, 0
+  index: -1
+wing_6
+  rotate: true
+  xy: 291, 213
+  size: 106, 174
+  orig: 106, 174
+  offset: 0, 0
+  index: -1

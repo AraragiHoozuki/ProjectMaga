@@ -23,14 +23,13 @@ const Colors = {
     BlueGray: '#607d8b'
 }
 
-
 class Paddings {
     /**
      *
-     * @param left  {number}
-     * @param top {number}
-     * @param right {number}
-     * @param bottom {number}
+     * @param {number} left
+     * @param {number} top
+     * @param {number} right
+     * @param {number} bottom
      */
     constructor(left = 0, top = left, right = left, bottom = top) {
         this._left = left;
@@ -53,6 +52,119 @@ class Paddings {
     get bottom() { return this._bottom; }
 
 }
+
+class Clickable extends PIXI.Container {
+    constructor(x = 0, y = 0, w = 0, h = 0) {
+        super();
+        this.x = x;
+        this.y = y;
+        this._width = w;
+        this._height = h;
+        this._active = true;
+    }
+
+    get width() {return this._width;}
+    get w() {return this._width;}
+    get height() {return this._height;}
+    get h() {return this._height;}
+
+    /**
+     * @returns {boolean}
+     */
+    get active() { return this._active;}
+    Activate() { this._active = true;}
+    Deactivate() { this._active = false;}
+
+    Enable(bool = true) {
+        this._active = (bool === true);
+    }
+
+    Disable() {
+        this.Enable(false);
+    }
+
+    /**  @returns {boolean} */
+    IsMouseOver() {
+        const pos = this.worldTransform.applyInverse(new Point(TouchInput.x, TouchInput.y));
+        return pos.x >= 0 && pos.x <= this.w && pos.y >= 0 && pos.y <= this.h;
+    }
+    /** @returns {boolean} */
+    IsPressed() {
+        return this._pressed;
+    }
+
+    IsEnabled() {
+        return this.visible && this._active;
+    }
+
+    _pressed = false;
+    _longPressed = false;
+    _pressPoint = new Point(0, 0);
+    _releasePoint = new Point(0, 0);
+    update() {
+        if (!this.IsEnabled()) return;
+        for (const child of this.children) {
+            if (child.update) {
+                child.update();
+            }
+        }
+        if (this._pressed) {
+            if (this.IsMouseOver()) {
+                if (!this._longPressed && TouchInput.isLongPressed()) {
+                    this._longPressed = true;
+                    this.OnLongPress();
+                }
+                if(TouchInput.isReleased()) {
+                    if(this._longPressed) {
+                        this.OnLongPressRelease(true);
+                    } else if(TouchInput.isClicked()){
+                        this.OnClick();
+                    }
+                    this._pressed = false;
+                    this._longPressed = false;
+                    this.OnRelease();
+                }
+            } else {
+                if(this._longPressed) {
+                    this.OnLongPressRelease(false);
+                }
+                this._pressed = false;
+                this._longPressed = false;
+                this.OnRelease();
+            }
+        } else if (TouchInput.isTriggered()&&this.IsMouseOver()) {
+            this._pressed = true;
+            this.OnPress();
+        }
+    }
+
+    OnPress() {
+        this._pressPoint.set(TouchInput.x, TouchInput.y);
+        console.log('press');
+    }
+
+    OnRelease() {
+        this._releasePoint.set(TouchInput.x, TouchInput.y);
+        console.log('release');
+    }
+
+    OnClick() {
+        console.log('click');
+    }
+
+    OnLongPress() {
+        console.log('long press start');
+    }
+
+    /**
+     * @param {boolean} isClick
+     */
+    OnLongPressRelease(isClick) {
+        console.log(`long press release, this is${isClick?'':' not'} a click`);
+    }
+}
+
+
 /**
  * 
  * @param {string} folder 

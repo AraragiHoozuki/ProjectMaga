@@ -114,6 +114,11 @@ class Modifier {
 		return this._skill.GetSpecialValue(name);
 	}
 
+	/** @param {string} name */
+	GSV(name) {
+		return this._skill.GetSpecialValue(name);
+	}
+
 	GetDescription() {
 		return '原始Modifier';
 	}

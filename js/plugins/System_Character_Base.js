@@ -188,9 +188,13 @@ class Status {
  * @property {string} iname - internal name
  * @property {string} name - character name
  * @property {string} model - filename of icon, picture, etc.
+ * @property {string} voice - voice file name
  * @property {number} inilevel - initial level
  * @property {string} race - related to some racist skills
  * @property {string[]} tags - tags
+ * @property {number} wept - weapon type
+ * @property {string} wep_model - default weapon model
+ * @property {string} wep_slot - default weapon model slot
  * @property {number} gender - 0:f, 1:m, 2:etc
  * @property {string} profile - profile
  * @property {number[]} iniparam - initial primary params
@@ -224,6 +228,7 @@ class Character {
     get data() { return null;}
     /** @returns {string} */
     get model() { return this.data.model; }
+    get voice() { return this.data.voice; }
 
     get name() { return this.data.name; }
     get level() { return this._level; }
@@ -247,8 +252,8 @@ class Character {
     get mana() { return this._mana; }
     get cp() { return this._cp; }
     get ct() { return this._ct; }
-    get hprate() { return this._hp * 100 / this.GetParam(ParamType.MHP);}
-    get manarate() { return this._mana * 100 / this.GetParam(ParamType.MMA);}
+    get hprate() { return this._hp * 100 / this.mhp;}
+    get manarate() { return this._mana * 100 / this.mma;}
 
     get mhp() { return this.GetParam(ParamType.MHP);}
     get mma() { return this.GetParam(ParamType.MMA);}
@@ -570,9 +575,9 @@ class Character {
      */
     RemoveModifier(mod) {
         if (this.HasAcquiredModifier(mod.constructor.name, mod.skill)) {
+            this.OnRemoveModifier(mod);
             this._modifiers.remove(mod);
             this.MarkParamChange();
-            this.OnRemoveModifier(mod);
         }
 
     }
@@ -626,11 +631,18 @@ class Character {
             }
         }
     }
+
+    ForgetSkill(iname) {
+        if (this.HasSkill(iname)) {
+            const sk = this._skills.find(s => s.iname === iname);
+            this._skills.remove(sk);
+            this.MarkParamChange();
+        }
+    }
     //#endregion
 
     //#region Battle events
     /**
-     * @param {boolean} include
      * @returns {CharSet}
      */
     AllySet() {
@@ -653,9 +665,8 @@ class Character {
     }
 
     OnBattleEnd() {
-        this._modifiers = [];
         this.validModifiers.forEach(mod => mod.OnBattleEnd());
-        this.acquiredModifiers.forEach(mod => mod.Remove());
+        this.allAcquiredModifiers.forEach(mod => mod.Remove());
     }
 
     OnTurnStart() {
@@ -682,7 +693,8 @@ class Character {
      * @param {Damage} damage
      */
     OnTakeDamage(damage) {
-        AudioManager.PlayDamaged(this.model, damage.absValue > this.mhp * 0.5);
+        if(damage.absValue > this.mhp * 0.1) AudioManager.PlayDamaged(this.voice, damage.absValue > this.mhp * 0.5);
+        this.controller.SetDamageAnimation();
         this.validModifiers.forEach(mod => mod.OnTakeDamage(damage));
         this.AddCp(5 + 30 * damage.absValue / this.mhp);
     }
@@ -691,7 +703,7 @@ class Character {
      * @param {Damage} damage
      */
     OnTakeHealing(damage) {
-        AudioManager.PlayHealed(this.model);
+        AudioManager.PlayHealed(this.voice);
         this.validModifiers.forEach(mod => mod.OnTakeHealing(damage));
     }
 
@@ -717,7 +729,7 @@ class Character {
     }
 
     OnDeath() {
-
+        AudioManager.PlayDeath(this.voice);
     }
     /**
      * @param {Modifier} mod
@@ -729,7 +741,7 @@ class Character {
      * @param {Modifier} mod
      */
     OnRemoveModifier(mod) {
-
+        mod.OnRemove();
     }
     //#endregion
 
@@ -747,6 +759,25 @@ class Character {
     isEffectRequested() {
         return !!this._effectType;
     }
+
+    /** @type PIXI.spine.Spine */
+    _sprite;
+    /** @type BtlSprCtrl */
+    _controller;
+
+    SetBattleSprite(sprite) {
+        this._sprite = sprite;
+        this._controller = sprite.controller;
+    }
+
+    ClearBattleSprite() {
+        this._sprite = undefined;
+        this._controller = undefined;
+    }
+    /** @returns {PIXI.spine.Spine} */
+    get battleSprite() { return this._sprite;}
+    /** @returns {BtlSprCtrl} */
+    get controller() { return this._controller;}
     //#endregion
 }
 
@@ -765,6 +796,13 @@ class PlayerChar extends Character {
 
     /** @returns {CharJSON} */
     get data() { return $dataPLC[this._iname];}
+
+    get weapon_model() {
+        return this.data.wep_model;
+    }
+    get weapon_slot() {
+        return this.data.wep_slot;
+    }
 
     InitSkills() {
         this.LearnSkill('SK_WAIT');
@@ -874,9 +912,15 @@ class PlayerChar extends Character {
     }
     //#endregion
 
+    OnDeath() {
+        super.OnDeath();
+        this.controller.SetDeathAnimation();
+    }
+
     OnBattleEnd() {
         super.OnBattleEnd();
         this.ClearBattleFace();
+        this.controller.SetVictoryAnimation();
     }
 }
 
@@ -931,7 +975,7 @@ class EnemyChar extends Character {
     //#region Battle Events
     OnDeath() {
         super.OnDeath();
-        this.battleSprite.startEffect('collapse');
+        this.controller.StartDisappear();
     }
     //#endregion
 
@@ -945,17 +989,7 @@ class EnemyChar extends Character {
     get screenX() { return this._x;}
     get screenY() { return this._y;}
 
-    /** @type Sprite_Enemy */
-    _sprite;
 
-    /**
-     * @param {Sprite_Enemy} sprite
-     */
-    SetSprite(sprite) {
-        this._sprite = sprite;
-    }
-    /** @returns {Sprite_Enemy} */
-    get battleSprite() { return this._sprite;}
 
     isHidden() { return false;}
     //#endregion

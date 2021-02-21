@@ -1,5 +1,18 @@
 const $fs = require('fs');
 
+class DataUtils {
+    static Load(path, options={}) {
+        return new Promise((resolve, reject)=> {
+            if (PIXI.Loader.shared.resources[path]) {
+                resolve(PIXI.Loader.shared.resources[path]);
+            } else {
+                PIXI.Loader.shared.add(path, path, options).load((loader, res) => {
+                    resolve(res[path]);
+                });
+            }
+        });
+    }
+}
 
 ImageManager.loadBitmapWithExt = function(folder, filename) {
     if (filename) {

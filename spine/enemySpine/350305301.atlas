@@ -1,0 +1,111 @@
+
+350305301.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body_1
+  rotate: false
+  xy: 628, 788
+  size: 323, 230
+  orig: 323, 230
+  offset: 0, 0
+  index: -1
+body_2
+  rotate: true
+  xy: 2, 168
+  size: 411, 279
+  orig: 411, 279
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 325, 659
+  size: 301, 359
+  orig: 301, 359
+  offset: 0, 0
+  index: -1
+lantern
+  rotate: false
+  xy: 2, 581
+  size: 321, 437
+  orig: 321, 437
+  offset: 0, 0
+  index: -1
+monster_arm_1
+  rotate: false
+  xy: 733, 740
+  size: 59, 46
+  orig: 59, 46
+  offset: 0, 0
+  index: -1
+monster_body
+  rotate: false
+  xy: 2, 18
+  size: 95, 148
+  orig: 95, 148
+  offset: 0, 0
+  index: -1
+monster_eye
+  rotate: true
+  xy: 2, 2
+  size: 14, 30
+  orig: 14, 30
+  offset: 0, 0
+  index: -1
+monster_hand_1
+  rotate: false
+  xy: 408, 610
+  size: 51, 47
+  orig: 51, 47
+  offset: 0, 0
+  index: -1
+monster_hand_2
+  rotate: true
+  xy: 628, 663
+  size: 20, 43
+  orig: 20, 43
+  offset: 0, 0
+  index: -1
+monster_hand_4
+  rotate: false
+  xy: 953, 920
+  size: 25, 20
+  orig: 25, 20
+  offset: 0, 0
+  index: -1
+monster_head
+  rotate: false
+  xy: 628, 685
+  size: 103, 101
+  orig: 103, 101
+  offset: 0, 0
+  index: -1
+monster_leg_1
+  rotate: false
+  xy: 99, 104
+  size: 45, 62
+  orig: 45, 62
+  offset: 0, 0
+  index: -1
+monster_thigh_1
+  rotate: false
+  xy: 325, 595
+  size: 81, 62
+  orig: 81, 62
+  offset: 0, 0
+  index: -1
+monster_toe_1
+  rotate: false
+  xy: 283, 527
+  size: 36, 52
+  orig: 36, 52
+  offset: 0, 0
+  index: -1
+monster_upperarm_1
+  rotate: false
+  xy: 953, 942
+  size: 48, 76
+  orig: 48, 76
+  offset: 0, 0
+  index: -1

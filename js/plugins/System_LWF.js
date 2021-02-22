@@ -2,7 +2,9 @@ class LWFUtils {
     static stage;
     static cache;
     static lwf;
+    static currentId = 0;
     static Init() {
+        this.lwfs = [];
         if (LWF) {
             LWFUtils.stage = document.createElement('canvas');
             LWFUtils.stage.width = 1280;
@@ -47,7 +49,21 @@ class LWFUtils {
         LWFUtils.Load(folder, name).then((lwf)=> {
             LWFUtils.lwf.rootMovie.attachLWF(lwf);
             lwf.rootMovie.moveTo(x, y);
-        })
+        });
+    }
+
+    static StaticLwf(folder, name, x, y) {
+        LWFUtils.currentId++;
+        const id = LWFUtils.currentId;
+        LWFUtils.Load(folder, name).then((lwf)=> {
+            LWFUtils.lwf.rootMovie.attachLWF(lwf, id);
+            lwf.rootMovie.moveTo(x, y);
+        });
+        return id;
+    }
+
+    static RemoveLwf(id) {
+        LWFUtils.lwf.rootMovie.deleteAttachedLWF(LWFUtils.lwf.rootMovie, LWFUtils.lwf.rootMovie.attachedLWFs[id]);
     }
 }
 
@@ -79,5 +95,6 @@ Scene_Boot.prototype.start = function() {
     }
     this.resizeScreen();
     this.updateDocumentTitle();
+    //added
     LWFUtils.Init();
 };

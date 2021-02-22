@@ -124,7 +124,7 @@ Scene_Base.prototype.updateFade = function() {
 };
 
 Scene_Base.prototype.updateChildren = function() {
-    for (const child of this.children) {
+    for (const child of this.children.clone().reverse()) {
         if (child.update) {
             child.update();
         }

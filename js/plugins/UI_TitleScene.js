@@ -8,6 +8,11 @@ Scene_Title.prototype.create = function() {
 Scene_Title.prototype.createText = function() {
 	this._text = new TitleText();
 	this.addChild(this._text);
+
+	//for test;
+	let btn = new Button('测试lwf', 'btn_lc_cmn', 0, 0, 200, 60, 'btn_hover_azure', new Paddings(10), new Paddings(16), new Paddings(22));
+	this.addChild(btn);
+	btn.SetClickHandler(()=>SceneManager.goto(DebugScene));
 };
 
 Scene_Title.prototype.processTouch = function() {

@@ -36,10 +36,10 @@ const Names = {
 		CRITICAL_DAMAGE: "暴击伤害加成",
 		ASSIST_HEAL: "治愈力",
 		RESIST_HEAL: "治疗抗性",
-		ASSIST_PHYSICAL: "物理加成",
-		RESIST_PHYSICAL: "物理耐性",
-		ASSIST_MAGICAL: "魔法加成",
-		RESIST_MAGICAL: "魔法耐性",
+		ASSIST_PHYSICAL: "物理伤害加成",
+		RESIST_PHYSICAL: "物理伤害耐性",
+		ASSIST_MAGICAL: "魔法伤害加成",
+		RESIST_MAGICAL: "魔法伤害耐性",
 
 		CP_AUTO_REGEN: "CP自动回复"
 	},

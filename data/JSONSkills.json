@@ -89,7 +89,7 @@
     "modifiers": [],
     "manacost": [50, 60, 70, 80, 80],
     "cpcost": [0, 0, 0, 0, 0],
-    "ctcost": [1000],
+    "ctcost": [700],
     "lucost": [0, 10, 20, 30, 40],
     "lwf": "811000266",
     "global": false,
@@ -135,6 +135,168 @@
       {
         "name": "damage_scale",
         "values": [200, 250, 300, 350, 400]
+      }
+    ]
+  },
+  "SK_TYRFINGR_INNER_EDGE": {
+    "iname": "SK_TYRFINGR_INNER_EDGE",
+    "name": "心之剑",
+    "script": "Skill_InnerEdge",
+    "icon": "none_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [30, 40, 50, 60, 50],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0, 10, 20, 20, 50],
+    "lwf": "811000120",
+    "global": false,
+    "animation": "transform",
+    "actionPoints": [1.4],
+    "sound": "se_attack_up",
+    "voice": "variable_chant3",
+    "specials": [
+      {
+        "name": "SPLUS_CRITICAL_CHANCE",
+        "values": [50, 50, 50, 50, 50]
+      },
+      {
+        "name": "SPLUS_ASSIST_NECRO",
+        "values": [20, 30, 40, 50, 50]
+      },
+      {
+        "name": "SPLUS_ASSIST_PHYSICAL",
+        "values": [20, 30, 40, 50, 50]
+      },
+      {
+        "name": "SCALE_SPD",
+        "values": [-50, -50, -50, -50, -50]
+      },
+      {
+        "name": "duration",
+        "values": [1, 1, 1, 1, 1]
+      }
+    ]
+  },
+  "SK_TYRFINGR_DARK_LEGACY": {
+    "iname": "SK_TYRFINGR_DARK_LEGACY",
+    "name": "黑暗遗产",
+    "script": "Skill_DarkLegacy",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_DarkLegacy"],
+    "manacost": [0, 0, 0, 0, 0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0, 10, 20, 40, 80],
+    "lwf": "811000267",
+    "global": false,
+    "animation": "variable_chant",
+    "actionPoints": [0.55],
+    "sound": "se_at_abyss_m",
+    "voice": "variable_chant3",
+    "specials": [
+      {
+        "name": "critical_chance",
+        "values": [1.5, 2, 2.5, 3, 4]
+      },
+      {
+        "name": "SPLUS_CRITICAL_DAMAGE",
+        "values": [100, 120, 140, 160, 180]
+      },
+      {
+        "name": "SPLUS_ASSIST_PHYSICAL",
+        "values": [50, 60, 70, 80, 80]
+      },
+      {
+        "name": "mana_recover",
+        "values": [200, 240, 280, 320, 400]
+      }
+    ]
+  },
+  "SK_TYRFINGR_TERROR_CHARGE": {
+    "iname": "SK_TYRFINGR_TERROR_CHARGE",
+    "name": "恐惧充能",
+    "script": "Skill_TerrorCharge",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_TerrorCharge"],
+    "manacost": [0, 0, 0, 0, 0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0, 10, 20, 40, 80],
+    "lwf": "813000160",
+    "global": false,
+    "animation": "",
+    "actionPoints": [],
+    "sound": "",
+    "voice": "",
+    "specials": [
+      {
+        "name": "magical_resist_per_stack",
+        "values": [3, 3.5, 4, 4.5, 5]
+      }
+    ]
+  },
+  "SK_TYRFINGR_GRAN_BARON": {
+    "iname": "SK_TYRFINGR_GRAN_BARON",
+    "name": "大巴隆",
+    "script": "Skill_GranBaron",
+    "icon": "necro_slash",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [20, 25, 30, 35, 40],
+    "cpcost": [0, 0, 0, 0, 0],
+    "ctcost": [1000],
+    "lucost": [0, 10, 20, 20, 40],
+    "lwf": "811000009",
+    "global": false,
+    "animation": "skill3",
+    "actionPoints": [0.41],
+    "sound": "se_at_slash",
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [150, 170, 190, 240, 280]
+      },
+      {
+        "name": "damage_scale_per_tc",
+        "values": [50, 60, 70, 80, 90]
+      },
+      {
+        "name": "ct_per_tc",
+        "values": [100]
+      }
+    ]
+  },
+  "SK_TYRFINGR_GRAN_BADE": {
+    "iname": "SK_TYRFINGR_GRAN_BADE",
+    "name": "大巴德",
+    "script": "Skill_GranBade",
+    "icon": "none_pierce",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [30, 36, 42, 48, 54],
+    "cpcost": [0, 0, 0, 0, 0],
+    "ctcost": [1000],
+    "lucost": [0, 10, 20, 20, 40],
+    "lwf": "811000005",
+    "global": false,
+    "animation": "skill2",
+    "actionPoints": [0.45, 0.65],
+    "sound": "se_at_thrust",
+    "specials": [
+      {
+        "name": "damage_scale",
+        "values": [90, 110, 130, 150, 185]
+      },
+      {
+        "name": "phy_res_down_per_tc",
+        "values": [6, 8, 10, 12, 14]
+      },
+      {
+        "name": "ct_per_tc",
+        "values": [100]
       }
     ]
   }

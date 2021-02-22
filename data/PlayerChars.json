@@ -60,6 +60,6 @@
         "profile": "",
         "iniparam": [600, 120, 75, 45, 26, 32, 42, 30],
         "maxparam": [21455, 600, 1790, 890, 725, 620, 155, 120],
-        "skills": ["SK_TYRFINGR_KENMOTU","SK_SLASH"]
+        "skills": ["SK_TYRFINGR_DARK_LEGACY","SK_TYRFINGR_TERROR_CHARGE","SK_SLASH","SK_TYRFINGR_KENMOTU","SK_TYRFINGR_INNER_EDGE","SK_TYRFINGR_GRAN_BARON","SK_TYRFINGR_GRAN_BADE"]
     }
 }

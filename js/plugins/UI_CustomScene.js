@@ -328,11 +328,21 @@ class DebugScene extends MenuBaseScene {
 		let btn = new Button('Test', 'btn_lc_cmn', 500, 200, 200, 60, 'btn_hover_azure', new Paddings(10), new Paddings(16), new Paddings(22));
 		this.addChild(btn);
 		btn.SetClickHandler(this.TestFunc.bind(this));
+
+		btn = new Button('LWF测试', 'btn_pos', 300, 400, 200, 80, undefined, new Paddings(25), undefined, new Paddings(25));
+		this.addChild(btn);
+		btn.SetClickHandler(this.TestLwf.bind(this));
 	}
 
 	TestFunc() {
 		//BattleFlow.BeginBattle("ES_TEST");
 		this.Toast('特朗普跟小三跑了！', '#dd004d');
+	}
+
+	TestLwf() {
+		let name = prompt();
+		if (name)
+			LWFUtils.PlayLwf('lwf/battleLwf/', name, 500, 300);
 	}
 }
 

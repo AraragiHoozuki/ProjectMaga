@@ -275,6 +275,7 @@ class BattleFlow {
      * @param {Character} target
      * @param {string} name
      * @param {number} duration
+     * @returns {Modifier}
      */
     static ApplyModifier(skill, target, name, duration= undefined) {
         if (!target.HasAcquiredModifier(name, skill)) {
@@ -283,8 +284,9 @@ class BattleFlow {
             let mod = new cla(target, skill);
             target.AcquireModifier(mod);
             if (duration) mod._duration = duration;
+            return mod;
         }
-
+        return undefined;
     }
     /**
      * @param {Skill} skill
@@ -554,6 +556,7 @@ class Damage {
         this.CalcDefense();
         this.CalcElement();
         this.CalcAttackType();
+        this.CalcPhysical();
         this.CalcCritical();
         this.CalcFinal();
     }
@@ -588,6 +591,14 @@ class Damage {
         let assist = this.source.GetParam(Damage.GetATAssistIndex(this._attack), true);
         let resist = this.victim.GetParam(Damage.GetATResistIndex(this._attack), true);
         let scale = Math.max(0, (100 + assist - resist)/100);
+        this._value *= scale;
+    }
+
+    CalcPhysical() {
+        if(this.value < 0) return;
+        const assist = this.source.GetParam(this.IsPhysical()?SecParamType.ASSIST_PHYSICAL:SecParamType.ASSIST_MAGICAL, true);
+        const resist = this.victim.GetParam(this.IsPhysical()?SecParamType.ASSIST_PHYSICAL:SecParamType.ASSIST_MAGICAL, true);
+        const scale = Math.max((assist + 100)*(100-resist)/10000);
         this._value *= scale;
     }
 

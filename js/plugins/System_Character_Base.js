@@ -528,6 +528,15 @@ class Character {
     }
 
     /**
+     * @param {string} cname
+     * @param {Skill} skill
+     * @returns {Modifier}
+     */
+    GetIntrinsicModifier(cname, skill= undefined) {
+        return this.allIntrinsicModifiers.find( mod => mod.constructor.name === cname && ((!skill)||mod.skill.iname===skill.iname));
+    }
+
+    /**
      * acquired modifiers
      * @type Modifier[] */
     _modifiers = [];
@@ -550,7 +559,7 @@ class Character {
      * @returns {boolean}
      */
     HasAcquiredModifier(cname, skill = undefined) {
-        return this.acquiredModifiers.some(mod => mod.constructor.name === cname && ((!skill)||mod.skill.iname===skill.iname))
+        return this.allAcquiredModifiers.some(mod => mod.constructor.name === cname && ((!skill)||mod.skill.iname===skill.iname))
     }
     /**
      * @param {string} cname
@@ -558,7 +567,7 @@ class Character {
      * @returns {Modifier}
      */
     GetAcquiredModifier(cname, skill= undefined) {
-        return this.acquiredModifiers.find( mod => mod.constructor.name === cname && ((!skill)||mod.skill.iname===skill.iname));
+        return this.allAcquiredModifiers.find( mod => mod.constructor.name === cname && ((!skill)||mod.skill.iname===skill.iname));
     }
 
     /**
@@ -666,27 +675,39 @@ class Character {
 
     OnBattleEnd() {
         this.validModifiers.forEach(mod => mod.OnBattleEnd());
-        this.allAcquiredModifiers.forEach(mod => mod.Remove());
+        const mods = this.allAcquiredModifiers;
+        for (let i = mods.length - 1; i >=0; i--) {
+            mods[i].Remove();
+        }
     }
 
     OnTurnStart() {
         this._turn ++;
         this.AddCp(this.GetParam(SecParamType.CP_AUTO_REGEN, true) + 5);
-        this.validModifiers.forEach(mod => mod.OnTurnStart());
+        const mods = this.validModifiers;
+        for (let i = mods.length - 1; i >=0; i--) {
+            mods[i].OnTurnStart();
+        }
     }
 
     /**
      * @param {Action} action
      */
     OnActionEnd(action) {
-        this.validModifiers.forEach(mod => mod.OnActionEnd(action));
+        const mods = this.validModifiers;
+        for (let i = mods.length - 1; i >=0; i--) {
+            mods[i].OnActionEnd(action);
+        }
     }
 
     /**
      * @param {Damage} damage
      */
     OnBeforeTakeDamage(damage) {
-        this.validModifiers.forEach(mod => mod.OnBeforeTakeDamage(damage));
+        const mods = this.validModifiers;
+        for (let i = mods.length - 1; i >=0; i--) {
+            mods[i].OnBeforeTakeDamage(damage);
+        }
     }
 
     /**
@@ -695,7 +716,10 @@ class Character {
     OnTakeDamage(damage) {
         if(damage.absValue > this.mhp * 0.1) AudioManager.PlayDamaged(this.voice, damage.absValue > this.mhp * 0.5);
         this.controller.SetDamageAnimation();
-        this.validModifiers.forEach(mod => mod.OnTakeDamage(damage));
+        const mods = this.validModifiers;
+        for (let i = mods.length - 1; i >=0; i--) {
+            mods[i].OnTakeDamage(damage);
+        }
         this.AddCp(5 + 30 * damage.absValue / this.mhp);
     }
 
@@ -704,28 +728,40 @@ class Character {
      */
     OnTakeHealing(damage) {
         AudioManager.PlayHealed(this.voice);
-        this.validModifiers.forEach(mod => mod.OnTakeHealing(damage));
+        const mods = this.validModifiers;
+        for (let i = mods.length - 1; i >=0; i--) {
+            mods[i].OnTakeHealing(damage);
+        }
     }
 
     /**
      * @param {Damage} damage
      */
     OnDealDamage(damage) {
-        this.validModifiers.forEach(mod => mod.OnDealDamage(damage));
+        const mods = this.validModifiers;
+        for (let i = mods.length - 1; i >=0; i--) {
+            mods[i].OnDealDamage(damage);
+        }
     }
 
     /**
      * @param {Damage} damage
      */
     OnDealHealing(damage) {
-        this.validModifiers.forEach(mod => mod.OnDealHealing(damage));
+        const mods = this.validModifiers;
+        for (let i = mods.length - 1; i >=0; i--) {
+            mods[i].OnDealHealing(damage);
+        }
     }
 
     /**
      * @param {boolean} IsImmortalGuts - guts trigger buy immortality > true; by gtus > false
      */
     OnGuts(IsImmortalGuts) {
-        this.validModifiers.forEach(mod => mod.OnGuts(IsImmortalGuts));
+        const mods = this.validModifiers;
+        for (let i = mods.length - 1; i >=0; i--) {
+            mods[i].OnGuts(IsImmortalGuts);
+        }
     }
 
     OnDeath() {

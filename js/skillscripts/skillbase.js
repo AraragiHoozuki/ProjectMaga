@@ -230,12 +230,24 @@ class Skill {
     /**
      * @param {Action} action
      */
-    OnSkillAnimation(action) {}
+    OnSkillAnimation(action) {
+    }
     /**
      * @param {Action} action
      */
     OnSkillEffect(action) {}
     OnSkillEnd() {}
+
+    /** @type Character[]*/
+    PlayLwf(targets) {
+        if (this.IsEffectGlobal()) {
+            LWFUtils.PlayLwf('lwf/battleLwf/', this.lwf, 0, 0);
+        } else {
+            for (let chr of targets) {
+                LWFUtils.PlayLwf('lwf/battleLwf/', this.lwf, chr.battleSprite.x, chr.battleSprite.y - 50);
+            }
+        }
+    }
 }
 
 class Skill_Wait extends Skill {

@@ -7,7 +7,8 @@ class Modifier {
 	static FLAG = {
 		NONE: 0,
 		IMMORTALITY: 0b1,
-		GUTS: 0b10
+		GUTS: 0b10,
+		IMMUNE: 0b100
 	}
 	/**
 	 * @param {Character} owner
@@ -172,6 +173,14 @@ class Modifier {
 	/**
 	 * @param {Damage} damage
 	 */
+	OnBeforeDealDamage(damage) {
+
+	}
+
+
+	/**
+	 * @param {Damage} damage
+	 */
 	OnDealHealing(damage) {
 
 	}
@@ -194,6 +203,13 @@ class Modifier {
 	 * @param {Damage} damage
 	 */
 	OnTakeHealing(damage) {
+
+	}
+
+	/**
+	 * @param {Damage} damage
+	 */
+	OnDefPiercing(damage) {
 
 	}
 

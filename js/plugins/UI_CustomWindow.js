@@ -1,7 +1,5 @@
 
 class CustomWindow extends Clickable {
-    _width = 0;
-    _height = 0;
     _title = '';
     _titleHeight = 0;
     /** @type Bitmap */
@@ -29,18 +27,6 @@ class CustomWindow extends Clickable {
         this.backTexture = ImageManager.LoadUIBitmap(undefined, bg);
         this.Move(x, y, w, h);
     }
-
-    get width() {return this._width;}
-    /**
-     * @param {number} value
-     */
-    set width(value) { this._width = value;}
-
-    get height() {return this._height;}
-    /**
-     * @param {number} value
-     */
-    set height(value) { this._height = value;}
 
     get backTexture() { return this._backTexture;}
     set backTexture(val) {
@@ -92,10 +78,6 @@ class CustomWindow extends Clickable {
     //#endregion
 
     //#region Basic Methods
-    update() {
-        super.update();
-    }
-
     /**
      * @param {number} x - x coordinate
      * @param {number} y - y coordinate
@@ -190,15 +172,6 @@ class CustomWindow extends Clickable {
     RefreshContent() {
         this._contentSprite.bitmap = new Bitmap(this.contentWidth, this.contentHeight);
         this._contentSprite.move(this.paddings.left, this._titleHeight + this.paddings.top);
-    }
-
-    /**
-     * Check if the mouse cursor is over this window
-     * @returns {boolean}
-     */
-    IsMouseOver() {
-        const pos = this._contentSprite.worldTransform.applyInverse(new Point(TouchInput.x, TouchInput.y));
-        return pos.x >= 0 && pos.x <= this.width && pos.y >= 0 && pos.y <= this.height;
     }
     //#endregion
 
@@ -419,11 +392,8 @@ class ScrollWindow extends CustomWindow {
 
     static get inertiaAttenuation() { return 0.94; }
 
-    _touching = false;
-    _touched = false;
     _scroll = 0;
     _scrolling = 0;
-    _scrollOrigin = 0;
     _scrollMax = 0;
     _scrollMin = 0;
     _inertia = 0;
@@ -481,6 +451,7 @@ class ScrollWindow extends CustomWindow {
     }
 
     OnRelease() {
+        super.OnRelease();
         this._scroll += this._scrolling;
         this._scrolling = 0;
     }
@@ -961,6 +932,33 @@ class BattleSkillListWindow extends ScrollListWindow {
         if (this.index === index) {
             this.DrawTexture('img/ui/', 'cell_select_cmn', r.x, r.y, r.width, r.height, new Paddings(9));
         }
+    }
+}
+
+class BattleSkillDetailWindow extends CustomWindow {
+    constructor(x, y, w, h, title, th = 0, titlebg = 'wd_title_cmn', bg = 'face_bg') {
+        super(x, y, w, h, title, th, titlebg, bg);
+    }
+
+    /**
+     * @param {string} s
+     * @returns {number}
+     */
+    TestDraw(s) {
+        const state = this.DrawTextEx(s, 0, 0, this.contentWidth);
+        return state.y + 32;
+    }
+
+    /** @param {Skill} skill */
+    SetSkill(skill) {
+        this.content.clear();
+        let s = '';
+        s += `${skill.name} 【等级 ${skill.level}/${skill.maxLevel}】\n`;
+        s += `消耗: \\${Colors.Indigo}${skill.manacost}  \\${Colors.Orange}${skill.cpcost}  \\${Colors.Gray}${skill.ctcost}\\${Colors.White}\n`;
+        s += skill.GetDescription();
+        let h = this.TestDraw(s) * 1.2;
+        this.Move(this.x, -h, this.width, h);
+        this.DrawTextEx(s, 0, 0, this.contentWidth);
     }
 }
 

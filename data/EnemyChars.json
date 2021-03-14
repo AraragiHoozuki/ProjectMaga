@@ -1,70 +1,11 @@
 {
-    "ENC_UNICORN": {
-        "iname": "ENC_UNICORN",
-        "name": "独角兽",
-        "model": "Unicorn",
-        "inilevel": 10,
-        "iniparam": [1000, 140, 10, 5000, 10, 10, 10, 10],
-        "maxparam": [10000, 670, 10, 8000, 10, 10, 140, 10],
-        "skills": ["SK_FIREBALL"]
-    },
-    "ENC_SALAMANDER": {
-        "iname": "ENC_SALAMANDER",
-        "name": "沙拉曼达",
-        "model": "350201501",
-        "inilevel": 10,
-        "iniparam": [600, 200, 60, 60, 25, 42, 34, 10],
-        "maxparam": [7500, 800, 900, 1100, 566, 715, 130, 10],
-        "skills": ["SK_SLASH"]
-    },
-    "ENC_MEMORY_TOME": {
-        "iname": "ENC_MEMORY_TOME",
-        "name": "记忆之书",
-        "model": "Evilbook",
-        "inilevel": 10,
-        "iniparam": [250, 400, 20, 70, 25, 42, 34, 10],
-        "maxparam": [9500, 1500, 500, 1350, 366, 715, 122, 10],
-        "skills": ["SK_MAGIC_CONVERSION","SK_DARK_STRIKE"],
-        "ai": ""
-    },
-    "ENC_DVASIA_CHALLENGE_EASY": {
-        "iname": "ENC_DVASIA_CHALLENGE_EASY",
-        "name": "DVASIA",
-        "model": "dvasia",
-        "inilevel": 20,
-        "iniparam": [250, 400, 20, 40, 25, 42, 34, 10],
-        "maxparam": [16500, 1500, 500, 1500, 366, 715, 122, 10],
-        "skills": ["SK_MAGIC_CONVERSION","SK_DARK_STRIKE","SK_DVASIA_DARK_SPHERE","SK_DVASIA_SHOCKED"],
-        "ai": "DvasiaBossEasy"
-    },
-    "ENC_MECHASHPERE": {
-        "iname": "ENC_MECHASHPERE",
-        "name": "万能球",
-        "model": "Mechasphere",
-        "inilevel": 20,
-        "iniparam": [4800, 1000, 180, 180, 80, 80, 50, 30],
-        "maxparam": [4800, 1000, 180, 180, 80, 80, 50, 30],
-        "skills": ["SK_POLYMORPH","SK_RUSH_STRIKE","SK_MANA_VOID_SHIELD"],
-        "ai": "MechaSphere"
-    },
-    "ENC_NAZARET_SABER": {
-        "iname": "ENC_NAZARET_SABER",
-        "name": "纳萨莱特剑士",
-        "model": "nazaret_saber",
-        "inilevel": 20,
-        "iniparam": [500, 100, 55, 24, 33, 29, 32, 10],
-        "maxparam": [21500, 450, 1455, 620, 725, 605, 155, 50],
-        "skills": ["SK_SLASH","SK_BRAVE","SK_GOD_WITHIN"],
-        "ai": "NazaretSaber"
-    },
-    "ENC_NAZARET_HEALER": {
-        "iname": "ENC_NAZARET_HEALER",
-        "name": "纳萨莱特治疗师",
-        "model": "nazaret_healer",
-        "inilevel": 20,
-        "iniparam": [400, 300, 25, 45, 21, 55, 29, 10],
-        "maxparam": [14500, 1950, 455, 1320, 340, 960, 135, 50],
-        "skills": ["SK_SUPER_REGENERATE","SK_HEALING_RAIN","SK_SUICIDE"],
-        "ai": "NazaretHealer"
+    "ENC_START_TRAINER": {
+        "iname": "ENC_START_TRAINER",
+        "name": "回忆的训练官",
+        "model": "350106301",
+        "inilevel": 15,
+        "iniparam": [3000, 1000, 150, 150, 50, 50, 40, 10],
+        "maxparam": [3000, 1000, 150, 150, 50, 50, 40, 10],
+        "skills": ["SK_ENEMY_NON_CRIT_IMMUNE","SK_SLASH","SK_ENEMY_HP_TO_24"]
     }
 }

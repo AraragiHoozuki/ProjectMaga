@@ -25,7 +25,6 @@ const Colors = {
 
 class Paddings {
     /**
-     *
      * @param {number} left
      * @param {number} top
      * @param {number} right
@@ -37,7 +36,6 @@ class Paddings {
         this._right = right;
         this._bottom = bottom;
     }
-
     _left = 0;
     _top = 0;
     _right = 0;
@@ -50,7 +48,6 @@ class Paddings {
     get right() { return this._top; }
     /** @returns number */
     get bottom() { return this._bottom; }
-
 }
 
 class Clickable extends PIXI.Container {
@@ -141,19 +138,23 @@ class Clickable extends PIXI.Container {
     OnPress() {
         this._pressPoint.set(TouchInput.x, TouchInput.y);
         console.log('press');
+        this.CallHandler(this.OnPress.name);
     }
 
     OnRelease() {
         this._releasePoint.set(TouchInput.x, TouchInput.y);
         console.log('release');
+        this.CallHandler(this.OnRelease.name);
     }
 
     OnClick() {
         console.log('click');
+        this.CallHandler(this.OnClick.name);
     }
 
     OnLongPress() {
         console.log('long press start');
+        this.CallHandler(this.OnLongPress.name);
     }
 
     /**
@@ -161,6 +162,28 @@ class Clickable extends PIXI.Container {
      */
     OnLongPressRelease(isClick) {
         console.log(`long press release, this is${isClick?'':' not'} a click`);
+        this.CallHandler(this.OnLongPressRelease.name);
+    }
+
+    _handlers = {};
+
+    /**
+     * @param {Function} func
+     * @param {Function} handle_func
+     * @param args
+     */
+    SetHandler(func, handle_func, ...args) {
+        if(!this[func.name]) {
+            throw new Error(`No method named ${func.name} found!`);
+        } else {
+            this._handlers[func.name] = handle_func.bind(this, ...args);
+        }
+    }
+
+    CallHandler(name) {
+        if(this._handlers[name]) {
+            this._handlers[name]();
+        }
     }
 }
 

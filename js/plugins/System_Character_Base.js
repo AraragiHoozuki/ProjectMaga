@@ -194,13 +194,12 @@ class Status {
  * @property {string[]} tags - tags
  * @property {number} wept - weapon type
  * @property {string} wep_model - default weapon model
- * @property {string} wep_slot - default weapon model slot
+ * @property {string} wep_slot - default weapon model slot of the spine
  * @property {number} gender - 0:f, 1:m, 2:etc
  * @property {string} profile - profile
  * @property {number[]} iniparam - initial primary params
  * @property {number[]} maxparam - maximal primary params
  * @property {string[]} skills - skills
- * @property {string} ai - ?
  * @property {string} joinMsg - message to be shown when joins party
  */
 
@@ -477,6 +476,22 @@ class Character {
 
     _paramChanged = false;
     MarkParamChange() { this._paramChanged = true; }
+
+    /**
+     * Get param value without refresh all params
+     * @param {number} index
+     * @param {boolean} isSecondary
+     *
+     * @returns {number}
+     */
+    GetInstantParam(index, isSecondary = false) {
+        if (isSecondary) {
+            return this._finalSStatus.GetValue(index);
+        } else {
+            return this._finalPStatus.GetValue(index);
+        }
+    }
+
     /**
      * Get param value by index
      * @param {number} index
@@ -694,6 +709,7 @@ class Character {
      * @param {Action} action
      */
     OnActionEnd(action) {
+        action._skill.OnSkillEnd();
         const mods = this.validModifiers;
         for (let i = mods.length - 1; i >=0; i--) {
             mods[i].OnActionEnd(action);
@@ -727,7 +743,7 @@ class Character {
      * @param {Damage} damage
      */
     OnTakeHealing(damage) {
-        AudioManager.PlayHealed(this.voice);
+        if(damage.source !== this) AudioManager.PlayHealed(this.voice);
         const mods = this.validModifiers;
         for (let i = mods.length - 1; i >=0; i--) {
             mods[i].OnTakeHealing(damage);
@@ -747,10 +763,30 @@ class Character {
     /**
      * @param {Damage} damage
      */
+    OnBeforeDealDamage(damage) {
+        const mods = this.validModifiers;
+        for (let i = mods.length - 1; i >=0; i--) {
+            mods[i].OnBeforeDealDamage(damage);
+        }
+    }
+
+    /**
+     * @param {Damage} damage
+     */
     OnDealHealing(damage) {
         const mods = this.validModifiers;
         for (let i = mods.length - 1; i >=0; i--) {
             mods[i].OnDealHealing(damage);
+        }
+    }
+
+    /**
+     * @param {Damage} damage
+     */
+    OnDefPiercing(damage) {
+        const mods = this.validModifiers;
+        for (let i = mods.length - 1; i >=0; i--) {
+            mods[i].OnDefPiercing(damage);
         }
     }
 
@@ -834,7 +870,11 @@ class PlayerChar extends Character {
     get data() { return $dataPLC[this._iname];}
 
     get weapon_model() {
-        return this.data.wep_model;
+        if (this.weapon && this.weapon.model) {
+            return this.weapon.model;
+        } else {
+            return this.data.wep_model;
+        }
     }
     get weapon_slot() {
         return this.data.wep_slot;
@@ -907,6 +947,7 @@ class PlayerChar extends Character {
     _equips = [null, null, null, null];
     get equips() {return this._equips;}
     get noEmptyEquips() {return this.equips.filter(e => e !== null);}
+    get weapon() {return this._equips[0];}
 
     /**
      * @param {Equip} it
@@ -977,6 +1018,13 @@ class EnemyChar extends Character {
     /** @returns {CharJSON} */
     get data() { return $dataENC[this._iname];}
 
+    _ai = 'Normal';
+    get ai() {return this._ai;}
+    /** @param {string} ai */
+    SetAi(ai) {
+        this._ai = ai;
+    }
+
     _aiFlags = {};
     get aiFlags() { return this._aiFlags;}
 
@@ -1000,8 +1048,8 @@ class EnemyChar extends Character {
 
     //#region AI
     DecideAction() {
-        if (this.data.ai) {
-            eval('AI.' + this.data.ai)(this);
+        if (this.ai) {
+            eval('AI.' + this.ai)(this);
         } else {
             AI.Normal(this);
         }

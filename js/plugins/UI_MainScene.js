@@ -92,7 +92,7 @@ class MainScene extends CustomScene {
 		if (confirm) {
 			let dx = 300;
 			let dy = 100;
-			let w = new InfoWindow(dx, dy, Graphics.width - 2 * dx, Graphics.height - 2 * dy, 0, '', 0, 'wd_title_white', 'wd_back_story');
+			let w = new InfoWindow(dx, dy, Graphics.width - 2 * dx, Graphics.height - 2 * dy, 0, '', 0, 'wd_title_white', 'wd_back_dark');
 			w.SetStage(item);
 			this.Dialog(w, true, true, this.OnStageStoryConfirm.bind(this));
 		}

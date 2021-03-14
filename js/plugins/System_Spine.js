@@ -67,6 +67,7 @@ class SpineUtils {
 class BtlSprCtrl extends PIXI.Container{
 
     _ready = false;
+    /** @type PIXI.spine.Spine */
     _spine = undefined;
     _weapon = undefined;
 
@@ -82,7 +83,7 @@ class BtlSprCtrl extends PIXI.Container{
     }
 
     OnReady() {
-        this._ready = false;
+        this._ready = true;
         this._spine.controller = this;
         this.SetIdle();
         this._spine.state.setAnimationByName(0, this._idleName, true);

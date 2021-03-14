@@ -71,3 +71,46 @@ class Skill_Slash extends Skill {
         }
     }
 }
+
+class Skill_KatanaSlash extends Skill {
+    GetDescription() {
+        return `对目标敌人造成${this.GetSpecialValue('damage_scale')}%的无属性·斩攻击·物理伤害`;
+    }
+
+    OnSkillAnimation(action) {
+        super.OnSkillAnimation(action);
+        this.owner.controller.SetSkillAnimation(this.animation);
+    }
+
+    OnSkillEffect(action) {
+        super.OnSkillEffect(action);
+        this.PlayLwf(action._targets);
+        AudioManager.PlaySe(this.sound);
+        let value = this.owner.GetParam(ParamType.STR) * this.GetSpecialValue('damage_scale')/120 + this.owner.GetParam(ParamType.SPD) * this.GetSpecialValue('damage_scale')/40 ;
+        for (let chr of action._targets) {
+            BattleFlow.ApplyDamage(this, chr, value, Damage.ELEMENT.NONE, Damage.ATTACK_TYPE.SLASH);
+        }
+    }
+}
+
+class Skill_Pierce extends Skill {
+    GetDescription() {
+        return `对目标敌人造成${this.GetSpecialValue('damage_scale')}%的无属性·突攻击·物理伤害`;
+    }
+
+    OnSkillAnimation(action) {
+        super.OnSkillAnimation(action);
+        this.owner.controller.SetSkillAnimation(this.animation);
+
+    }
+
+    OnSkillEffect(action) {
+        super.OnSkillEffect(action);
+        this.PlayLwf(action.targets);
+        this.PlaySound();
+        let value = this.owner.GetParam(ParamType.STR) * this.GetSpecialValue('damage_scale')/100;
+        for (const chr of action._targets) {
+            BattleFlow.ApplyDamage(this, chr, value, Damage.ELEMENT.NONE, Damage.ATTACK_TYPE.PIERCE);
+        }
+    }
+}

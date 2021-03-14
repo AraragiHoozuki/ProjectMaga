@@ -35,7 +35,19 @@ class BattleScene extends CustomScene {
 		this._skillList = new BattleSkillListWindow(BattleFaceList.FaceWidth, Graphics.height - 180, Graphics.width - BattleFaceList.FaceWidth, BattleFaceList.FaceHeight, '', 0);
 		this.addChild(this._skillList);
 		this._skillList.Close();
+
+		this._skillDetail = new BattleSkillDetailWindow(0, 0, Graphics.width - BattleFaceList.FaceWidth, 0, '', 0);
+		this._skillList.addChild(this._skillDetail);
+		this._skillDetail.Close();
+
 		this._skillList.SetClickHandler(this.OnSkillConfirm.bind(this));
+		this._skillList.SetHandler(this._skillList.OnLongPress, ()=> {
+			if (this._skillList.item) {
+				this._skillDetail.SetSkill(this._skillList.item);
+				this._skillDetail.Open();
+			}
+		});
+		this._skillList.SetHandler(this._skillList.OnLongPressRelease, () => this._skillDetail.Close());
 	}
 
 	/** @type BattleSelector */

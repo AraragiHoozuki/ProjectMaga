@@ -41,7 +41,7 @@ const Names = {
 		ASSIST_MAGICAL: "魔法伤害加成",
 		RESIST_MAGICAL: "魔法伤害耐性",
 
-		CP_AUTO_REGEN: "CP自动回复"
+		CP_AUTO_REGEN: "技力自动回复"
 	},
 	EquipSlots: ['武器', '防具', '饰品', '饰品'],
 	ItemTypes: ['装备', '材料', '票券', '剧情'],

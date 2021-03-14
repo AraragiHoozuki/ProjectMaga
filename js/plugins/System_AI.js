@@ -7,6 +7,7 @@ class AI {
 	 */
 	static UseSkill(en, iname, target = undefined) {
 		const skill = en.activeSkills.find(s => s.iname === iname);
+		if (!skill) throw new Error(`Skill ${iname} was not found in ${en.name}`);
 		if (target === undefined) {
 			if (skill.IsForSelf()) {
 				target = en;
@@ -25,23 +26,11 @@ class AI {
 		BattleFlow.PushAction(en.activeSkills.randomChoice(), $gameParty.battleMembers.filter(c=>c.IsAlive()).randomChoice());
 	}
 
-	static DvasiaBossEasy(en) {
-		if (en.turnCount < 3 ) {
-			BattleFlow.PushAction(en.activeSkills.find(s => s.iname === 'SK_DARK_STRIKE'), $gameParty.battleMembers.filter(c=>c.IsAlive()).randomChoice());
-		} else if (en.turnCount > 4) {
-			BattleFlow.PushAction(en.activeSkills.find(s => s.iname === 'SK_DVASIA_SHOCKED'), en);
+	static StartTrainer(en) {
+		if (en.turnCount === 10) {
+			AI.UseSkill(en, 'SK_ENEMY_HP_TO_24');
 		} else {
-			BattleFlow.PushAction(en.activeSkills.find(s => s.iname === 'SK_DVASIA_DARK_SPHERE'), $gameParty.battleMembers.filter(c=>c.IsAlive()).randomChoice());
-		}
-	}
-
-	static MechaSphere(en) {
-		switch (true) {
-			case (en.turnCount - 4)%5 === 0:
-				BattleFlow.PushAction(en.activeSkills.find(s => s.iname === 'SK_MANA_VOID_SHIELD'), en);
-				break;
-			default:
-				BattleFlow.PushAction(en.activeSkills.find(s => s.iname === 'SK_RUSH_STRIKE'), $gameParty.battleMembers.filter(c=>c.IsAlive()).randomChoice());
+			AI.UseSkill(en, 'SK_SLASH');
 		}
 	}
 

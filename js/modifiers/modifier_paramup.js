@@ -1,6 +1,35 @@
 class Modifier_ParamUp extends Modifier {
 	GetDescription() {
-		return '属性变化';
+		let str = '';
+		const psp = this.GetPrimaryStatusPlus();
+		const pss = this.GetPrimaryStatusScale();
+		for(const key of Object.keys(ParamType)) {
+			if (psp[ParamType[key]]) {
+				str += Names.Params[key];
+				if (psp[ParamType[key]] > 0) str += '+';
+				str += psp[ParamType[key]];
+				str += ', ';
+			}
+			if (pss[ParamType[key]]) {
+				str += Names.Params[key];
+				if (pss[ParamType[key]] > 0) str += '+';
+				str += pss[ParamType[key]];
+				str += '%, ';
+			}
+		}
+		const ssp = this.GetSecondaryStatusPlus();
+		for(const key of Object.keys(SecParamType)) {
+			if (ssp[SecParamType[key]]) {
+				str += Names.Params[key];
+				if (ssp[SecParamType[key]] > 0) str += '+';
+				str += ssp[SecParamType[key]];
+				str += ', ';
+			}
+		}
+		if (str.endsWith(', ')) {
+			str = str.substring(0, str.length - 2);
+		}
+		return str;
 	}
 
 	GetPrimaryStatusPlus() {

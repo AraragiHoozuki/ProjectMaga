@@ -9,14 +9,14 @@
         "wept": 0,
         "skills": []
     },
-    "IT_WP_DE_SENECTUTE": {
-        "iname": "IT_WP_DE_SENECTUTE",
-        "name": "论老年",
-        "icon": "grimoire_tome",
-        "description": "",
-        "type": 0,
+    "IT_BATTLE_MEMORY": {
+        "iname": "IT_BATTLE_MEMORY",
+        "name": "战斗的记忆",
+        "icon": "gaiden_jade",
+        "description": "    在战斗场景中，角色的四个槽由上到下分别是生命、法力、技力(CP)、行动值(CT)，当\\#4caf50生命值\\#ffffff为0时就会死亡，当全员死亡时便会Game Over； 使用技能可能需要消耗\\#4caf50法力和CP\\#ffffff，CP在每回合开始时或受到伤害时都会回复，CP满值为100点，但是可以积累到200点，消耗100CP的技能如果在大于100CP时使用，会消耗全部CP并根据消耗值提高效果；角色每个单位时间会积累相当于速度的\\#4caf50行动值\\#ffffff，行动值达到1000后便可行动，不同的技能消耗的行动值可能不同，使用消耗少的技能便可以更快来到下一次行动。角色速度可以在属性界面确认。\n\n    提尔芬格拥有“恐惧充能”特殊状态。使用“心之剑”提高暴击率可以快速积累，但是心之剑会降低速度，这时消耗恐惧充能使用技能可以额外增加CT从而弥补速度的不足，在危机时刻也可爆发“黑暗遗产”一举歼灭对手。具体技能效果可以在角色界面或战斗中长按技能来查阅，在战斗中也可点击右上角按钮查看双方详细状态，有针对性地指定计划。\n\n",
+        "type": 3,
         "slot": 0,
-        "wept": 3,
+        "wept": 0,
         "skills": []
     },
     "IT_WP_RUBY_STAFF": {
@@ -29,14 +29,15 @@
         "wept": 2,
         "skills": ["SK_EQ_PARAM_RUBY"]
     },
-    "IT_ACC_NAZARET_BRACER": {
-        "iname": "IT_ACC_NAZARET_BRACER",
-        "name": "那萨雷特护腕",
-        "icon": "bracer_generic",
-        "description": "那萨雷特士兵的制式装备\n魔防+36",
+    "IT_WP_KATANA_AMATUHAGO": {
+        "iname": "IT_WP_KATANA_AMATUHAGO",
+        "name": "天羽羽斩",
+        "icon": "kanata_generic",
+        "description": "力量+25、暴击率+25",
         "type": 0,
-        "slot": 2,
-        "wept": -1,
-        "skills": ["SK_EQ_PARAM_NAZARET_BRACER"]
+        "slot": 0,
+        "wept": 1,
+        "model": "211029041",
+        "skills": ["SK_PARAM_AMATUKAGO"]
     }
 }

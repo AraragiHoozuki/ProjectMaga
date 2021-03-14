@@ -263,8 +263,7 @@ class Party extends CharSet {
  * @typedef {Object} EnemySetting
  * @property {string} iname - internal name
  * @property {number} level - level
- * @property {number} x - x coordinate
- * @property {number} y - y coordinate
+ * @property {string} ai - ai func
 
  */
 
@@ -309,7 +308,7 @@ class EnemySet extends CharSet {
         this._members = [];
         this.data.enemies.forEach(es => {
             let e = new EnemyChar(es.iname, es.level);
-            e.SetSpritePos(es.x, es.y);
+            e.SetAi(es.ai);
             this._members.push(e);
         })
     }

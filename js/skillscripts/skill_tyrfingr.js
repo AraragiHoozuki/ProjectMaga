@@ -134,7 +134,7 @@ class Modifier_DarkLegacy extends Modifier {
 
     GetSecondaryStatusPlus() {
         let values = [];
-        values[SecParamType.CRITICAL_DAMAGE] = this.GSV('critical_chance') * this.stack;
+        values[SecParamType.CRITICAL_CHANCE] = this.GSV('critical_chance') * this.stack;
         return values;
     }
 
@@ -278,7 +278,7 @@ class Skill_GranBade extends Skill {
         const value = this.owner.GetParam(ParamType.STR) * this.GSV('damage_scale')/100;
         const tc = this.owner.GetIntrinsicModifier('Modifier_TerrorCharge').Consume();
         for (const chr of action._targets) {
-            BattleFlow.ApplyDamage(this, chr, value, Damage.ELEMENT.NONE, Damage.ATTACK_TYPE.SLASH);
+            BattleFlow.ApplyDamage(this, chr, value, Damage.ELEMENT.NONE, Damage.ATTACK_TYPE.PIERCE);
             if (tc > 0) {
                 let mod = BattleFlow.ApplyModifier(this, chr, 'Modifier_GranBade', 3);
                 if (mod) mod.SetTc(tc);
@@ -301,5 +301,33 @@ class Modifier_GranBade extends Modifier {
         let values = [];
         values[SecParamType.RESIST_PHYSICAL] = -this._tc * this.GSV('phy_res_down_per_tc');
         return values;
+    }
+}
+
+class Skill_GladiuCeleste extends Skill {
+    GetDescription() {
+        return `对目标敌人造成${this.GetSpecialValue('damage_scale')}%的死灵属性·斩攻击·物理伤害；消耗恐惧充能（直至留下1层，最多消耗3层），每层增加自身${this.GSV('ct_per_tc')}CT，并增加伤害倍率${this.GSV('bonus_scale_per_tc')}%`;
+    }
+
+    OnSkillAnimation(action) {
+        super.OnSkillAnimation(action);
+        this.owner.controller.SetSkillAnimation(this.animation);
+    }
+
+    OnSkillEffect(action) {
+        super.OnSkillEffect(action);
+        this.PlayLwf(action._targets);
+        AudioManager.PlaySe(this.sound);
+        let value = this.owner.GetParam(ParamType.STR) * this.GSV('damage_scale')/100;
+        value += 0.5 * (this.costedCp - 100);
+        const tc = this.owner.GetIntrinsicModifier('Modifier_TerrorCharge').Consume();
+        for (const chr of action._targets) {
+            if (tc > 0) {
+                value += this.GSV('bonus_scale_per_tc') * tc;
+            }
+            BattleFlow.ApplyDamage(this, chr, value, Damage.ELEMENT.NECRO, Damage.ATTACK_TYPE.SLASH);
+
+        }
+        this.owner.AddCt(this.GSV('ct_per_tc') * tc);
     }
 }

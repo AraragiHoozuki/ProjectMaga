@@ -1,6 +1,6 @@
 class Skill_ParamUp extends Skill {
 	GetDescription() {
-		return '属性变化（通用）';
+		return this.intrinsicModifiers[0].GetDescription();
 	}
 
 	IsPassive() {

@@ -24,6 +24,7 @@ var $dataSkills;
  * @property {[string]} modifiers - intrinsic modifiers of the skill
  * @property {string} animation - animation id
  * @property {string} voice - voice event name(default is 'attack')
+ * @property {string} description - description
  * @property {[SkillSpecialValue]} specials - skill special values
  */
 
@@ -101,6 +102,7 @@ class Skill {
     get actionPoints() {return this.data.actionPoints;}
     get sound() {return this.data.sound;}
     get lwf() {return this.data.lwf;}
+    get desc() {return this.data.description;}
 
     IsEffectGlobal() {
         return this.data.global === true;
@@ -221,10 +223,22 @@ class Skill {
             AudioManager.PlayAttack(this.owner.voice);
         }
     }
+
+    _costedCp = 0;
+    /**
+     * record cp costed by all cp cost skills(100 cp skills)
+     * @returns {number}
+     */
+    get costedCp() {return this._costedCp;}
     OnSkillCost() {
         this.owner.AddMana(-this.manacost);
-        this.owner.AddCp(-this.cpcost);
         this.owner.AddCt(-this.ctcost);
+        if (this.cpcost === 100) {
+            this._costedCp = this.owner.cp;
+            this.owner.AddCp(-this.owner.cp);
+        } else {
+            this.owner.AddCp(-this.cpcost);
+        }
     }
 
     /**
@@ -236,17 +250,26 @@ class Skill {
      * @param {Action} action
      */
     OnSkillEffect(action) {}
-    OnSkillEnd() {}
+    OnSkillEnd() {
+        this._effectPlayed = false;
+    }
+
+    _effectPlayed = false;
+    SetEffectPlayed() {this._effectPlayed = true;}
 
     /** @type Character[]*/
     PlayLwf(targets) {
         if (this.IsEffectGlobal()) {
-            LWFUtils.PlayLwf('lwf/battleLwf/', this.lwf, 0, 0);
+            LWFUtils.PlayLwf('lwf/battleLwf/', this.lwf, 300, 400);
         } else {
-            for (let chr of targets) {
+            for (const chr of targets) {
                 LWFUtils.PlayLwf('lwf/battleLwf/', this.lwf, chr.battleSprite.x, chr.battleSprite.y - 50);
             }
         }
+    }
+
+    PlaySound() {
+        AudioManager.PlaySe(this.sound);
     }
 }
 

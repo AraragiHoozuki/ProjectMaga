@@ -1,24 +1,17 @@
 {
-    "ES_SALAMANDER_2_LV10": {
-        "iname": "ES_SALAMANDER_2_LV10",
+    "ES_FIRST_TRAIN": {
+        "iname": "ES_FIRST_TRAIN",
         "enemies": [
             {
-                "iname": "ENC_SALAMANDER",
+                "iname": "ENC_START_TRAINER",
                 "level": 10,
-                "x": 500,
-                "y": 400
-            },
-            {
-                "iname": "ENC_SALAMANDER",
-                "level": 10,
-                "x": 800,
-                "y": 400
+                "ai": "StartTrainer"
             }
         ],
-        "drops": [
-            {"iname": "IT_MONEY", "amount": 100, "probability": 100}
-        ],
         "bgm": "",
+        "drops": [
+            {"iname": "IT_BATTLE_MEMORY", "amount": 1, "probability": 100}
+        ],
         "btl_back1": "Cobblestones1",
         "btl_back2": "Castle3"
     },

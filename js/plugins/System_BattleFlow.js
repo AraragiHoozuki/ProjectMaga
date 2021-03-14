@@ -216,6 +216,7 @@ class BattleFlow {
     static ActionPoints = [];
     static UpdateActionResolve() {
         if (this.ActionPoints.length < 1) {
+            this._action._user.OnActionEnd(this._action);
             BattleFlow._phase = BattleFlow.PHASE.ACTION_LOOP;
         } else {
             if (this._action._user.battleSprite.state.tracks[0].time >= this.ActionPoints[0]) {
@@ -263,9 +264,12 @@ class BattleFlow {
      * @param {ATTACK_TYPE} attack
      * @param {boolean} physical - true for physical damage, false for magical
      * @param {Damage.TYPE} type
+     * @param {boolean} canCritical
+     * @param {number} bonusCritical
+     * @param {number} ignoreDef
      */
-    static ApplyDamage(skill, victim, value, element = Damage.ELEMENT.NONE, attack= Damage.ATTACK_TYPE.NONE, physical = true, type = Damage.TYPE.HP) {
-        let damage = new Damage(skill, victim, value, element, attack, physical, type);
+    static ApplyDamage(skill, victim, value, element = Damage.ELEMENT.NONE, attack= Damage.ATTACK_TYPE.NONE, physical = true, type = Damage.TYPE.HP, canCritical = true, bonusCritical = 0, ignoreDef = 0) {
+        let damage = new Damage(skill, victim, value, element, attack, physical, type, canCritical, bonusCritical, ignoreDef);
         damage.Resolve();
         damage.Apply();
     }
@@ -369,6 +373,8 @@ class Action {
                 }
             }
             targets = targets.clone();
+        } else if (!target.IsAlive()&&!this._skill.IsForDead()) {
+            targets = [target.AllySet().battleMembers.filter(c => c.IsAlive()).randomChoice()];
         }
         if (this._skill.IsForSelf()) {
             if (this._skill.IsForAlly()) {
@@ -391,6 +397,8 @@ class Action {
         }
         return targets;
     }
+
+    get targets() {return this._targets;}
 
     Prepare() {
         if (!this._user.IsAlive()) {
@@ -498,8 +506,11 @@ class Damage {
      * @param {ATTACK_TYPE} attack
      * @param {boolean} physical
      * @param {TYPE} type
+     * @param {boolean} canCritical
+     * @param {number} bonusCritical - bonus critical chance only for this skill
+     * @param {number} ignoreDef - ignore defense rate
      */
-    constructor(skill, victim, value, element, attack, physical = true, type = Damage.TYPE.HP) {
+    constructor(skill, victim, value, element, attack, physical = true, type = Damage.TYPE.HP, canCritical = true, bonusCritical = 0, ignoreDef = 0) {
         this._skill = skill;
         this._victim = victim;
         this._source = skill.owner;
@@ -508,6 +519,9 @@ class Damage {
         this._attack = attack;
         this._physical = physical === true;
         this._type = type;
+        this._canCritical = canCritical;
+        this._bonusCritcalChance = bonusCritical;
+        this._ignoreDef = ignoreDef;
     }
     /** @type Skill */
     _skill;
@@ -550,6 +564,13 @@ class Damage {
         return !this.IsPhysical();
     }
 
+    /**
+     * @param {number} val
+     */
+    AddDefPiercing(val) {
+        this._ignoreDef += val;
+    }
+
     Resolve() {
         this.CheckHit();
         this.CheckCritical();
@@ -565,14 +586,16 @@ class Damage {
     }
 
     CheckCritical() {
-        if (this.type !== Damage.TYPE.HP) return;
-        let base = this.source.GetParam(SecParamType.CRITICAL_CHANCE, true);
+        if ((!this._canCritical) || this.type !== Damage.TYPE.HP) return;
+        let base = this._bonusCritcalChance + this.source.GetParam(SecParamType.CRITICAL_CHANCE, true);
         this._critical =  Math.ProbCheck(base, this.source.GetParam(ParamType.LUK));
     }
 
     CalcDefense() {
         if (this._value >= 0 && this.type === Damage.TYPE.HP) {
             let def = this.victim.GetParam((this._physical?ParamType.DEF:ParamType.MND));
+            this.source.OnDefPiercing(this);
+            def -= def * this._ignoreDef/100;
             this._value -= def;
             this._value = Math.max(this._value, 1);
         }
@@ -651,6 +674,7 @@ class Damage {
     Apply() {
         if (this.type === Damage.TYPE.HP) {
             if (this._value >= 0) {
+                this.source.OnBeforeDealDamage(this);
                 this.victim.OnBeforeTakeDamage(this);
                 this.ApplyControl();
                 this.CalcFinal();

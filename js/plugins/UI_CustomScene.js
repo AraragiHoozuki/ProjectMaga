@@ -200,7 +200,7 @@ class Toast extends Sprite {
 		super(new Bitmap(Toast.Length, Toast.Height));
 		this.x = - Toast.Length;
 		this._y0 = y;
-		this.y = this._y0 + 200;
+		this.y = this._y0;
 		this.bitmap.fontFace = $gameSystem.mainFontFace();
 		this.bitmap.fontSize = $gameSystem.mainFontSize();
 		this.bitmap.textColor = color;

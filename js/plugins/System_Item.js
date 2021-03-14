@@ -9,6 +9,7 @@ var $dataItems;
  * @property {number} slot - equip slot
  * @property {number} type - item type
  * @property {number} wept - weapon type
+ * @property {string} model - weapon model
  * @property {[string]} skills - intrinsic skills
  */
 
@@ -87,6 +88,9 @@ class Equip extends Item {
 
 	get skills() { return this._skills;}
 	get equippingChr() {return this._character;}
+	get model() {
+		return this.data.model;
+	}
 
 	/**
 	 * @param {PlayerChar} chr

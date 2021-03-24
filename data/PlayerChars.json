@@ -14,7 +14,21 @@
         "profile": "    阿特奥斯共和国对内调查、执法机构“裁判所”的骨干人员，领导的第七调查团直属于“七贤臣”之一的高迪芬，因为工作原因常出差在外。",
         "iniparam": [600, 120, 75, 45, 26, 32, 42, 30],
         "maxparam": [21455, 600, 1790, 890, 725, 620, 155, 120],
-        "skills": ["SK_TYRFINGR_DARK_LEGACY","SK_TYRFINGR_TERROR_CHARGE","SK_SLASH","SK_TYRFINGR_KENMOTU","SK_TYRFINGR_INNER_EDGE","SK_TYRFINGR_GRAN_BARON","SK_TYRFINGR_GRAN_BADE", "SK_TYRFINGR_GALDIUS_CELESTE"]
+        "crafts": ["SK_TEST", "SK_TEST", "SK_TEST", "SK_TEST"],
+        "talents": [
+            [0, 1, 2, "SK_TEST", "SK_TEST"],
+            ["SK_TEST", "SK_TEST", 3, "SK_TEST", 2],
+            ["SK_TEST", 1, "SK_TEST", 1, "SK_TEST"],
+            [0, 3, "SK_TEST", 2, "SK_TEST"],
+            ["SK_TEST", "SK_TEST", 0, "SK_TEST", 3]
+        ],
+        "talent_edges": [
+            [0, 0, 0, 1, 1],
+            [2, 2, 4, 8, 2],
+            [2, 2, 1, 1, 2],
+            [2, 4, 4, 4, 2],
+            [2, 1, 1, 1, 1]
+        ]
     },
     "PLC_ROZETTA": {
         "iname": "PLC_ROZETTA",
@@ -50,21 +64,21 @@
         "maxparam": [19255, 650, 1540, 690, 755, 556, 175, 150],
         "skills": ["SK_SPECULUM_AQUA","SK_FATAL_STRIKE","SK_KATANA_SLASH","SK_ISKA_SIDE_CHANGE","SK_ISKA_ISSEN","SK_ISKA_UKENAGASU","SK_ISKA_BLADEMIRROR","SK_ISKA_CIEL_BREAK_SLASH"]
     },
-    "PLC_ORLANDO": {
-        "iname": "PLC_ORLANDO",
-        "name": "奥兰多",
-        "model": "104040102",
-        "voice": "",
+    "PLC_AURELIA": {
+        "iname": "PLC_AURELIA",
+        "name": "奥蕾莉亚",
+        "model": "104010111",
+        "voice": "radius",
         "inilevel": 10,
         "race": "人",
         "tags": [],
-        "wept": 5,
-        "wep_model": "211040011",
-        "wep_slot": "weapon_lance",
-        "gender": 1,
+        "wept": 0,
+        "wep_model": "211010041",
+        "wep_slot": "weapon_sword",
+        "gender": 0,
         "profile": "    奥特奥斯共和国裁判所第七调查团团员",
         "iniparam": [750, 110, 49, 12, 44, 31, 45, 10],
         "maxparam": [26255, 500, 1240, 390, 1155, 856, 128, 75],
-        "skills": ["SK_PIERCE"]
+        "skills": ["SK_PERSISTANCE","SK_DURANDAL","SK_SLASH","SK_AURELIA_DEFEND_STANCE"]
     }
 }

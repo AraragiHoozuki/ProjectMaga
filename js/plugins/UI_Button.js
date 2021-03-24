@@ -8,11 +8,12 @@ class Button extends Clickable {
 	 * @param w {number}
 	 * @param h {number}
 	 * @param pressed_image {string}
-	 * @param  {Paddings} pd
-	 * @param  {Paddings} pressed_pd
-	 * @param  {Paddings} pressed_texture_pd
+	 * @param  {Paddings} pd - image sprite texture paddings
+	 * @param  {Paddings} pressed_pd - image hovered paddings
+	 * @param  {Paddings} pressed_texture_pd - image hovered texture paddings
+	 * @param  {string} image_folder
 	 */
-	constructor(text, image, x, y, w, h, pressed_image = image + '_hover' , pd= new Paddings(), pressed_pd = new Paddings(), pressed_texture_pd = new Paddings()) {
+	constructor(text, image, x, y, w, h, pressed_image = image + '_hover' , pd= new Paddings(), pressed_pd = new Paddings(), pressed_texture_pd = new Paddings(), image_folder = undefined) {
 		super(x, y, w, h);
 		this.x = x;
 		this.y = y;
@@ -21,7 +22,7 @@ class Button extends Clickable {
 		this._paddings = pd;
 		this._hoverPaddings = pressed_pd;
 		this._hoverTexturePaddings = pressed_texture_pd;
-		this.CreateImage(image);
+		this.CreateImage(image, image_folder);
 		this.CreatePressedSprite(pressed_image);
 		this.CreateText(text);
 	}
@@ -62,9 +63,9 @@ class Button extends Clickable {
 
 	/** @type Sprite */
 	_imageSprite;
-	CreateImage(image) {
+	CreateImage(image, image_folder) {
 		/** @type Bitmap */
-		let texture = ImageManager.LoadUIBitmap(undefined, image);
+		let texture = ImageManager.LoadUIBitmap(image_folder, image);
 		if (this.width <= 0) {
 			this.width = texture.width;
 		}
@@ -119,8 +120,10 @@ class Button extends Clickable {
 
 	OnLongPressRelease(isClick) {
 		super.OnLongPressRelease(isClick);
-		this.OnRelease();
-		if (isClick) this.OnClick();
+		if (!this._handlers[this.OnLongPress.name]) {
+			this.OnRelease();
+			if (isClick) this.OnClick();
+		}
 	}
 
 	/**
@@ -144,9 +147,8 @@ class Button extends Clickable {
 	}
 	OnClick() {
 		super.OnClick();
-		if (this._clickHandler) {
+		if (this._handlers[this.OnClick.name]) {
 			AudioManager.playSe({name: this._clickSe, pitch: 100, volume: 200});
-			this._clickHandler();
 		}
 	}
 }

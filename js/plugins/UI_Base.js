@@ -50,6 +50,57 @@ class Paddings {
     get bottom() { return this._bottom; }
 }
 
+//#region font
+let _Scene_Boot_prototype_loadGameFonts = Scene_Boot.prototype.loadGameFonts;
+Scene_Boot.prototype.loadGameFonts = function() {
+    _Scene_Boot_prototype_loadGameFonts.call(this);
+    FontManager.load("kai", '魏碑字体.ttf');
+    FontManager.load("xin", 'zhulangbaoren.otf');
+};
+
+const TextStyles = {
+    Normal: {
+        "dropShadowAlpha": 0.8,
+        "dropShadowAngle": -16.2,
+        "dropShadowBlur": 3,
+        "dropShadowDistance": 4,
+        "fill": "white",
+        "fontFamily": "rmmz-mainfont",
+        "fontSize": 36,
+        "strokeThickness": 2
+    },
+    KaiTitle: {
+        "dropShadow": true,
+        "dropShadowAlpha": 0.8,
+        "dropShadowAngle": -16,
+        "dropShadowBlur": 3,
+        "dropShadowDistance": 4,
+        "fill": [
+            "white",
+            "#ededed"
+        ],
+        "fontFamily": "kai",
+        "fontSize": 45,
+        "strokeThickness": 2
+    },
+    CharTitle: {
+        "align": "center",
+        "dropShadow": true,
+        "dropShadowAlpha": 0.8,
+        "dropShadowAngle": -16,
+        "dropShadowBlur": 3,
+        "dropShadowDistance": 4,
+        "fill": [
+            "white",
+            "#ededed"
+        ],
+        "fontFamily": "xin",
+        "fontSize": 64,
+        "strokeThickness": 2
+    },
+}
+//#endregion
+
 class Clickable extends PIXI.Container {
     constructor(x = 0, y = 0, w = 0, h = 0) {
         super();

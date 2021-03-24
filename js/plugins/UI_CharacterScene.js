@@ -11,7 +11,7 @@ class CharacterListScene extends MenuBaseScene {
 		this.addChild(this._charListWindow);
 		this._charListWindow.MakeList();
 		this._charListWindow.Activate();
-		this._charListWindow.SetClickHandler(this.OnCharacterClick.bind(this));
+		this._charListWindow.SetHandler(this._charListWindow.OnClick, this.OnCharacterClick.bind(this));
 	}
 
 	OnCharacterClick() {
@@ -24,25 +24,31 @@ class CharacterListScene extends MenuBaseScene {
 class CharacterDetailScene extends MenuBaseScene {
 	/** @type PlayerChar */
 	static character;
+	/**
+	 * window width
+	 * @type {number}
+	 */
+	get WW() {return 640;}
 	get headerText() {return '角色信息';}
 	get tabHeight() {return 64;}
 
 	CreateContents() {
 		super.CreateContents();
 		this.CreateTatie();
-		this.CreateInfoWindow();
 		this.CreateParamWindow();
-		this.CreateSkillList();
+		this.CreateCraftList();
+		this.CreateLearnedSkillList();
+		this.CreateLearningSkillList();
 		this.CreateEquipWindow();
 		this.CreateProfileWindow();
 		this.CreateTabButtons();
+		this.CreateInfoWindow();
 	}
 
 	_tatie;
 	CreateTatie() {
-		let w = Graphics.width/2;
-		let h = Graphics.height - this.headerHeight;
-		this._tatie = new Sprite(new Bitmap(w, h));
+		let w = Graphics.width - 500;
+		let h;
 		const img = ImageManager.loadBitmap('img/taties/', CharacterDetailScene.character.model);
 		if (img.width > w) {
 			h = img.height * w / img.width;
@@ -50,87 +56,117 @@ class CharacterDetailScene extends MenuBaseScene {
 			w = img.width;
 			h = img.height;
 		}
-		this._tatie.bitmap.DrawBitmap(img, 0, 0, (Graphics.width/2 - w)/2, this.headerHeight, w, h);
-		this._tatie.move(0, this.headerHeight);
+		this._tatie = new Sprite(new Bitmap(w, h));
+		this._tatie.bitmap.DrawBitmap(img, 0, 0, 0, this.headerHeight, w, h);
+		this._tatie.move((Graphics.width - w)/2, 0);
 		this.addChild(this._tatie);
+
+		this._charName = new PIXI.Text(CharacterDetailScene.character.name, TextStyles.CharTitle);
+		this._charName.x = (Graphics.width - this._charName.width)/2;
+		this._charName.y = this.headerHeight;
+		this.addChild(this._charName);
 	}
+
 	/** @type InfoWindow */
 	_infoWindow;
 	CreateInfoWindow() {
-		this._infoWindow = new InfoWindow(0, this.headerHeight, Graphics.width/2, Graphics.height - this.headerHeight, 0, '', 0, undefined, 'wd_back_dark');
+		this._infoWindow = new InfoWindow(100, this.headerHeight, Graphics.width - 200, Graphics.height - this.headerHeight * 2, 0, '', 0, undefined, 'wd_back_dark');
 		this.addChild(this._infoWindow);
 		this._infoWindow.Close();
 	}
 
+	/** @type CraftListWindow */
+	_craftList;
+	CreateCraftList() {
+		this._craftList = new CraftListWindow((Graphics.width - this.WW)/2, this.headerHeight, this.WW, Graphics.height - this.headerHeight - this.tabHeight, '', 0, undefined, 'wd_back_cmn');
+		this._craftList.MakeList(CharacterDetailScene.character);
+		this.addChild(this._craftList);
+		this._craftList.Close();
+		this._craftList.SetHandler(this._craftList.OnLongPress, ()=>{
+			if (this._craftList.index >= 0) {
+				if (this._craftList.item) {
+					this._infoWindow.SetString(Skill.GetDescription(this._craftList.item.data, this._craftList.item.level));
+				} else {
+					this._infoWindow.SetString(Skill.GetDescription($dataSkills[CharacterDetailScene.character.data.crafts[this._craftList.index]], 0));
+				}
+				this._infoWindow.Open();
+			}
+		});
+		this._craftList.SetHandler(this._craftList.OnLongPressRelease, ()=>{this._infoWindow.Close();});
+	}
+
 	/** @type SkillListWindow */
 	_skillList;
-	/** @type Button */
-	_skillLvupBtn;
-	CreateSkillList() {
-		this._skillList = new SkillListWindow(Graphics.width/2, this.headerHeight, Graphics.width/2, Graphics.height - this.headerHeight - this.tabHeight, '', 0, undefined, 'content_frame_cmn');
+	_scText;
+	CreateLearnedSkillList() {
+		this._skillList = new SkillListWindow((Graphics.width - this.WW)/2, this.headerHeight, this.WW, Graphics.height - this.headerHeight - this.tabHeight, '', 0, undefined, 'wd_back_cmn');
 		this._skillList.MakeList(CharacterDetailScene.character);
 		this.addChild(this._skillList);
-		this._skillList.SetSelectHandler(this.OnSkillSelect.bind(this));
 		this._skillList.Close();
 
-		const bw = 220;
-		this._skillLvupBtn = new Button('升级', 'btn_pos', Graphics.width/4 - bw/2, Graphics.height - 90, bw, 80, undefined, new Paddings(25), new Paddings(0), new Paddings(25));
-		this.addChild(this._skillLvupBtn);
-		this._skillLvupBtn.Hide();
-		this._skillLvupBtn.SetClickHandler(this.OnSkillLevelUpClick.bind(this));
-	}
-
-	OnSkillSelect() {
-		if (this._skillList.item) {
-			this._infoWindow.SetSkill(this._skillList.item);
-			this._infoWindow.Open();
-			this._infoWindow.Activate();
-			if (this._skillList.item.level < this._skillList.item.maxLevel) {
-				this._skillLvupBtn.ShowAndActivate();
-			} else {
-				this._skillLvupBtn.Hide();
+		this._skillList.SetHandler(this._skillList.OnClick, ()=> {
+			if (this._skillList.index >= 0) {
+				if (this._skillList.item.IsEquipped()) {
+					CharacterDetailScene.character.UnequipSkill(this._skillList.item);
+					this._skillList.RedrawCurrentItem();
+					this._scText.text = `记忆：${CharacterDetailScene.character.GetCostMemory()}/${CharacterDetailScene.character.memory}`;
+				} else if (CharacterDetailScene.character.MemoryEnoughQ(this._skillList.item)) {
+					CharacterDetailScene.character.EquipSkill(this._skillList.item);
+					this._skillList.RedrawCurrentItem();
+					this._scText.text = `记忆：${CharacterDetailScene.character.GetCostMemory()}/${CharacterDetailScene.character.memory}`;
+				} else {
+					this.Toast('记忆不足', Colors.Red);
+				}
 			}
-		} else {
-			this._infoWindow.Close();
-			this._skillLvupBtn.Hide();
-		}
+		});
+
+		this._skillList.SetHandler(this._skillList.OnLongPress, ()=>{
+			if (this._skillList.index >= 0) {
+				this._infoWindow.SetString(Skill.GetDescription(this._skillList.item.data, this._skillList.item.level));
+				this._infoWindow.Open();
+			}
+		});
+		this._skillList.SetHandler(this._skillList.OnLongPressRelease, ()=>{this._infoWindow.Close();});
+
+		this._scText = new PIXI.Text(`记忆：${CharacterDetailScene.character.GetCostMemory()}/${CharacterDetailScene.character.memory}`, TextStyles.KaiTitle);
+		this._skillList.addChild(this._scText);
+		this._scText.x = this._skillList.width + 10;
+		this._scText.y = 10;
 	}
 
-	OnSkillLevelUpClick() {
-		const dx = 300;
-		const dy = 100;
-		const cost = this._skillList.item.levelUpCost;
-		const iname = 'IT_KAKERA_'+CharacterDetailScene.character.iname;
-		let w = new MaterialCostWindow(dx, dy, Graphics.width - 2 * dx, Graphics.height - 2 * dy, '', 0, 'wd_title_white', 'wd_back_cmn');
-		w.SetList([{iname: iname, amount: cost}]);
-		this.Dialog(w, $gameParty.ItemAmount(iname) >= cost, true, this.OnLevelUpConfirm.bind(this));
+	/** @type LearningSkillListWindow */
+	_learningSkillList;
+	CreateLearningSkillList() {
+		this._learningSkillList = new LearningSkillListWindow((Graphics.width - this.WW)/2, this.headerHeight, this.WW, Graphics.height - this.headerHeight - this.tabHeight, '', 0, undefined, 'wd_back_cmn');
+		this._learningSkillList.MakeList(CharacterDetailScene.character);
+		this.addChild(this._learningSkillList);
+		this._learningSkillList.Close();
+		this._learningSkillList.SetHandler(this._learningSkillList.OnLongPress, ()=>{
+			if (this._learningSkillList.index >= 0) {
+				this._infoWindow.SetString(Skill.GetDescription($dataSkills[this._learningSkillList.item.iname], 0));
+				this._infoWindow.Open();
+			}
+		});
+		this._learningSkillList.SetHandler(this._learningSkillList.OnLongPressRelease, ()=>{this._infoWindow.Close();});
 	}
 
-	OnLevelUpConfirm(confirm) {
-		if (confirm) {
-			$gameParty.GetItem('IT_KAKERA_'+CharacterDetailScene.character.iname, - this._skillList.item.levelUpCost);
-			this._skillList.item.LevelUp();
-			this._skillList.RedrawItem(this._skillList.index);
-			this._infoWindow.SetSkill(this._skillList.item);
-		}
-	}
 
 	/** @type  InfoWindow */
 	_paramWindow;
 	CreateParamWindow() {
-		this._paramWindow = new InfoWindow(Graphics.width/2, this.headerHeight, Graphics.width/2, Graphics.height - this.headerHeight - this.tabHeight, 0, '', 0, undefined, 'content_frame_cmn');
+		this._paramWindow = new InfoWindow((Graphics.width - this.WW)/2, this.headerHeight, this.WW, Graphics.height - this.headerHeight * 2, 0, '', 0, undefined, 'wd_back_cmn');
 		this.addChild(this._paramWindow);
-		this._paramWindow.Activate();
-		this._paramWindow.SetCharacter(CharacterDetailScene.character)
+		this._paramWindow.SetCharacter(CharacterDetailScene.character);
+		this._paramWindow.Close();
 	}
 
 	/** @type EquipWindow */
 	_equipWindow;
 	CreateEquipWindow() {
-		this._equipWindow = new EquipWindow(Graphics.width/2, this.headerHeight, Graphics.width/2, Graphics.height - this.headerHeight - this.tabHeight, '', 0, undefined, 'content_frame_cmn');
+		this._equipWindow = new EquipWindow((Graphics.width - this.WW)/2, this.headerHeight, this.WW, Graphics.height - this.headerHeight - this.tabHeight, '', 0, undefined, 'wd_back_cmn');
 		this._equipWindow.MakeList(CharacterDetailScene.character);
 		this.addChild(this._equipWindow);
-		this._equipWindow.SetClickHandler(this.OnSlotClick.bind(this));
+		this._equipWindow.SetHandler(this._equipWindow.OnClick, this.OnSlotClick.bind(this));
 		this._equipWindow.Close();
 	}
 	_tempInfoWindow;
@@ -147,13 +183,13 @@ class CharacterDetailScene extends MenuBaseScene {
 			this.addChild(this._tempInfoWindow);
 			this._tempInfoWindow.Open();
 			this._tempInfoWindow.Activate();
-			w.SetClickHandler((()=> {
+			w.SetHandler(w.OnClick, ()=> {
 				if (w.item instanceof Equip) {
 					this._tempInfoWindow.SetEquip(w.item);
 				} else {
 					this._tempInfoWindow.Clear();
 				}
-			}).bind(this));
+			});
 		} else {
 
 		}
@@ -186,29 +222,80 @@ class CharacterDetailScene extends MenuBaseScene {
 		this._profileWindow.Close();
 	}
 
-	_statusBtn;
-	_skillBtn;
-	_equipBtn;
-	_profileBtn;
+	_lastBtn;
 	CreateTabButtons() {
-		let x0 = Graphics.width/2;
-		let w = Graphics.width/8;
-		let y = Graphics.height - this.tabHeight;
-		this._statusBtn = new Button('属性', 'btn_octagon', x0, y, w, this.tabHeight, undefined, new Paddings(20, 20, 17, 14), new Paddings(), new Paddings(20, 20, 17, 14));
-		this.addChild(this._statusBtn);
-		this._statusBtn.SetClickHandler(this.ChangeWindow.bind(this, this._paramWindow));
+		let x = -100;
+		let y = 200;
+		let w = 300;
+		let h = 60;
+		const status_btn = new CharDetailLeftTabBtn('属性', 'btn_chr_panel', x, y, w, h, undefined, new Paddings(20, 20, 20, 24), new Paddings(10), new Paddings(28));
+		status_btn.SetHandler(status_btn.OnClick, ()=>{
+			if (this._lastBtn !== status_btn) this._lastBtn?.Toggle();
+			if (status_btn.IsToggled()) {
+				this.CloseAllWindow();
+				this._lastBtn = undefined;
+			} else {
+				this.ChangeWindow(this._paramWindow);
+				this._lastBtn = status_btn;
+			}
+		});
+		this.addChild(status_btn);
 
-		this._skillBtn = new Button('技能', 'btn_octagon', x0 + w, y, w, this.tabHeight, undefined, new Paddings(20, 20, 17, 14), new Paddings(), new Paddings(20, 20, 17, 14));
-		this.addChild(this._skillBtn);
-		this._skillBtn.SetClickHandler(this.ChangeWindow.bind(this, this._skillList));
+		y+=h;
+		const crf_btn = new CharDetailLeftTabBtn('特技', 'btn_chr_panel', x, y, w, h, undefined, new Paddings(20, 20, 20, 24), new Paddings(10), new Paddings(28));
+		crf_btn.SetHandler(crf_btn.OnClick, ()=>{
+			if (this._lastBtn !== crf_btn) this._lastBtn?.Toggle();
+			if (crf_btn.IsToggled()) {
+				this.CloseAllWindow();
+				this._lastBtn = undefined;
+			} else {
+				this.ChangeWindow(this._craftList);
+				this._lastBtn = crf_btn;
+			}
+		});
+		this.addChild(crf_btn);
 
-		this._equipBtn = new Button('装备', 'btn_octagon', x0 + 2 * w, y, w, this.tabHeight, undefined, new Paddings(20, 20, 17, 14), new Paddings(), new Paddings(20, 20, 17, 14));
-		this.addChild(this._equipBtn);
-		this._equipBtn.SetClickHandler(this.ChangeWindow.bind(this, this._equipWindow));
+		y+=h;
+		const sk_btn = new CharDetailLeftTabBtn('技能', 'btn_chr_panel', x, y, w, h, undefined, new Paddings(20, 20, 20, 24), new Paddings(10), new Paddings(28));
+		sk_btn.SetHandler(sk_btn.OnClick, ()=>{
+			if (this._lastBtn !== sk_btn) this._lastBtn?.Toggle();
+			if (sk_btn.IsToggled()) {
+				this.CloseAllWindow();
+				this._lastBtn = undefined;
+			} else {
+				this.ChangeWindow(this._skillList);
+				this._lastBtn = sk_btn;
+			}
+		});
+		this.addChild(sk_btn);
 
-		this._profileBtn = new Button('介绍', 'btn_octagon', x0 + 3 * w, y, w, this.tabHeight, undefined, new Paddings(20, 20, 17, 14), new Paddings(), new Paddings(20, 20, 17, 14));
-		this.addChild(this._profileBtn);
-		this._profileBtn.SetClickHandler(this.ChangeWindow.bind(this, this._profileWindow));
+		y+=h;
+		const ls_btn = new CharDetailLeftTabBtn('学习', 'btn_chr_panel', x, y, w, h, undefined, new Paddings(20, 20, 20, 24), new Paddings(10), new Paddings(28));
+		ls_btn.SetHandler(ls_btn.OnClick, ()=>{
+			if (this._lastBtn !== ls_btn) this._lastBtn?.Toggle();
+			if (ls_btn.IsToggled()) {
+				this.CloseAllWindow();
+				this._lastBtn = undefined;
+			} else {
+				this.ChangeWindow(this._learningSkillList);
+				this._lastBtn = ls_btn;
+			}
+		});
+		this.addChild(ls_btn);
+
+		y+=h;
+		const eq_btn = new CharDetailLeftTabBtn('装备', 'btn_chr_panel', x, y, w, h, undefined, new Paddings(20, 20, 20, 24), new Paddings(10), new Paddings(28));
+		eq_btn.SetHandler(eq_btn.OnClick, ()=>{
+			if (this._lastBtn !== eq_btn) this._lastBtn?.Toggle();
+			if (eq_btn.IsToggled()) {
+				this.CloseAllWindow();
+				this._lastBtn = undefined;
+			} else {
+				this.ChangeWindow(this._equipWindow);
+				this._lastBtn = eq_btn;
+			}
+		});
+		this.addChild(eq_btn);
 	}
 
 	/**
@@ -220,8 +307,14 @@ class CharacterDetailScene extends MenuBaseScene {
 			case this._paramWindow:
 				this._paramWindow.SetCharacter(CharacterDetailScene.character);
 				break;
+			case this._craftList:
+				this._craftList.MakeList(CharacterDetailScene.character);
+				break;
 			case this._skillList:
 				this._skillList.MakeList(CharacterDetailScene.character);
+				break;
+			case this._learningSkillList:
+				this._learningSkillList.MakeList(CharacterDetailScene.character);
 				break;
 			case this._equipWindow:
 				this._equipWindow.MakeList(CharacterDetailScene.character);
@@ -238,10 +331,34 @@ class CharacterDetailScene extends MenuBaseScene {
 
 	CloseAllWindow() {
 		this._paramWindow.Close();
+		this._craftList.Close();
 		this._skillList.Close();
+		this._learningSkillList.Close();
 		this._equipWindow.Close();
 		this._profileWindow.Close();
 		this._infoWindow.Close();
-		this._skillLvupBtn.Hide();
+	}
+}
+
+class CharDetailLeftTabBtn extends Button {
+	_toggled = false;
+
+	OnClick() {
+		super.OnClick();
+		this.Toggle();
+	}
+
+	Toggle() {
+		if (!this._toggled) {
+			this._toggled = true;
+			this.x += 50;
+		} else {
+			this._toggled = false;
+			this.x -= 50;
+		}
+	}
+
+	IsToggled() {
+		return this._toggled;
 	}
 }

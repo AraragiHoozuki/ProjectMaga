@@ -1,3 +1,16 @@
+AudioManager.createBuffer = function(folder, name) {
+    let ext = this.audioFileExt(); // .ogg
+    if (!$fs.existsSync(this._path + folder + name + ext)) {
+        ext = '.wav';
+    }
+    const url = this._path + folder + Utils.encodeURI(name) + ext;
+    const buffer = new WebAudio(url);
+    buffer.name = name;
+    buffer.frameCount = Graphics.frameCount;
+    return buffer;
+};
+
+
 AudioManager.PlaySe = function(name) {
     AudioManager.playSe({
         name: name,

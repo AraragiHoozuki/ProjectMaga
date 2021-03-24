@@ -222,6 +222,13 @@ class Party extends CharSet {
             return 0;
         }
     }
+    /** @type Ark[] */
+    _arks;
+    get arks() {return this._arks;}
+
+    GetArk(iname) {
+        this._arks.push(new Ark(iname));
+    }
     //#endregion
 
     FullRecover() {

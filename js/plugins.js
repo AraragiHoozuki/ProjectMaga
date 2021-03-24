@@ -12,11 +12,13 @@ var $plugins =
 {"name":"System_Character_State","status":true,"description":"","parameters":{}},
 {"name":"System_Player_Party","status":true,"description":"","parameters":{}},
 {"name":"System_Item","status":true,"description":"","parameters":{}},
+{"name":"System_Ark","status":true,"description":"","parameters":{}},
 {"name":"System_Voice","status":true,"description":"","parameters":{}},
 {"name":"System_AI","status":true,"description":"","parameters":{}},
 {"name":"UI_Base","status":true,"description":"","parameters":{}},
 {"name":"UI_Button","status":true,"description":"","parameters":{}},
 {"name":"UI_Spine","status":true,"description":"","parameters":{}},
+{"name":"UI_Number","status":true,"description":"","parameters":{}},
 {"name":"UI_Gauge","status":true,"description":"","parameters":{}},
 {"name":"UI_CustomWindow","status":true,"description":"","parameters":{}},
 {"name":"UI_CustomScene","status":true,"description":"","parameters":{}},
@@ -25,6 +27,7 @@ var $plugins =
 {"name":"UI_MainScene","status":true,"description":"","parameters":{}},
 {"name":"UI_ItemScene","status":true,"description":"","parameters":{}},
 {"name":"UI_CharacterScene","status":true,"description":"","parameters":{}},
+{"name":"UI_TalentScene","status":true,"description":"","parameters":{}},
 {"name":"UI_BattleScene","status":true,"description":"","parameters":{}},
 {"name":"UI_BattleResult","status":true,"description":"","parameters":{}}
 ];

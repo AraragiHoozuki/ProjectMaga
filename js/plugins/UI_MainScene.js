@@ -113,17 +113,17 @@ class MainScene extends CustomScene {
 		let [x, y] = [16, Graphics.height - 100];
 		let btn = new Button('', 'btn_party', x, y, 96, 91, 'btn_main_hover');
 		this.addChild(btn);
-		btn.SetClickHandler(()=>{SceneManager.push(CharacterListScene);});
+		btn.SetHandler(btn.OnClick, ()=>{SceneManager.push(CharacterListScene);});
 		x += 88;
 
 		btn = new Button('', 'btn_inventory', x, y, 96, 91, 'btn_main_hover');
 		this.addChild(btn);
-		btn.SetClickHandler(()=>{SceneManager.push(InventoryScene);});
+		btn.SetHandler(btn.OnClick, ()=>{SceneManager.push(InventoryScene);});
 		x += 88;
 
 		btn = new Button('', 'btn_save', x, y, 96, 91, 'btn_main_hover');
 		this.addChild(btn);
-		btn.SetClickHandler(()=>{
+		btn.SetHandler(btn.OnClick,()=>{
 			DataManager.saveGame(0);
 			SoundManager.playSave();
 			toast('保存游戏成功', Colors.Green);

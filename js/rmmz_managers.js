@@ -67,7 +67,8 @@ DataManager._databaseFiles = [
     { name: "$dataItems", src: "JSONItems.json" },
     { name: "$dataMaps", src: "JSONMaps.json" },
     { name: "$dataStages", src: "JSONStages.json" },
-    { name: "$dataVersion", src: "Version.json"}
+    { name: "$dataVersion", src: "Version.json"},
+    { name: "$dataArks", src: "JSONArks.json"}
 ];
 
 DataManager.loadGlobalInfo = function() {

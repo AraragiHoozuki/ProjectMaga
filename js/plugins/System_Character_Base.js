@@ -184,6 +184,12 @@ class Status {
 }
 
 /**
+ * @typedef {Object} CharTalent
+ * @property {string} iname - talent skill iname
+ * @property {number} level - talent learned at level
+ * */
+
+/**
  * @typedef {Object} CharJSON
  * @property {string} iname - internal name
  * @property {string} name - character name
@@ -199,7 +205,9 @@ class Status {
  * @property {string} profile - profile
  * @property {number[]} iniparam - initial primary params
  * @property {number[]} maxparam - maximal primary params
- * @property {string[]} skills - skills
+ * @property {string[]} crafts - crafts to learn
+ * @property {(string|number)[][]} talents - talent table
+ * @property {number[][]} talent_edges - talent table edges
  * @property {string} joinMsg - message to be shown when joins party
  */
 
@@ -213,6 +221,7 @@ class Character {
     _cp = 0;
     _ct = 0;
     _level = 1;
+    _memory = 20;
 
     /**
      * @param {string} iname 
@@ -236,6 +245,7 @@ class Character {
     get tags() {return this.data.tags;}
     get gender() {return this.data.gender;}
     get profile() {return this.data.profile;}
+    get memory() {return this._memory;}
 
     IsChanting() {
         return false;
@@ -256,6 +266,14 @@ class Character {
 
     get mhp() { return this.GetParam(ParamType.MHP);}
     get mma() { return this.GetParam(ParamType.MMA);}
+
+    LevelUp() {
+        if (this._level < this.MaxLevel) {
+            this._level ++;
+            this._memory ++;
+            this.MarkParamChange();
+        }
+    }
 
     ActionCt() {
         return 1000;
@@ -342,6 +360,14 @@ class Character {
         val = Math.floor(val);
         this.SetCt(this.ct + val);
         this._paramChanged = true;
+    }
+
+    /**
+     * @param {Modifier.FLAG} flag
+     * @returns {boolean}
+     */
+    HasFlag(flag) {
+        return this.allModifiers.some(mod => mod.HasFlag(flag));
     }
 
 
@@ -608,10 +634,45 @@ class Character {
     //#endregion
 
     //#region skill
+    /**
+     * @typedef {Object} LearningSkill
+     * @property {string} iname - skill iname
+     * @property {number} ap - current ap
+     * @property {boolean} completed - is learning completed
+     */
+    /** @type LearningSkill[] */
+    _learningSkills = [];
     /** @type Skill[] */
-    _skills = [];
-    /** @returns {Skill[]} */
-    get skills() { return this._skills;}
+    _learnedSkills = [];
+    /** @type Skill[] */
+    _tempSkills = [];
+
+    get learningSkills() {return this._learningSkills;}
+    get learnedSkills() {return this._learnedSkills;}
+    get equippedSkills() {return this.learnedSkills.filter(s=>s.IsEquipped());}
+
+    ProgressLearnSkill(iname, ap) {
+        const ln = this._learningSkills.find(l => l.iname === iname);
+        if (!ln) {
+            this._learningSkills.push({
+                iname: iname,
+                ap: ap,
+                completed: false
+            });
+        } else {
+            ln.ap += ap;
+            if (ln.ap >= $dataSkills[ln.iname].ap) {
+                ln.ap = $dataSkills[ln.iname].ap;
+                ln.completed = true;
+                this.LearnSkill(ln.iname);
+            }
+        }
+    }
+
+    /**
+     * All skills  (learned skills)
+     * @returns {Skill[]} */
+    get skills() { return this.equippedSkills;}
 
     /** @returns {Skill[]} */
     get passiveSkills() {
@@ -628,7 +689,7 @@ class Character {
      * @returns {boolean}
      */
     HasSkill(iname) {
-        return this._skills.some(sk => sk.iname === iname);
+        return this.learnedSkills.some(sk => sk.iname === iname);
     }
 
     /**
@@ -642,26 +703,90 @@ class Character {
     /**
      * @param {string} iname
      * @param {number} level
+     *
+     * @returns {Skill}
+     */
+    _ForceLearnSkill(iname, level = 1) {
+        const data = $dataSkills[iname];
+        let cla = eval(data.script);
+        /** @type Skill */
+        let skill = new cla(iname, this);
+        this._learnedSkills.push(skill);
+        if (level > 1) {
+            skill.SetLevel(level);
+        }
+        return skill;
+    }
+
+    /**
+     * 通过天赋学习技能，其SC会转变为0
+     * @param {string} iname
+     */
+    LearnTalentSkill(iname) {
+        let sk = this._learnedSkills.find(s=>s.iname === iname);
+        if (sk) {
+            if (sk.IsTalent()) {
+                sk.LevelUp();
+            } else {
+                sk.SetTalent();
+            }
+        } else {
+            sk = this._ForceLearnSkill(iname);
+            sk.SetTalent();
+        }
+    }
+
+    /**
+     * @param {string} iname
+     * @param {number} level
      */
     LearnSkill(iname, level = 1) {
         if (this.CanLearnSkill(iname)) {
-            let data = $dataSkills[iname];
-            let cla = eval(data.script);
-            /** @type Skill */
-            let skill = new cla(iname, this);
-            this._skills.push(skill);
-            if (level > 1) {
-                skill.SetLevel(level);
-            }
+            this._ForceLearnSkill(iname, level);
         }
     }
 
     ForgetSkill(iname) {
         if (this.HasSkill(iname)) {
-            const sk = this._skills.find(s => s.iname === iname);
-            this._skills.remove(sk);
+            const sk = this._learnedSkills.find(s => s.iname === iname);
+            this._learnedSkills.remove(sk);
             this.MarkParamChange();
         }
+    }
+
+    GetCostMemory() {
+        return this.equippedSkills.reduce((prev, curr) => {
+            return prev + curr.memory;
+        }, 0);
+    }
+    /**
+     * @param {Skill} sk
+     */
+    MemoryEnoughQ(sk) {
+        const sum = this.GetCostMemory();
+        return sum + sk.memory <= this.memory;
+    }
+    /**
+     * @param {Skill} sk
+     */
+    EquipSkill(sk) {
+        sk.Equip(true);
+        this.MarkParamChange();
+    }
+    /**
+     * @param {Skill} sk
+     */
+    CheckMemoryAndEquipSkill(sk) {
+        if (this.MemoryEnoughQ(sk)) {
+            this.EquipSkill(sk);
+        }
+    }
+    /**
+     * @param {Skill} sk
+     */
+    UnequipSkill(sk) {
+        sk.Equip(false);
+        this.MarkParamChange();
     }
     //#endregion
 
@@ -881,9 +1006,11 @@ class PlayerChar extends Character {
     }
 
     InitSkills() {
-        this.LearnSkill('SK_WAIT');
-        for (let sk of this.data.skills) {
-            this.LearnSkill(sk);
+        this.LearnTalentSkill('SK_WAIT');
+        for (const t of this.data.talents) {
+            if(t.level <= this.level) {
+                this.LearnTalentSkill(t.iname);
+            }
         }
     }
 
@@ -898,20 +1025,55 @@ class PlayerChar extends Character {
         }
     }
 
-    LevelUp() {
-        if (this._level < this.MaxLevel) {
-            this._level ++;
-            this.MarkParamChange();
+
+
+    //#region Skill
+    _skillPoints = 0;
+    get sp() {return this._skillPoints;}
+    /**
+     * 角色特技，包含3个特技和一个必杀
+     * @type {Craft[]}
+     */
+    _crafts = [undefined, undefined, undefined, undefined];
+    get crafts() {return this._crafts;}
+    get normalCrafts() {return this._crafts.slice(0,3);}
+    get ultimateCraft() {return this._crafts[3];}
+
+    LearnCraft(slot) {
+        if (slot < 0 || slot > 3) {
+            throw new Error(`slot 参数应当在 0~3 之间，当前 slot 参数为 ${slot}`);
+        }
+        const c = this._crafts[slot];
+        if (c === undefined) {
+            const iname = this.data.crafts[slot];
+            const data = $dataSkills[iname];
+            const cla = eval(data.script);
+            /** @type Craft */
+            this._crafts[slot] = new cla(iname, this);
+        } else {
+            c.LevelUp();
         }
     }
 
-    //#region Skill
+    _unlockedTalents = [[],[],[],[],[]];
+    IsTalentUnlocked(row, col) {
+        return this._unlockedTalents[row][col] === true;
+    }
+    UnlockTalent(row, col) {
+        this._unlockedTalents[row][col] = true;
+        if (typeof this.data.talents[row][col] === 'number') {
+            this.LearnCraft(this.data.talents[row][col]);
+        } else {
+            this.LearnTalentSkill(this.data.talents[row][col]);
+        }
+    }
+
     /**
      * @returns {Skill[]}
      */
     GetSkillsGrantedByEquips() {
         let sks = [];
-        for (let eq of this.noEmptyEquips) {
+        for (const eq of this.noEmptyEquips) {
             for (let sk of eq.skills) {
                 sks.push(sk);
             }
@@ -920,7 +1082,8 @@ class PlayerChar extends Character {
     }
 
     get skills() {
-        return super.skills.concat(this.GetSkillsGrantedByEquips());
+        let s = this._ark?[this._ark.skill]:[];
+        return s.concat(super.skills).concat(this.GetSkillsGrantedByEquips());
     }
 
     get nonEquipSkills() {
@@ -986,6 +1149,26 @@ class PlayerChar extends Character {
             this._equips[this._equips.indexOf(eq)] = null;
             this.MarkParamChange();
         }
+    }
+    /** @type Ark */
+    _ark = undefined;
+    get ark() {return this._ark;}
+    /**
+     * @param {Ark} ark
+     */
+    EquipArk(ark) {
+        if (this._ark) {
+            this.RemoveArk();
+        }
+        this._ark = ark;
+        this._ark.OnEquipped(this);
+        this.MarkParamChange();
+    }
+
+    RemoveArk() {
+        this._ark.OnRemoved();
+        this._ark = undefined;
+        this.MarkParamChange();
     }
     //#endregion
 

@@ -17,6 +17,30 @@
     "specials": [
     ]
   },
+  "SK_TEST": {
+    "iname": "SK_TEST",
+    "name": "测试",
+    "expr": "技能基本说明",
+    "script": "Skill_NormalModifier",
+    "modifiers": ["Modifier_ParamUp"],
+    "icon": "test",
+    "passive": false,
+    "ap": 100,
+    "memory": 1,
+    "sp": [0],
+    "manacost": [0, 0, 0, 0],
+    "cpcost": [0],
+    "ctcost": [600],
+    "lucost": [0],
+    "lwf": "",
+    "global": false,
+    "animation": "",
+    "actionPoints": [0],
+    "specials": [
+      {"name": "test", "tooltip": "测试属性", "values": [100, 200, 300, 400]},
+      {"name": "PLUS_STR", "tooltip": "力量加成", "values": [100, 200, 300, 400]}
+    ]
+  },
   "SK_PARAM": {
     "iname": "SK_PARAM",
     "name": "属性变化·测试",
@@ -850,6 +874,86 @@
       {
         "name": "damage_scale",
         "values": [60, 80, 100]
+      }
+    ]
+  },
+  "SK_PERSISTANCE": {
+    "iname": "SK_PERSISTANCE",
+    "name": "不屈",
+    "script": "Skill_NormalModifier",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_Persistance"],
+    "manacost": [0, 0, 0, 0, 0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0, 10, 20, 20, 50],
+    "specials": [
+      {
+        "name": "ini_stack",
+        "values": [2, 2, 3, 3, 4]
+      },
+      {
+        "name": "phy_res_up_per_stack",
+        "values": [5, 6, 7, 8, 8]
+      },
+      {
+        "name": "heal_rate",
+        "values": [10, 12, 14, 18, 25]
+      }
+    ]
+  },
+  "SK_DURANDAL": {
+    "iname": "SK_DURANDAL",
+    "name": "不灭之盾",
+    "script": "Skill_NormalModifier",
+    "icon": "passive",
+    "passive": true,
+    "modifiers": ["Modifier_Durandal"],
+    "manacost": [0, 0, 0, 0, 0],
+    "cpcost": [0],
+    "ctcost": [0],
+    "lucost": [0, 10, 20, 20, 50],
+    "specials": [
+      {
+        "name": "cap_hp_pct",
+        "values": [60, 55, 50, 45, 40]
+      },
+      {
+        "name": "heal_def_pct",
+        "values": [30, 40, 50, 60, 70]
+      }
+    ]
+  },
+  "SK_AURELIA_DEFEND_STANCE": {
+    "iname": "SK_AURELIA_DEFEND_STANCE",
+    "name": "防御姿态",
+    "script": "Skill_DefendStance",
+    "icon": "none_magic",
+    "passive": false,
+    "modifiers": [],
+    "manacost": [30, 35, 40, 45, 50],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lucost": [0, 10, 20, 20, 40],
+    "lwf": "812000652",
+    "global": false,
+    "animation": "variable_chant",
+    "actionPoints": [0.5],
+    "sound": "se_buff_vc_defense_up",
+    "voice": "variable_chant",
+    "specials": [
+      {
+        "name": "SCALE_DEF",
+        "values": [30, 40, 50, 60, 80]
+      },
+      {
+        "name": "SCALE_MND",
+        "values": [30, 40, 50, 60, 80]
+      },
+      {
+        "name": "duration",
+        "values": [2, 2, 3, 4, 4]
       }
     ]
   }

@@ -56,13 +56,12 @@ class CustomScene extends Scene_Base {
 		this._backgroundSprite = new Sprite(new Bitmap(Graphics.width, Graphics.height));
 		let x = 0, y = 0;
 		const bitmap = ImageManager.LoadUIBitmap(undefined, this.backgroundImageName);
-		const size = bitmap.width;
 		while (x < Graphics.width) {
 			while (y < Graphics.height) {
-				this._backgroundSprite.bitmap.DrawBitmap(bitmap, 0, 0, x, y, size, size);
-				y += size;
+				this._backgroundSprite.bitmap.DrawBitmap(bitmap, 0, 0, x, y, bitmap.width, bitmap.height);
+				y += bitmap.height;
 			}
-			x += size;
+			x += bitmap.width;
 			y = 0;
 		}
 		this.addChild(this._backgroundSprite);
@@ -82,6 +81,7 @@ class CustomScene extends Scene_Base {
 	 * @param {boolean} withConfirm
 	 * @param {boolean} withCancel
 	 * @param {Function} callback
+	 * @param {boolean} closeOnReturn
 	 */
 	Dialog(window, withConfirm = false, withCancel= false, callback, closeOnReturn = true) {
 		this._dialogMask.visible = true;
@@ -104,21 +104,22 @@ class CustomScene extends Scene_Base {
 
 		if (withCancel) {
 			cab = new Button('取消', 'btn_neg', Graphics.width/2 - 50 - this.dialogBtnWidth, Graphics.height - 94, this.dialogBtnWidth, 80, undefined, new Paddings(25), undefined, new Paddings(25));
+			cab.SetClickSe('se_cancel');
 			this.addChild(cab);
-			cab.SetClickHandler((()=> {
+			cab.SetHandler(cab.OnClick, (()=> {
 				this.DialogReturn(false, callback, true);
 				this.removeChild(cob);
 				this.removeChild(cab);
-			}).bind(this));
+			}));
 		}
 		if (withConfirm) {
-			cob.SetClickHandler((()=> {
+			cob.SetHandler(cob.OnClick, (()=> {
 				this.DialogReturn(true, callback, closeOnReturn);
 				if (closeOnReturn) {
 					this.removeChild(cob);
 					this.removeChild(cab);
 				}
-			}).bind(this));
+			}));
 		}
 
 	}
@@ -302,11 +303,12 @@ class MenuBaseScene extends CustomScene {
 	_closeBtn;
 	CreateBackBtn() {
 		this._backBtn = new Button('', 'btn_back', 0, 0, 108, 48);
+		this._backBtn.SetClickSe('se_cancel');
 		this.addChild(this._backBtn);
 		this._closeBtn = new Button('', 'btn_close', Graphics.width - 108, 0, 108, 48);
 		this.addChild(this._closeBtn);
-		this._backBtn.SetClickHandler(SceneManager.pop.bind(SceneManager));
-		this._closeBtn.SetClickHandler(()=>{SceneManager.goto(MainScene);});
+		this._backBtn.SetHandler(this._backBtn.OnClick, SceneManager.pop.bind(SceneManager));
+		this._closeBtn.SetHandler(this._closeBtn.OnClick,()=>{SceneManager.goto(MainScene);});
 	}
 }
 
@@ -327,11 +329,18 @@ class DebugScene extends MenuBaseScene {
 	CreateButtons() {
 		let btn = new Button('Test', 'btn_lc_cmn', 500, 200, 200, 60, 'btn_hover_azure', new Paddings(10), new Paddings(16), new Paddings(22));
 		this.addChild(btn);
-		btn.SetClickHandler(this.TestFunc.bind(this));
+		btn.SetHandler(btn.OnClick, this.TestFunc.bind(this));
 
 		btn = new Button('LWF测试', 'btn_pos', 300, 400, 200, 80, undefined, new Paddings(25), undefined, new Paddings(25));
 		this.addChild(btn);
-		btn.SetClickHandler(this.TestLwf.bind(this));
+		btn.SetHandler(btn.OnClick, this.TestLwf.bind(this));
+
+		btn = new Button('数字测试', 'btn_pos', 600, 400, 200, 80, undefined, new Paddings(25), undefined, new Paddings(25));
+		this.addChild(btn);
+		btn.SetHandler(btn.OnClick, this.TestNumber.bind(this));
+		const n = new NumberSprite(1280, 0, 1000, 'number_azure', 'right');
+		this.addChild(n);
+		this._number = n;
 	}
 
 	TestFunc() {
@@ -343,6 +352,11 @@ class DebugScene extends MenuBaseScene {
 		let name = prompt();
 		if (name)
 			LWFUtils.PlayLwf('lwf/battleLwf/', name, 500, 300);
+	}
+
+	TestNumber() {
+		let name = prompt();
+		this._number.SetNumber(parseInt(name));
 	}
 }
 

@@ -8,7 +8,8 @@ class Modifier {
 		NONE: 0,
 		IMMORTALITY: 0b1,
 		GUTS: 0b10,
-		IMMUNE: 0b100
+		IMMUNE: 0b100,
+		TAUNT: 0b1000
 	}
 	/**
 	 * @param {Character} owner

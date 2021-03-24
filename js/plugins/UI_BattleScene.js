@@ -8,8 +8,6 @@ class BattleScene extends CustomScene {
 		this.CreateSpriteset();
 		this.CreateFaceList();
 		this.CreateSkillList();
-		//this.CreateCharSelector(); created when spine load complete
-		this.CreateDetailWindow();
 	}
 
 	/** @type Spriteset_Battle */
@@ -55,22 +53,6 @@ class BattleScene extends CustomScene {
 	CreateCharSelector() {
 		this._charSelector = new BattleSelector();
 		this.addChild(this._charSelector);
-	}
-	/** @type BattleDetailWindow */
-	_detailWindowL;
-	/** @type BattleDetailWindow */
-	_detailWindowR;
-	_detailButton;
-	CreateDetailWindow() {
-		this._detailWindowL = new BattleDetailWindow(0, 0, Graphics.width/2, Graphics.height, 600);
-		this._detailWindowR = new BattleDetailWindow(Graphics.width/2, 0, Graphics.width/2, Graphics.height, 600);
-		this.addChild(this._detailWindowL);
-		this.addChild(this._detailWindowR);
-		this._detailWindowL.Close();
-		this._detailWindowR.Close();
-		this._detailButton = new Button('', 'btn_lc_cmn', Graphics.width - 60, 0, 60, 60, 'btn_hover_azure', new Paddings(10), new Paddings(16), new Paddings(22));
-		this.addChild(this._detailButton);
-		this._detailButton.SetClickHandler(this.OnDetailBtnClick.bind(this));
 	}
 
 	start() {
@@ -122,20 +104,7 @@ class BattleScene extends CustomScene {
 		BattleFlow.InputCharacterChange();
 	}
 
-	OnDetailBtnClick() {
-		if (this._detailWindowL.visible) {
-			this._detailWindowL.Close();
-			this._detailWindowR.Close();
-		} else {
-			this._detailWindowL.SetCharacter(this._charSelector.SelectedPlayer);
-			this._detailWindowR.SetCharacter(this._charSelector.SelectedEnemy);
-			this._detailWindowL.Open();
-			this._detailWindowL.Activate();
-			this._detailWindowR.Open();
-			this._detailWindowR.Activate();
-		}
 
-	}
 }
 
 class BattleCharFace extends PIXI.Container {
@@ -317,15 +286,22 @@ class BattleSelectCursor extends Sprite {
 	}
 }
 
-class BattleSelector extends PIXI.Container {
+class BattleSelector extends Clickable {
 	constructor() {
-		super();
+		super(0, 0, Graphics.width, Graphics.height);
 		this._enemies = $gameTroop.members;
 		this._actors = $gameParty.battleMembers;
 		this._enemyCursor = new BattleSelectCursor(true);
 		this._actorCursor = new BattleSelectCursor(false);
 		this.addChild(this._enemyCursor);
 		this.addChild(this._actorCursor);
+		this.CreateDetailWindow();
+	}
+
+	CreateDetailWindow() {
+		this._detailWindow = new BattleDetailWindow(100, 36, Graphics.width - 200, Graphics.height - 72, 0);
+		this.addChild(this._detailWindow);
+		this._detailWindow.Close();
 	}
 
 	/** @returns {EnemyChar} */
@@ -348,21 +324,36 @@ class BattleSelector extends PIXI.Container {
 	update() {
 		this._enemyCursor.update();
 		this._actorCursor.update();
-		this.ProcessTouch();
+		super.update();
 	}
 
-	ProcessTouch() {
-		if (TouchInput.isTriggered()) {
-			let index = this.GetClickedPlayer();
+	_lastClicked = 0; //0 for player, 1 for enemy, -1 for null
+	OnPress() {
+		let index = this.GetClickedPlayer();
+		if (index > -1) {
+			SoundManager.playCursor();
+			this._lastClicked = 0;
+		} else {
+			index = this.GetClickedEnemy();
 			if (index > -1) {
 				SoundManager.playCursor();
+				this._lastClicked = 1;
 			} else {
-				index = this.GetClickedEnemy();
-				if (index > -1) {
-					SoundManager.playCursor();
-				}
+				this._lastClicked = -1;
 			}
 		}
+	}
+
+	OnLongPress() {
+		if (this._lastClicked > -1) {
+			this._detailWindow.SetCharacter(this._lastClicked===0?this.SelectedPlayer : this.SelectedEnemy);
+			this._detailWindow.Open();
+			this._detailWindow.Activate();
+		}
+	}
+
+	OnLongPressRelease(isClick) {
+		this._detailWindow.Close();
 	}
 
 	GetClickedPlayer() {

@@ -373,8 +373,14 @@ class Action {
                 }
             }
             targets = targets.clone();
-        } else if (!target.IsAlive()&&!this._skill.IsForDead()) {
-            targets = [target.AllySet().battleMembers.filter(c => c.IsAlive()).randomChoice()];
+        } else {
+            if (!this._skill.IsForAlly()) {
+                const taunter = this._user.EnemySet().battleMembers.find(chr => chr.HasFlag(Modifier.FLAG.TAUNT));
+                if (taunter) targets = [taunter];
+            }
+            if (!target.IsAlive()&&!this._skill.IsForDead()) {
+                targets = [target.AllySet().battleMembers.filter(c => c.IsAlive()).randomChoice()];
+            }
         }
         if (this._skill.IsForSelf()) {
             if (this._skill.IsForAlly()) {

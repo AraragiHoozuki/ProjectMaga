@@ -5,7 +5,7 @@ const Names = {
 		STR: "力量",
 		INT: "智慧",
 		DEF: "防御",
-		MND: "魔防",
+		MND: "精神",
 		SPD: "速度",
 		LUK: "幸运",
 		ASSIST_PYRO: "火属性",

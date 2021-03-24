@@ -21,7 +21,7 @@ class CustomWindow extends Clickable {
         super();
         this._title = title;
         this._titleHeight = th;
-        this._contentPaddings = new Paddings(12, 12, 12, 12);
+        this._contentPaddings = new Paddings(16);
         this.Create();
         this.titleTexture = ImageManager.LoadUIBitmap(undefined, titlebg);
         this.backTexture = ImageManager.LoadUIBitmap(undefined, bg);
@@ -664,6 +664,10 @@ class ScrollListWindow extends ScrollWindow {
         }
     }
 
+    RedrawCurrentItem() {
+        this.RedrawItem(this.index);
+    }
+
     /**
      * @param index {number}
      */
@@ -709,7 +713,14 @@ class ScrollListWindow extends ScrollWindow {
     }
 
     OnClick() {
-        if (this.index > -1) this.OnConfirm();
+        if (this.index > -1) {
+            if (this.IsItemEnabled()) {
+                SoundManager.playOk();
+                super.OnClick();
+            } else {
+                SoundManager.playBuzzer();
+            }
+        }
     }
 
     IsItemEnabled() {
@@ -873,6 +884,38 @@ class MaterialCostWindow extends ItemListWindow {
     }
 }
 
+class CraftListWindow extends ScrollListWindow {
+    /** @type Craft[] */
+    _data;
+    /** @type PlayerChar*/
+    _chr;
+    get maxCols() { return 1;}
+    get itemHeight() { return 64; }
+    /** @returns {Skill} */
+    get item() { return super.item;}
+
+    /**
+     * @param {PlayerChar} chr
+     */
+    MakeList(chr) {
+        this._chr = chr;
+        this._data = chr.crafts;
+        super.MakeList();
+    }
+
+    DrawItem(index) {
+        let r = this.GetItemRect(index);
+        let i_r = new Rectangle(r.x, r.y, r.height, r.height);
+        this.DrawTexture('img/ui/', 'cell_cmn', r.x, r.y, r.width, r.height, new Paddings(10));
+        this.DrawImageInRect('img/icons/skill/', this._data[index]?this._data[index].icon:$dataSkills[this._chr.data.crafts[index]].icon,0, 0, i_r, new Paddings(10));
+        this.DrawTextEx(this._data[index]?this._data[index].name:($dataSkills[this._chr.data.crafts[index]].name+'(尚未习得)'), r.x + i_r.width, r.y + r.height/3.5, r.width - r.height);
+        this.DrawText(`等级 ${this._data[index]?this._data[index].level:0}/${$dataSkills[this._chr.data.crafts[index]].manacost.length}`, r.x, r.y + r.height/3.5, r.width - 8, 'right');
+        if (this.index === index) {
+            this.DrawTexture('img/ui/', 'cell_select_cmn', r.x, r.y, r.width, r.height, new Paddings(9));
+        }
+    }
+}
+
 class SkillListWindow extends ScrollListWindow {
     /** @type Skill[] */
     _data;
@@ -885,17 +928,48 @@ class SkillListWindow extends ScrollListWindow {
      * @param {PlayerChar} chr
      */
     MakeList(chr) {
-        this._data = chr.nonEquipSkills;
+        this._data = chr.learnedSkills;
         super.MakeList();
     }
 
     DrawItem(index) {
         let r = this.GetItemRect(index);
         let i_r = new Rectangle(r.x, r.y, r.height, r.height);
-        this.DrawTexture('img/ui/', this._data[index].IsPassive()?'cell_gray':'cell_cmn', r.x, r.y, r.width, r.height, new Paddings(10));
+        this.DrawTexture('img/ui/', 'cell_cmn', r.x, r.y, r.width, r.height, new Paddings(10));
         this.DrawImageInRect('img/icons/skill/', this._data[index].icon,0, 0, i_r, new Paddings(10));
         this.DrawTextEx(this._data[index].name, r.x + i_r.width, r.y + r.height/3.5, r.width - r.height);
-        this.DrawText(`等级 ${this._data[index].level}/${this._data[index].maxLevel}`, r.x, r.y + r.height/3.5, r.width - 8, 'right');
+        this.DrawImage('img/ui/', `switch_${this._data[index].IsEquipped() ? 'on' : 'off'}`, 0, 0, r.width - 100, r.y + 5, 100, r.height - 10);
+        this.DrawText(`记忆 ${this._data[index].memory}`, r.x, r.y + r.height/3.5, r.width - 100, 'right');
+        if (this.index === index) {
+            this.DrawTexture('img/ui/', 'cell_select_cmn', r.x, r.y, r.width, r.height, new Paddings(9));
+        }
+    }
+}
+
+class LearningSkillListWindow extends ScrollListWindow {
+    /** @type LearningSkill[] */
+    _data;
+    get maxCols() { return 1;}
+    get itemHeight() { return 64; }
+    /** @returns {Skill} */
+    get item() { return super.item;}
+
+    /**
+     * @param {PlayerChar} chr
+     */
+    MakeList(chr) {
+        this._data = chr.learningSkills;
+        super.MakeList();
+    }
+
+    DrawItem(index) {
+        let r = this.GetItemRect(index);
+        let i_r = new Rectangle(r.x, r.y, r.height, r.height);
+        let ls = this._data[index];
+        this.DrawTexture('img/ui/', 'cell_cmn', r.x, r.y, r.width, r.height, new Paddings(10));
+        this.DrawImageInRect('img/icons/skill/', $dataSkills[ls.iname].icon,0, 0, i_r, new Paddings(10));
+        this.DrawTextEx($dataSkills[ls.iname].name, r.x + i_r.width, r.y + r.height/3.5, r.width - r.height);
+        this.DrawProgressBar('CP', 1, r.x + r.height + 200, r.y + r.height/3, r.width - r.x - r.height - 220, ls.ap, $dataSkills[ls.iname].ap);
         if (this.index === index) {
             this.DrawTexture('img/ui/', 'cell_select_cmn', r.x, r.y, r.width, r.height, new Paddings(9));
         }
@@ -997,6 +1071,11 @@ class EquipWindow extends ScrollListWindow {
 }
 
 class InfoWindow extends ScrollWindow {
+    SetString(str) {
+        let h = this.TestDraw(str);
+        this.SetContentLength(h);
+        this.Draw(str);
+    }
     /**
      * @param {Skill} skill
      */

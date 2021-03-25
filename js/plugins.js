@@ -26,6 +26,7 @@ var $plugins =
 {"name":"UI_UpdateScene","status":true,"description":"","parameters":{}},
 {"name":"UI_MainScene","status":true,"description":"","parameters":{}},
 {"name":"UI_ItemScene","status":true,"description":"","parameters":{}},
+{"name":"UI_ArkScene","status":true,"description":"","parameters":{}},
 {"name":"UI_CharacterScene","status":true,"description":"","parameters":{}},
 {"name":"UI_TalentScene","status":true,"description":"","parameters":{}},
 {"name":"UI_BattleScene","status":true,"description":"","parameters":{}},

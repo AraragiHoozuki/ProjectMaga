@@ -112,6 +112,7 @@ class Party extends CharSet {
 
     GameStart() {
         this.MemberJoin('PLC_TYRFINGR');
+        this.GetArk('ARK_SWORD_AND_SHIELD');
         //this.GetItem('IT_WP_AHURAMAZDA_STAFF', 1);
         //this.GetItem('IT_KAKERA_PLC_ROSELIA', 999);
     }
@@ -223,7 +224,7 @@ class Party extends CharSet {
         }
     }
     /** @type Ark[] */
-    _arks;
+    _arks = [];
     get arks() {return this._arks;}
 
     GetArk(iname) {

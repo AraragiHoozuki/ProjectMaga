@@ -347,7 +347,7 @@ class CustomWindow extends Clickable {
         let dh = this.lineHeight;
         let sx = 0;
         let sy = 0;
-        this.contents.blt(bitmap, sx, sy, pw, ph, dx, dy, dw , dh);
+        this.content.blt(bitmap, sx, sy, pw, ph, dx, dy, dw , dh);
     }
 
     /**
@@ -938,8 +938,8 @@ class SkillListWindow extends ScrollListWindow {
         this.DrawTexture('img/ui/', 'cell_cmn', r.x, r.y, r.width, r.height, new Paddings(10));
         this.DrawImageInRect('img/icons/skill/', this._data[index].icon,0, 0, i_r, new Paddings(10));
         this.DrawTextEx(this._data[index].name, r.x + i_r.width, r.y + r.height/3.5, r.width - r.height);
-        this.DrawImage('img/ui/', `switch_${this._data[index].IsEquipped() ? 'on' : 'off'}`, 0, 0, r.width - 100, r.y + 5, 100, r.height - 10);
-        this.DrawText(`记忆 ${this._data[index].memory}`, r.x, r.y + r.height/3.5, r.width - 100, 'right');
+        this.DrawImage('img/ui/', `checkbox_${this._data[index].IsEquipped() ? 'on' : 'off'}`, 0, 0, r.width - 56, r.y + 6, 50, 50);
+        this.DrawText(`记忆 ${this._data[index].memory}`, r.x, r.y + r.height/3.5, r.width - 58, 'right');
         if (this.index === index) {
             this.DrawTexture('img/ui/', 'cell_select_cmn', r.x, r.y, r.width, r.height, new Paddings(9));
         }
@@ -1064,6 +1064,99 @@ class EquipWindow extends ScrollListWindow {
             this.DrawTextEx(`未装备${Names.EquipSlots[index]}`, r.x + i_r.width, r.y + r.height/3.5, r.width - r.height);
         }
 
+        if (this.index === index) {
+            this.DrawTexture('img/ui/', 'cell_select_cmn', r.x, r.y, r.width, r.height, new Paddings(9));
+        }
+    }
+}
+
+class ArkSelectWindow extends ScrollListWindow {
+    /** @type Ark[] */
+    _data;
+    get maxCols() { return 1;}
+    get itemHeight() { return 240; }
+    /** @returns {Ark} */
+    get item() { return super.item;}
+    /** @type PlayerChar */
+    _chr;
+
+    /**
+     * @param {PlayerChar} chr
+     */
+    MakeList(chr) {
+        this._chr = chr;
+        this._data = [undefined, ...$gameParty.arks];
+        super.MakeList();
+    }
+
+    DrawItem(index) {
+        let r = this.GetItemRect(index);
+        let i_r = new Rectangle(r.x, r.y, 200, r.height);
+        this.DrawTexture('img/ui/', 'cell_cmn', r.x, r.y, r.width, r.height, new Paddings(10));
+        if (index > 0) {
+            this.DrawImageInRect('img/icons/ark/', this._data[index].image,0, 0, i_r, new Paddings(10));
+            this.DrawTexture('img/ui/', 'wd_back_teal', r.x + i_r.width - 4, r.y + 10, 300, r.height -20, new Paddings(4));
+            this.DrawTextEx(`${this._data[index].name} 【等级 ${this._data[index].level}】`, r.x + i_r.width, r.y + 10, 300);
+            this.DrawTextEx(this._data[index].shortDesc, r.x + i_r.width, r.y + 40, 300);
+            let y = r.y + 10;
+            let x = r.x + i_r.width + 304;
+            this.DrawTexture('img/ui/', 'wd_back_orange', x - 4, y, r.width - x - 2, r.height -20, new Paddings(4));
+            for (const ln of this._data[index].allLearnings) {
+                this.DrawImage('img/icons/skill/', $dataSkills[ln.iname].icon, 0, 0, x, y, 32, 32);
+                this.DrawText($dataSkills[ln.iname].name, x + 36, y + 3, r.width - x - 36);
+                if (ln.level <= this._data[index].level) {
+                    this.DrawText(`进度: ${this._chr.GetSkillLearningAp(ln.iname)}/${$dataSkills[ln.iname].ap}    AP倍率: ${ln.ap}`, x + 36, y + 3, r.width - x - 45, 'right');
+                } else {
+                    this.DrawText(`需要圣物等级${ln.level}`, x + 36, y + 3, r.width - x - 45, 'right');
+                }
+                y += 32;
+            }
+        } else {
+            this.content.fontSize = 48;
+            this.DrawText('卸下', r.x, r.y + this.itemHeight * 0.4, r.width, 'center');
+            this.ResetFontSettings();
+        }
+
+        if (this.index === index) {
+            this.DrawTexture('img/ui/', 'cell_select_cmn', r.x, r.y, r.width, r.height, new Paddings(9));
+        }
+    }
+}
+
+class ArkListWindow extends ScrollListWindow {
+    /** @type Ark[] */
+    _data;
+    get maxCols() { return 1;}
+    get itemHeight() { return 240; }
+    /** @returns {Ark} */
+    get item() { return super.item;}
+
+    MakeList() {
+        this._data = $gameParty.arks;
+        super.MakeList();
+    }
+
+    DrawItem(index) {
+        let r = this.GetItemRect(index);
+        let i_r = new Rectangle(r.x, r.y, 200, r.height);
+        this.DrawTexture('img/ui/', 'cell_cmn', r.x, r.y, r.width, r.height, new Paddings(10));
+        this.DrawImageInRect('img/icons/ark/', this._data[index].image,0, 0, i_r, new Paddings(10));
+        this.DrawTexture('img/ui/', 'wd_back_teal', r.x + i_r.width - 4, r.y + 10, 300, r.height -20, new Paddings(4));
+        this.DrawTextEx(`${this._data[index].name} 【等级 ${this._data[index].level}】`, r.x + i_r.width, r.y + 10, 300);
+        this.DrawTextEx(this._data[index].shortDesc, r.x + i_r.width, r.y + 40, 300);
+        let y = r.y + 10;
+        let x = r.x + i_r.width + 304;
+        this.DrawTexture('img/ui/', 'wd_back_orange', x - 4, y, r.width - x - 2, r.height -20, new Paddings(4));
+        for (const ln of this._data[index].allLearnings) {
+            this.DrawImage('img/icons/skill/', $dataSkills[ln.iname].icon, 0, 0, x, y, 32, 32);
+            this.DrawText($dataSkills[ln.iname].name, x + 36, y + 3, r.width - x - 36);
+            if (ln.level <= this._data[index].level) {
+                this.DrawText(`AP倍率: ${ln.ap}`, x + 36, y + 3, r.width - x - 45, 'right');
+            } else {
+                this.DrawText(`需要圣物等级${ln.level}`, x + 36, y + 3, r.width - x - 45, 'right');
+            }
+            y += 32;
+        }
         if (this.index === index) {
             this.DrawTexture('img/ui/', 'cell_select_cmn', r.x, r.y, r.width, r.height, new Paddings(9));
         }

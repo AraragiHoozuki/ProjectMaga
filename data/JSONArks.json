@@ -1,3 +1,13 @@
 {
-
+  "ARK_SWORD_AND_SHIELD": {
+    "name": "剑与盾",
+    "image": "sword_shield",
+    "flavour": "",
+    "skill": "SK_SLASH",
+    "item": "",
+    "learnings": [
+      {"iname": "SK_FIREBALL", "ap": 1, "level": 1},
+      {"iname": "SK_TYRFINGR_SHURA_BLADE", "ap": 1, "level": 3}
+    ]
+  }
 }

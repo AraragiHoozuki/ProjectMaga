@@ -38,6 +38,7 @@ class Ark {
 
     get iname() {return this._iname;}
     get data() {return $dataArks[this._iname];}
+    get name() {return this.data.name;}
     get image() {return this.data.image;}
     get flavour() {return this.data.flavour;}
     get level() {return this._level;}
@@ -45,6 +46,7 @@ class Ark {
     get currentLearnings() {return this.data.learnings.filter(ln => ln.level <= this.level);}
     get skill() {return this._skill;}
 
+    get shortDesc() {return this._skill.data.expr; }
     get description() {
         return Skill.GetDescription(this._skill.data, this._skill.level);
     }

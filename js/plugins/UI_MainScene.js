@@ -121,6 +121,11 @@ class MainScene extends CustomScene {
 		btn.SetHandler(btn.OnClick, ()=>{SceneManager.push(InventoryScene);});
 		x += 88;
 
+		btn = new Button('', 'btn_ark', x, y, 96, 91, 'btn_main_hover');
+		this.addChild(btn);
+		btn.SetHandler(btn.OnClick,()=>{SceneManager.push(ArkListScene);});
+		x += 88;
+
 		btn = new Button('', 'btn_save', x, y, 96, 91, 'btn_main_hover');
 		this.addChild(btn);
 		btn.SetHandler(btn.OnClick,()=>{

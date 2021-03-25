@@ -40,6 +40,7 @@ class CharacterDetailScene extends MenuBaseScene {
 		this.CreateLearnedSkillList();
 		this.CreateLearningSkillList();
 		this.CreateEquipWindow();
+		this.CreateArkSlotWindow();
 		this.CreateProfileWindow();
 		this.CreateTabButtons();
 		this.CreateInfoWindow();
@@ -213,6 +214,30 @@ class CharacterDetailScene extends MenuBaseScene {
 		this._tempInfoWindow.Close();
 		this.removeChild(this._tempInfoWindow);
 	}
+	/** @type ArkSlot */
+	_arkSlot;
+	CreateArkSlotWindow() {
+		let w = 500;
+		let h = 600;
+		this._arkSlot = new ArkSlot((Graphics.width - w)/2, (Graphics.height - h)/2, w, h);
+		this.addChild(this._arkSlot);
+		this._arkSlot.visible = false;
+		this._arkSlot.SetHandler(this._arkSlot._btn.OnClick, ()=>{
+			const w = new ArkSelectWindow(100, 8, Graphics.width - 200, Graphics.height - 100, '', 0, undefined, 'wd_back_cmn');
+			w.MakeList(CharacterDetailScene.character);
+			this.Dialog(w, true, true, (confirm)=>{
+				if (confirm) {
+					if (w.index > 0) {
+						CharacterDetailScene.character.EquipArk(w.item);
+						this._arkSlot.SetArk(w.item);
+					} else if (CharacterDetailScene.character.ark){
+						CharacterDetailScene.character.RemoveArk();
+						this._arkSlot.SetEmpty();
+					}
+				}
+			});
+		});
+	}
 
 	/** @type InfoWindow */
 	_profileWindow;
@@ -225,7 +250,7 @@ class CharacterDetailScene extends MenuBaseScene {
 	_lastBtn;
 	CreateTabButtons() {
 		let x = -100;
-		let y = 200;
+		let y = 150;
 		let w = 300;
 		let h = 60;
 		const status_btn = new CharDetailLeftTabBtn('属性', 'btn_chr_panel', x, y, w, h, undefined, new Paddings(20, 20, 20, 24), new Paddings(10), new Paddings(28));
@@ -296,10 +321,32 @@ class CharacterDetailScene extends MenuBaseScene {
 			}
 		});
 		this.addChild(eq_btn);
+
+		y+=h;
+		const ark_slot = new CharDetailLeftTabBtn('圣物', 'btn_chr_panel', x, y, w, h, undefined, new Paddings(20, 20, 20, 24), new Paddings(10), new Paddings(28));
+		ark_slot.SetHandler(ark_slot.OnClick, ()=>{
+			if (this._lastBtn !== ark_slot) this._lastBtn?.Toggle();
+			if (ark_slot.IsToggled()) {
+				this.CloseAllWindow();
+				this._lastBtn = undefined;
+			} else {
+				this.ChangeWindow(this._arkSlot);
+				this._lastBtn = ark_slot;
+			}
+		});
+		this.addChild(ark_slot);
+
+		y+=h;
+		const tlt_slot = new CharDetailLeftTabBtn('天赋', 'btn_chr_panel', x, y, w, h, undefined, new Paddings(20, 20, 20, 24), new Paddings(10), new Paddings(28));
+		tlt_slot.SetHandler(tlt_slot.OnClick, ()=>{
+			TalentScene.player = CharacterDetailScene.character;
+			SceneManager.push(TalentScene);
+		});
+		this.addChild(tlt_slot);
 	}
 
 	/**
-	 * @param {CustomWindow} w
+	 * @param w
 	 */
 	ChangeWindow(w) {
 		this.CloseAllWindow();
@@ -319,6 +366,9 @@ class CharacterDetailScene extends MenuBaseScene {
 			case this._equipWindow:
 				this._equipWindow.MakeList(CharacterDetailScene.character);
 				break;
+			case this._arkSlot:
+				this._arkSlot.Show();
+				return;
 			case this._profileWindow:
 				this._profileWindow.SetProfile(CharacterDetailScene.character);
 				break;
@@ -335,6 +385,7 @@ class CharacterDetailScene extends MenuBaseScene {
 		this._skillList.Close();
 		this._learningSkillList.Close();
 		this._equipWindow.Close();
+		this._arkSlot.Hide();
 		this._profileWindow.Close();
 		this._infoWindow.Close();
 	}
@@ -360,5 +411,51 @@ class CharDetailLeftTabBtn extends Button {
 
 	IsToggled() {
 		return this._toggled;
+	}
+}
+
+class ArkSlot extends Clickable {
+	constructor(x, y, w, h) {
+		super(x, y, w, h);
+		this._back = new Sprite(new Bitmap(w, h));
+		this._backBitmap = this._back.bitmap;
+		this._btn = new Button('', 'slot_ark', 0, 0, w, h, undefined, new Paddings(24), new Paddings(0), new Paddings(13));
+		this.addChild(this._back);
+		this.addChild(this._btn);
+		this.x = x;
+		this.y = y;
+		this.SetEmpty();
+	}
+
+	SetEmpty() {
+		this._backBitmap.clear();
+		this._backBitmap.DrawImageInRect('img/ui/', 'slot_ark_back', 0, 0, new Rectangle(0, 0, this.w, this.h), new Paddings(8));
+	}
+
+	/**
+	 * @param {Ark} ark
+	 */
+	SetArk(ark) {
+		this._backBitmap.clear();
+		this._backBitmap.DrawImageInRect('img/icons/ark/', ark.image, 0, 0, new Rectangle(0, 0, this.w, this.h), new Paddings(8));
+	}
+
+	Hide() {
+		this.visible = false;
+		this.Deactivate();
+	}
+
+	Show() {
+		this.visible = true;
+		this.Activate();
+	}
+
+	/**
+	 * @param {Function} func
+	 * @param {Function} handle_func
+	 * @param args
+	 */
+	SetHandler(func, handle_func, ...args) {
+		this._btn.SetHandler(func, handle_func, ...args)
 	}
 }

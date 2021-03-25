@@ -151,7 +151,7 @@ class Clickable extends PIXI.Container {
     _releasePoint = new Point(0, 0);
     update() {
         if (!this.IsEnabled()) return;
-        for (const child of this.children) {
+        for (const child of [...this.children].reverse()) {
             if (child.update) {
                 child.update();
             }

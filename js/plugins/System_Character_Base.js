@@ -669,6 +669,19 @@ class Character {
         }
     }
 
+    GetSkillLearningAp(iname) {
+        if (this.HasSkill(iname)) {
+            return $dataSkills[iname].ap;
+        } else {
+            const l = this._learningSkills.find(ln => ln.iname === iname);
+            if (l) {
+                return l.ap;
+            } else {
+                return 0;
+            }
+        }
+    }
+
     /**
      * All skills  (learned skills)
      * @returns {Skill[]} */

@@ -30,5 +30,6 @@ var $plugins =
 {"name":"UI_CharacterScene","status":true,"description":"","parameters":{}},
 {"name":"UI_TalentScene","status":true,"description":"","parameters":{}},
 {"name":"UI_BattleScene","status":true,"description":"","parameters":{}},
-{"name":"UI_BattleResult","status":true,"description":"","parameters":{}}
+{"name":"UI_BattleResult","status":true,"description":"","parameters":{}},
+{"name":"System_Debug","status":true,"description":"","parameters":{}}
 ];

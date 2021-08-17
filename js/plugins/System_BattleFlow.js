@@ -151,6 +151,11 @@ class BattleFlow {
         for (let chr of chrs) {
             if (!chr.IsAlive()) continue;
             chr.AddCt(BattleFlow.CalcCtSpeed(chr));
+            if (chr instanceof PlayerChar) {
+                for (const c of chr.crafts) {
+                    c?.Charge(chr.GetParam(ParamType.SPD));
+                }
+            }
             if (chr.ct >= chr.ActionCt()) {
                 chr.OnTurnStart();
                 if (chr instanceof PlayerChar) {

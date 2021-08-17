@@ -12,6 +12,7 @@
  * @property {string} flavour - ark flavour text
  * @property {string} skill - ark skill;
  * @property {string} item - item reward;
+ * @property {number[]} soul_req - soul req for level up;
  * @property {[ArkLearn]} learnings - ark learning skills;
  */
 
@@ -45,6 +46,7 @@ class Ark {
     get allLearnings() {return this.data.learnings;}
     get currentLearnings() {return this.data.learnings.filter(ln => ln.level <= this.level);}
     get skill() {return this._skill;}
+    get explore() {return this._explore;}
 
     get shortDesc() {return this._skill.data.expr; }
     get description() {
@@ -69,6 +71,10 @@ class Ark {
         }
     }
 
+    GetLevelUpCost() {
+        return this._level === Ark.MaxLevel? 0:this.data.soul_req[this._level];
+    }
+
     AddExplore(val) {
         this._explore += val;
         this._explore = Math.min(this._explore, Ark.MaxExplore);
@@ -77,6 +83,13 @@ class Ark {
     _exploreItemGot = false;
     IsExploreItemGot() {
         return this._exploreItemGot;
+    }
+
+    GetExploreItem() {
+        if (this._explore === Ark.MaxExplore&&!this._exploreItemGot) {
+            $gameParty.GetItem(this.data.item);
+            this._exploreItemGot = true;
+        }
     }
 
     OnEquipped(chr) {

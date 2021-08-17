@@ -25,6 +25,7 @@ class Button extends Clickable {
 		this.CreateImage(image, image_folder);
 		this.CreatePressedSprite(pressed_image);
 		this.CreateText(text);
+		this.Activate();
 	}
 	/** @type Paddings */
 	_paddings;
@@ -48,8 +49,6 @@ class Button extends Clickable {
 	 * @returns {boolean}
 	 */
 	get active() {return this._active;}
-	Activate() {this._active = true;}
-	Deactivate() {this._active = false;}
 	Hide() {
 		this.visible = false;
 		this.Deactivate();
@@ -145,6 +144,7 @@ class Button extends Clickable {
 	SetClickSe(name) {
 		this._clickSe = name;
 	}
+
 	OnClick() {
 		super.OnClick();
 		if (this._handlers[this.OnClick.name]) {

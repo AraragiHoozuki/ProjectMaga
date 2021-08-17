@@ -16,6 +16,7 @@ class LWFUtils {
             LWFUtils.stage.style.bottom = '0';
             LWFUtils.stage.style.right = '0';
             LWFUtils.stage.style.margin = "auto";
+            LWFUtils.stage.style.pointerEvents = 'none';
             document.body.appendChild(LWFUtils.stage);
             window.onresize=()=>{
                 LWFUtils.stage.style.width=Graphics._realScale * LWFUtils.stage.width + 'px';

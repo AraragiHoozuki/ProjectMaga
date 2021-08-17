@@ -121,14 +121,14 @@ class TalentScene extends MenuBaseScene {
                 } else {
                     sk = TalentScene.player.learnedSkills.find(s => s.iname === iname);
                 }
-                if(sk===undefined) {
-                    sp = $dataSkills[iname].sp[0];
-                    str += `学习技能【${$dataSkills[iname].name}】， 需要花费技能点${$dataSkills[iname].sp[0]}点\n`;
-                    str += Skill.GetDescription($dataSkills[iname], 0);
-                } else {
+                if(!!sk) {
                     sp = sk.spNeeded;
                     str += `升级技能【${$dataSkills[iname].name}】， 需要花费技能点${sk.spNeeded}点\n`;
                     str += Skill.GetDescription($dataSkills[iname], sk.level, sk.level+1);
+                } else {
+                    sp = $dataSkills[iname].sp[0];
+                    str += `学习技能【${$dataSkills[iname].name}】， 需要花费技能点${$dataSkills[iname].sp[0]}点\n`;
+                    str += Skill.GetDescription($dataSkills[iname], 0);
                 }
                 let h = w.TestDraw(str);
                 w.SetContentLength(h);

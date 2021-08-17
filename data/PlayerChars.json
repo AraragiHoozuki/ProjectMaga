@@ -2,7 +2,7 @@
     "PLC_TYRFINGR": {
         "iname": "PLC_TYRFINGR",
         "name": "提尔芬格",
-        "model": "104010121",
+        "model": "104010122",
         "voice": "thillelille",
         "inilevel": 10,
         "race": "人",
@@ -14,7 +14,8 @@
         "profile": "    阿特奥斯共和国对内调查、执法机构“裁判所”的骨干人员，领导的第七调查团直属于“七贤臣”之一的高迪芬，因为工作原因常出差在外。",
         "iniparam": [600, 120, 75, 45, 26, 32, 42, 30],
         "maxparam": [21455, 600, 1790, 890, 725, 620, 155, 120],
-        "crafts": ["SK_TEST", "SK_TEST", "SK_TEST", "SK_TEST"],
+        "attack": "SK_ATTACK_TYRFINGR",
+        "crafts": ["CR_TYRFINGR_DOUBLE_SLASH", "CR_TYRFINGR_FLAME_SLASH", "SK_TEST", "SK_TEST"],
         "talents": [
             [0, 1, 2, "SK_TEST", "SK_TEST"],
             ["SK_TEST", "SK_TEST", 3, "SK_TEST", 2],

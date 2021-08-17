@@ -9,6 +9,16 @@
         "wept": 0,
         "skills": []
     },
+    "IT_MAT_BLUE_SOUL": {
+        "iname": "IT_MAT_BLUE_SOUL",
+        "name": "圣魂",
+        "icon": "blue_soul",
+        "description": "可以用来升级圣物",
+        "type": 1,
+        "slot": 0,
+        "wept": 0,
+        "skills": []
+    },
     "IT_BATTLE_MEMORY": {
         "iname": "IT_BATTLE_MEMORY",
         "name": "战斗的记忆",

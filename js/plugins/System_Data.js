@@ -1,16 +1,57 @@
-const $fs = require('fs');
-
 class DataUtils {
+    /** @type PIXI.Loader[] */
+    static _pool = [PIXI.Loader.shared];
+
     static Load(path, options={}) {
         return new Promise((resolve, reject)=> {
             if (PIXI.Loader.shared.resources[path]) {
                 resolve(PIXI.Loader.shared.resources[path]);
             } else {
-                PIXI.Loader.shared.add(path, path, options).load((loader, res) => {
+                const loader = DataUtils.FirstAvailLoader();
+                loader.add(path, path, options).load((loader, res) => {
+                    if (!PIXI.Loader.shared.resources[path]) PIXI.Loader.shared.resources[path] = res[path];
                     resolve(res[path]);
                 });
             }
         });
+    }
+
+    /**
+     * 
+     * @param {string[]} paths 
+     * @param {Object} options 
+     * @returns 
+     */
+    static LoadMulti(paths, options = {}) {
+        return new Promise((resolve, reject)=> {
+            if (paths.every(p => PIXI.Loader.shared.resources[p]!== undefined)) {
+                resolve(paths.map(p=>PIXI.Loader.shared.resources[p]));
+            } else {
+                const loader = DataUtils.FirstAvailLoader();
+                const arr = [];
+                for(const p of paths) {
+                    if (PIXI.Loader.shared.resources[p] === undefined) {
+                        loader.add(p, p, options);
+                        arr.push(p);
+                    }
+                }
+                loader.load((ld, res)=> {
+                    for (const p of arr) {
+                        PIXI.Loader.shared.resources[p] = res[p];
+                    }
+                    resolve(paths.map(p=>PIXI.Loader.shared.resources[p]));
+                });
+            }
+        });
+    }
+
+    static FirstAvailLoader() {
+        let ld = this._pool.find((loader)=>loader.loading === false);
+        if (ld === undefined) {
+            ld = new PIXI.Loader();
+            DataUtils._pool.push(ld);
+        }
+        return ld
     }
 }
 
@@ -23,6 +64,23 @@ ImageManager.loadBitmapWithExt = function(folder, filename) {
     }
 };
 
+ImageManager.LoadBitmapAsync = function(folder, filename) {
+    return new Promise((resolve, reject)=> {
+        const b = this.loadBitmap(folder, filename);
+        b.addLoadListener(() => resolve(b));
+    });
+};
+
+/**
+ * 
+ * @param {string} folder 
+ * @param {string} filename
+ * @returns {Bitmap} 
+ */
+ ImageManager.LoadUIBitmap = function(folder = 'img/ui/', filename) {
+    return ImageManager.loadBitmap(folder, filename);
+};
+
 Array.prototype.randomChoice = function() {
     return this[Math.randomInt(this.length)];
 }
@@ -32,7 +90,7 @@ Scene_Boot.prototype.loadSystemImages = function() {
     ColorManager.loadWindowskin();
     ImageManager.loadSystem("IconSet");
 
-    const fs = $fs;
+    const fs = require('fs');
     let files;
 
     files = fs.readdirSync(ImagePreLoadPathPrefix + 'img/ui/');

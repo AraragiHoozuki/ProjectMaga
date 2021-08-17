@@ -1,5 +1,6 @@
 AudioManager.createBuffer = function(folder, name) {
     let ext = this.audioFileExt(); // .ogg
+    const $fs = require('fs');
     if (!$fs.existsSync(this._path + folder + name + ext)) {
         ext = '.wav';
     }

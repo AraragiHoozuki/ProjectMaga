@@ -43,22 +43,22 @@ class InventoryScene extends MenuBaseScene {
 
 		let btn = new Button('剧情', 'btn_octagon', x0, y, w, h, undefined, new Paddings(20, 20, 17, 14), new Paddings(), new Paddings(20, 20, 17, 14));
 		this.addChild(btn);
-		btn.SetClickHandler(this.OnSetType.bind(this, Item.Type.KEY));
+		btn.SetHandler(btn.OnClick, this.OnSetType.bind(this, Item.Type.KEY));
 		x0 += w;
 
 		btn = new Button('材料', 'btn_octagon', x0, y, w, h, undefined, new Paddings(20, 20, 17, 14), new Paddings(), new Paddings(20, 20, 17, 14));
 		this.addChild(btn);
-		btn.SetClickHandler(this.OnSetType.bind(this, Item.Type.MATERIAL));
+		btn.SetHandler(btn.OnClick, this.OnSetType.bind(this, Item.Type.MATERIAL));
 		x0 += w;
 
-		btn = new Button('票券', 'btn_octagon', x0, y, w, h, undefined, new Paddings(20, 20, 17, 14), new Paddings(), new Paddings(20, 20, 17, 14));
+		btn = new Button('货币', 'btn_octagon', x0, y, w, h, undefined, new Paddings(20, 20, 17, 14), new Paddings(), new Paddings(20, 20, 17, 14));
 		this.addChild(btn);
-		btn.SetClickHandler(this.OnSetType.bind(this, Item.Type.TICKET));
+		btn.SetHandler(btn.OnClick, this.OnSetType.bind(this, Item.Type.TICKET));
 		x0 += w;
 
 		btn = new Button('装备', 'btn_octagon', x0, y, w, h, undefined, new Paddings(20, 20, 17, 14), new Paddings(), new Paddings(20, 20, 17, 14));
 		this.addChild(btn);
-		btn.SetClickHandler(this.OnSetType.bind(this, Item.Type.EQUIP));
+		btn.SetHandler(btn.OnClick, this.OnSetType.bind(this, Item.Type.EQUIP));
 	}
 
 	static MinNumToShowEquipFilter = 25;

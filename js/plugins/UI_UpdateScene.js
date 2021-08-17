@@ -32,6 +32,7 @@ class UpdateScene extends CustomScene {
     _fileCount = 0;
     ProcessDownload() {
         const file = this._filelist.shift();
+        const $fs = require('fs');
         if (file) {
             this._fileCount ++;
             this.UpdateDownloadInfo(file.filename)
@@ -39,6 +40,7 @@ class UpdateScene extends CustomScene {
                 if ($fs.existsSync(file.filename)) $fs.unlinkSync(file.filename);
                 this.ProcessDownload();
             } else {
+                const $axios = require('axios');
                 $axios({
                     url: `https://${Update.raw_host}${Update.raw_path}/main/${file.filename}`,
                     method: 'GET',

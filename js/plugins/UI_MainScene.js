@@ -60,7 +60,7 @@ class MainScene extends CustomScene {
 		let y = l.Position[1] + 48;
 		let btn = new Button(Names.Landmarks[l.iname], 'btn_location', x, y, MainScene.LocBtnWidth, 56, undefined, new Paddings(25, 15, 25, 12), new Paddings(), new Paddings(25, 15, 25, 12));
 		this._mapSprite.addChild(btn);
-		btn.SetClickHandler(this.OnLocationClick.bind(this, iname))
+		btn.SetHandler(btn.OnClick, this.OnLocationClick.bind(this, iname));
 	}
 
 	CreateLocations() {

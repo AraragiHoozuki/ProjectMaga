@@ -1,5 +1,4 @@
-const $https = require('https');
-const $axios = require('axios');
+
 var $dataVersion;
 class Network {
     /**
@@ -10,6 +9,7 @@ class Network {
     static async HttpsGet(options) {
         return new Promise((resolve) => {
             let data = '';
+            const $https = require('https');
             $https.get(options, (res) => {
                 res.on("data", (chunk) => {
                     data += chunk;

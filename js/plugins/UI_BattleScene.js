@@ -38,7 +38,7 @@ class BattleScene extends CustomScene {
 		this._skillList.addChild(this._skillDetail);
 		this._skillDetail.Close();
 
-		this._skillList.SetClickHandler(this.OnSkillConfirm.bind(this));
+		this._skillList.SetHandler(this._skillList.OnClick, this.OnSkillConfirm.bind(this));
 		this._skillList.SetHandler(this._skillList.OnLongPress, ()=> {
 			if (this._skillList.item) {
 				this._skillDetail.SetSkill(this._skillList.item);
@@ -511,15 +511,6 @@ Spriteset_Battle.prototype.update = function() {
 	this.updateBattleback();
 	this.updateAnimations();
 	this.updateDamages();
-	this.UpdateHpGauges();
-};
-
-Spriteset_Battle.prototype.UpdateHpGauges = function() {
-	if (this._hpGauges) {
-		for(const g of this._hpGauges) {
-			g.SetValue(g.chr.hp, g.chr.mhp);
-		}
-	}
 };
 
 

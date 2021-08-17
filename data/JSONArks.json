@@ -4,9 +4,10 @@
     "image": "sword_shield",
     "flavour": "",
     "skill": "SK_SLASH",
-    "item": "",
+    "item": "IT_WP_RUBY_STAFF",
+    "soul_req": [0, 1000, 3000, 5000, 8500, 13000, 18000, 25000, 46000, 93000],
     "learnings": [
-      {"iname": "SK_FIREBALL", "ap": 1, "level": 1},
+      {"iname": "SK_CRITICAL_UP_S", "ap": 16, "level": 1},
       {"iname": "SK_TYRFINGR_SHURA_BLADE", "ap": 1, "level": 3}
     ]
   }

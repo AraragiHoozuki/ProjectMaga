@@ -312,53 +312,7 @@ class MenuBaseScene extends CustomScene {
 	}
 }
 
-class DebugScene extends MenuBaseScene {
-	CreateCustomContents() {
-		super.CreateCustomContents();
-		this.CreateCharList();
-		this.CreateButtons();
-	}
 
-	CreateCharList() {
-		this._charListWindow = new CharacterListWindow(0, 0, Graphics.width, Graphics.height, '', 0);
-		this.addChild(this._charListWindow);
-		this._charListWindow.MakeList();
-		this._charListWindow.Activate();
-	}
-
-	CreateButtons() {
-		let btn = new Button('Test', 'btn_lc_cmn', 500, 200, 200, 60, 'btn_hover_azure', new Paddings(10), new Paddings(16), new Paddings(22));
-		this.addChild(btn);
-		btn.SetHandler(btn.OnClick, this.TestFunc.bind(this));
-
-		btn = new Button('LWF测试', 'btn_pos', 300, 400, 200, 80, undefined, new Paddings(25), undefined, new Paddings(25));
-		this.addChild(btn);
-		btn.SetHandler(btn.OnClick, this.TestLwf.bind(this));
-
-		btn = new Button('数字测试', 'btn_pos', 600, 400, 200, 80, undefined, new Paddings(25), undefined, new Paddings(25));
-		this.addChild(btn);
-		btn.SetHandler(btn.OnClick, this.TestNumber.bind(this));
-		const n = new NumberSprite(1280, 0, 1000, 'number_azure', 'right');
-		this.addChild(n);
-		this._number = n;
-	}
-
-	TestFunc() {
-		//BattleFlow.BeginBattle("ES_TEST");
-		this.Toast('特朗普跟小三跑了！', '#dd004d');
-	}
-
-	TestLwf() {
-		let name = prompt();
-		if (name)
-			LWFUtils.PlayLwf('lwf/battleLwf/', name, 500, 300);
-	}
-
-	TestNumber() {
-		let name = prompt();
-		this._number.SetNumber(parseInt(name));
-	}
-}
 
 Scene_Title.prototype.commandNewGame = function() {
 	DataManager.setupNewGame();

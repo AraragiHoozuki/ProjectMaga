@@ -205,6 +205,7 @@ class Status {
  * @property {string} profile - profile
  * @property {number[]} iniparam - initial primary params
  * @property {number[]} maxparam - maximal primary params
+ * @property {string} attack - normal attack skill
  * @property {string[]} crafts - crafts to learn
  * @property {(string|number)[][]} talents - talent table
  * @property {number[][]} talent_edges - talent table edges
@@ -1020,6 +1021,7 @@ class PlayerChar extends Character {
 
     InitSkills() {
         this.LearnTalentSkill('SK_WAIT');
+        this.LearnTalentSkill(this.data.attack);
         for (const t of this.data.talents) {
             if(t.level <= this.level) {
                 this.LearnTalentSkill(t.iname);
@@ -1057,14 +1059,13 @@ class PlayerChar extends Character {
             throw new Error(`slot 参数应当在 0~3 之间，当前 slot 参数为 ${slot}`);
         }
         const c = this._crafts[slot];
-        if (c === undefined) {
+        if (!!c) {
+            c.LevelUp();
+        } else {
             const iname = this.data.crafts[slot];
             const data = $dataSkills[iname];
             const cla = eval(data.script);
-            /** @type Craft */
             this._crafts[slot] = new cla(iname, this);
-        } else {
-            c.LevelUp();
         }
     }
 
@@ -1194,6 +1195,9 @@ class PlayerChar extends Character {
         super.OnBattleEnd();
         this.ClearBattleFace();
         this.controller.SetVictoryAnimation();
+        for (const c of this.crafts) {
+            c?.ClearSCT();
+        }
     }
 }
 
@@ -1213,6 +1217,7 @@ class EnemyChar extends Character {
 
     /** @returns {CharJSON} */
     get data() { return $dataENC[this._iname];}
+    get skills() { return this._learnedSkills;}
 
     _ai = 'Normal';
     get ai() {return this._ai;}
@@ -1235,7 +1240,7 @@ class EnemyChar extends Character {
 
     InitSkills() {
         for (let sk of this.data.skills) {
-            this.LearnSkill(sk, Math.ceil(this.level/20));
+            this._ForceLearnSkill(sk);
         }
     }
 

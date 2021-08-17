@@ -984,10 +984,10 @@ class BattleSkillListWindow extends ScrollListWindow {
     /** @returns {Skill} */
     get item() { return super.item;}
     /**
-     * @param {Character} chr
+     * @param {PlayerChar} chr
      */
     MakeList(chr) {
-        this._data = chr.activeSkills;
+        this._data = [...chr.crafts.filter(c=>!!c), ...chr.activeSkills];
         super.MakeList();
     }
 
@@ -996,13 +996,22 @@ class BattleSkillListWindow extends ScrollListWindow {
     }
 
     DrawItem(index) {
-        if (!this._data[index]) return;
-        let name = `${this._data[index].name} (\\#307ff5${this._data[index].manacost}\\#ffffff・\\#f49f51${this._data[index].cpcost}\\#ffffff・\\#888878${this._data[index].ctcost}\\#ffffff)`
-        let r = this.GetItemRect(index);
-        let i_r = new Rectangle(r.x, r.y, r.height, r.height);
-        this.DrawTexture('img/ui/', this._data[index].CanUse()?'cell_cmn':'cell_gray', r.x, r.y, r.width, r.height, new Paddings(10));
+        const sk = this._data[index];
+        if (!sk) return;
+        const name = `${this._data[index].name}`;
+        const r = this.GetItemRect(index);
+        const i_r = new Rectangle(r.x, r.y, r.height, r.height);
+        this.DrawTexture('img/ui/', sk.CanUse()?'cell_cmn':'cell_gray', r.x, r.y, r.width, r.height, new Paddings(10));
         this.DrawImageInRect('img/icons/skill/', this._data[index].icon,0, 0, i_r, new Paddings(10));
         this.DrawTextEx(name, r.x + i_r.width, r.y + r.height/3.5, r.width - r.height);
+        if (sk instanceof Craft) {
+            this.DrawProgressBar('AP', 1, r.x + r.width - 260, r.y + r.height/3.5, 200, sk.sct, sk.maxSct);
+            this.content.textColor = Colors.Orange;
+            this.DrawText(`x${sk.stack}`, r.x, r.y + r.height/3.5, r.width - 10, 'right');
+            this.ResetFontSettings();
+        } else {
+
+        }
         if (this.index === index) {
             this.DrawTexture('img/ui/', 'cell_select_cmn', r.x, r.y, r.width, r.height, new Paddings(9));
         }
@@ -1027,10 +1036,8 @@ class BattleSkillDetailWindow extends CustomWindow {
     SetSkill(skill) {
         this.content.clear();
         let s = '';
-        s += `${skill.name} 【等级 ${skill.level}/${skill.maxLevel}】\n`;
-        s += `消耗: \\${Colors.Indigo}${skill.manacost}  \\${Colors.Orange}${skill.cpcost}  \\${Colors.Gray}${skill.ctcost}\\${Colors.White}\n`;
         s += skill.GetDescription();
-        let h = this.TestDraw(s) * 1.2;
+        let h = this.TestDraw(s) + 20;
         this.Move(this.x, -h, this.width, h);
         this.DrawTextEx(s, 0, 0, this.contentWidth);
     }
@@ -1151,9 +1158,9 @@ class ArkListWindow extends ScrollListWindow {
             this.DrawImage('img/icons/skill/', $dataSkills[ln.iname].icon, 0, 0, x, y, 32, 32);
             this.DrawText($dataSkills[ln.iname].name, x + 36, y + 3, r.width - x - 36);
             if (ln.level <= this._data[index].level) {
-                this.DrawText(`AP倍率: ${ln.ap}`, x + 36, y + 3, r.width - x - 45, 'right');
+                this.DrawText(`AP倍率: ${ln.ap}    习得AP需求: ${$dataSkills[ln.iname].ap}`, x + 36, y + 3, r.width - x - 45, 'right');
             } else {
-                this.DrawText(`需要圣物等级${ln.level}`, x + 36, y + 3, r.width - x - 45, 'right');
+                this.DrawText(`需要圣物等级${ln.level}    习得AP需求: ${$dataSkills[ln.iname].ap}`, x + 36, y + 3, r.width - x - 45, 'right');
             }
             y += 32;
         }

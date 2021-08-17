@@ -1,3 +1,22 @@
+const GraphicsInteractivityChange = {};
+GraphicsInteractivityChange.Video_createElement= Video._createElement;
+Video._createElement = function() {
+    GraphicsInteractivityChange.Video_createElement.call(this);
+    this._element.style.pointerEvents = "none";
+};
+GraphicsInteractivityChange.GraphicsFPSCounter_createElements = Graphics.FPSCounter.prototype._createElements;
+Graphics.FPSCounter.prototype._createElements = function() {
+    GraphicsInteractivityChange.GraphicsFPSCounter_createElements.call(this);
+    this._boxDiv.style.pointerEvents = "none";
+    this._labelDiv.style.pointerEvents = "none";
+    this._numberDiv.style.pointerEvents = "none";
+};
+GraphicsInteractivityChange.Graphics_createErrorPrinter = Graphics._createErrorPrinter;
+Graphics._createErrorPrinter = function() {
+    GraphicsInteractivityChange.Graphics_createErrorPrinter.call(this);
+    this._errorPrinter.style.pointerEvents = 'none';
+};
+
 /**
  * Enum for predefined colors
  * @readonly
@@ -108,7 +127,8 @@ class Clickable extends PIXI.Container {
         this.y = y;
         this._width = w;
         this._height = h;
-        this._active = true;
+        this.InitiateEvents();
+        this.Deactivate();
     }
 
     get width() {return this._width;}
@@ -120,11 +140,12 @@ class Clickable extends PIXI.Container {
      * @returns {boolean}
      */
     get active() { return this._active;}
-    Activate() { this._active = true;}
-    Deactivate() { this._active = false;}
+    Activate() { this._active = this.interactive = true;}
+    Deactivate() { this._active = this.interactive = false;}
 
     Enable(bool = true) {
-        this._active = (bool === true);
+        if (bool) this.Activate();
+        else this.Deactivate();
     }
 
     Disable() {
@@ -138,7 +159,7 @@ class Clickable extends PIXI.Container {
     }
     /** @returns {boolean} */
     IsPressed() {
-        return this._pressed;
+        return this._pressTimer !== false;
     }
 
     IsEnabled() {
@@ -149,53 +170,88 @@ class Clickable extends PIXI.Container {
     _longPressed = false;
     _pressPoint = new Point(0, 0);
     _releasePoint = new Point(0, 0);
+    _pressTimer = false;
+    _longPressThreshold = 30;
+
+    InitiateEvents() {
+        this.SetHitArea(new PIXI.Rectangle(0, 0, this.w, this.h));
+        this.on('pointerdown', this.OnPress.bind(this));
+        this.on('pointerout', this.OnLeave.bind(this));
+        this.on('pointertap', this.OnClick.bind(this));
+        this.on('pointerup', this.OnRelease.bind(this));
+    }
+
+    /**
+     * @param {PIXI.Graphics} area 
+     */
+    SetHitArea(area) {
+        this.hitArea = area;
+    }
+    
     update() {
         if (!this.IsEnabled()) return;
+        if (this.IsPressed()) {
+            this._pressTimer++;
+            if (this._pressTimer >= this._longPressThreshold && !this._longPressed) this.OnLongPress();
+        }
         for (const child of [...this.children].reverse()) {
             if (child.update) {
                 child.update();
             }
         }
-        if (this._pressed) {
-            if (this.IsMouseOver()) {
-                if (!this._longPressed && TouchInput.isLongPressed()) {
-                    this._longPressed = true;
-                    this.OnLongPress();
-                }
-                if(TouchInput.isReleased()) {
-                    if(this._longPressed) {
-                        this.OnLongPressRelease(true);
-                    } else if(TouchInput.isClicked()){
-                        this.OnClick();
-                    }
-                    this._pressed = false;
-                    this._longPressed = false;
-                    this.OnRelease();
-                }
-            } else {
-                if(this._longPressed) {
-                    this.OnLongPressRelease(false);
-                }
-                this._pressed = false;
-                this._longPressed = false;
-                this.OnRelease();
-            }
-        } else if (TouchInput.isTriggered()&&this.IsMouseOver()) {
-            this._pressed = true;
-            this.OnPress();
-        }
+        // if (this._pressed) {
+        //     if (this.IsMouseOver()) {
+        //         if (!this._longPressed && TouchInput.isLongPressed()) {
+        //             this._longPressed = true;
+        //             this.OnLongPress();
+        //         }
+        //         if(TouchInput.isReleased()) {
+        //             if(this._longPressed) {
+        //                 this.OnLongPressRelease(true);
+        //             } else if(TouchInput.isClicked()){
+        //                 this.OnClick();
+        //             }
+        //             this._pressed = false;
+        //             this._longPressed = false;
+        //             this.OnRelease();
+        //         }
+        //     } else {
+        //         if(this._longPressed) {
+        //             this.OnLongPressRelease(false);
+        //         }
+        //         this._pressed = false;
+        //         this._longPressed = false;
+        //         this.OnRelease();
+        //     }
+        // } else if (TouchInput.isTriggered()&&this.IsMouseOver()) {
+        //     this._pressed = true;
+        //     this.OnPress();
+        // }
     }
 
     OnPress() {
         this._pressPoint.set(TouchInput.x, TouchInput.y);
         console.log('press');
+        this._pressTimer = 0;
         this.CallHandler(this.OnPress.name);
+        
+    }
+
+    OnLeave() {
+        if (this.IsPressed()) this.OnRelease();
     }
 
     OnRelease() {
         this._releasePoint.set(TouchInput.x, TouchInput.y);
-        console.log('release');
-        this.CallHandler(this.OnRelease.name);
+        this._pressTimer = false;
+        this._longPressed = false;
+        const long = this._pressTimer >= this._longPressThreshold?true:false;
+        if (long) {
+            this.OnLongPressRelease();
+        } else {
+            console.log('release');
+            this.CallHandler(this.OnRelease.name);
+        }
     }
 
     OnClick() {
@@ -205,14 +261,12 @@ class Clickable extends PIXI.Container {
 
     OnLongPress() {
         console.log('long press start');
+        this._longPressed = true;
         this.CallHandler(this.OnLongPress.name);
     }
 
-    /**
-     * @param {boolean} isClick
-     */
-    OnLongPressRelease(isClick) {
-        console.log(`long press release, this is${isClick?'':' not'} a click`);
+    OnLongPressRelease() {
+        console.log(`long press release`);
         this.CallHandler(this.OnLongPressRelease.name);
     }
 
@@ -238,16 +292,122 @@ class Clickable extends PIXI.Container {
     }
 }
 
+/**
+ * 平铺图像，在保障边缘不扭曲的情况下，可以画出任意大小的类矩形区域。
+ */
+class Spreading extends PIXI.Container {
+    /**
+     * 
+     * @param {PIXI.Texture} tex 
+     * @param {number} y 
+     * @param {number} x 
+     * @param {number} w 
+     * @param {number} h 
+     * @param {Paddings} p 
+     * @param {number} mode - 0 for tiling, 1 for stretching
+     */
+    constructor(tex, x, y, w, h, p, mode = Spreading.Mode.Tile) {
+        super();
+        this.x = x;
+        this.y = y;
+        this._width = w;
+        this._height = h;
+        this._paddings = p;
+        this._texture = tex;
+        this._mode = mode;
+        for (let i = 0; i < 9; i++) {
+            this._sprites.push(this.addChild(new PIXI.Sprite()));
+        }
+        this.RefreshSprites();
+    }
+
+    static Mode = {
+        Tile: 0,
+        Stretch: 1
+    }
 
 /**
- * 
- * @param {string} folder 
- * @param {string} filename
- * @returns {Bitmap} 
+ * @typedef {Object} SpreadingConfig
+ * @property {string} path
+ * @property {[number]} paddings
  */
-ImageManager.LoadUIBitmap = function(folder = 'img/ui/', filename) {
-    return ImageManager.loadBitmap(folder, filename);
-};
+    static Configs = {
+        ANADEN_CELL: {
+            path: 'img/ui/spreading/cell_cmn.png',
+            paddings: [15]
+        }
+    }
+
+    _width;
+    get width() {return this._width;}
+    set width(val) {if (val !== this._width) this._width = val; this.RefreshSprites();}
+    _height;
+    get height() {return this._height;}
+    set height(val) {if (val !== this._height) this._height = val; this.RefreshSprites();}
+
+    _sprites = [];
+
+    /**
+     * 
+     * @param {PIXI.Texture} tex 
+     * @param {Paddings} p 
+     */
+    SetTexture(tex, p)  {
+        this._texture = tex,
+        this._paddings = p;
+        this.RefreshSprites();
+    }
+
+    RefreshSprites() {
+        const p = this._paddings;
+        const tex = this._texture;
+        let sp, ft;
+        const list = [
+            [0, 0, p.left, p.top], //左上角
+            [tex.width - p.right, 0, p.right, p.top], //右上角
+            [0, tex.height - p.bottom, p.left, p.bottom], //左下角
+            [tex.width - p.right, tex.height - p.bottom, p.right, p.bottom], //右下角
+            [p.left, 0, tex.width - p.left - p.right, p.top], //上
+            [p.left, tex.height - p.bottom, tex.width - p.left - p.right, p.bottom], //下
+            [0, p.top, p.left, tex.height - p.top - p.bottom], //左
+            [tex.width - p.right, p.top, p.right, tex.height - p.top - p.bottom] //右
+        ];
+        for(let i = 0; i < 8; i++) {
+            ft = new PIXI.Texture(tex, new Rectangle(...(list[i])));
+            sp = this._sprites[i];
+            sp.texture = ft;
+            if ( i >= 4) {
+                if (i <= 5) {sp.scale.x = (this.width - p.left - p.right)/list[i][2];}
+                else {sp.scale.y = (this.height - p.top - p.bottom)/list[i][3];}
+            }
+        }
+
+        ft = new PIXI.Texture(tex, new Rectangle(p.left, p.top, tex.width - p.left - p.right, tex.height - p.top - p.bottom));
+        sp = this._sprites[8];
+        if (this._mode === Spreading.Mode.Tile) {
+            sp = this._sprites.pop();
+            this.removeChild(sp);
+            sp = new PIXI.TilingSprite(ft, this.width - p.left - p.right, this.height - p.top - p.bottom);
+            this.addChild(sp);
+            this._sprites.push(sp);
+        } else {
+            sp.texture = ft;
+            sp.scale.x = (this.width - p.left - p.right)/(this._texture.width - p.left - p.right);
+            sp.scale.y = (this.height - p.top - p.bottom)/(this._texture.height -  p.top - p.bottom);
+        }
+        
+        [this._sprites[0].x, this._sprites[0].y] = [0, 0];
+        [this._sprites[1].x, this._sprites[1].y] = [this.width - p.right, 0];
+        [this._sprites[2].x, this._sprites[2].y] = [0, this.height - p.bottom];
+        [this._sprites[3].x, this._sprites[3].y] = [this.width - p.right, this.height - p.bottom];
+        [this._sprites[4].x, this._sprites[4].y] = [p.left, 0];
+        [this._sprites[5].x, this._sprites[5].y] = [p.left, this.height - p.bottom];
+        [this._sprites[6].x, this._sprites[6].y] = [0, p.top];
+        [this._sprites[7].x, this._sprites[7].y] = [this.width - p.right, p.top];
+        [this._sprites[8].x, this._sprites[8].y] = [p.left, p.top];
+    }
+}
+
 
 
 /**

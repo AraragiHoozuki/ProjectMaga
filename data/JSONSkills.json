@@ -21,7 +21,7 @@
     "iname": "SK_TEST",
     "name": "测试",
     "expr": "技能基本说明",
-    "script": "Skill_NormalModifier",
+    "script": "Craft",
     "modifiers": ["Modifier_ParamUp"],
     "icon": "test",
     "passive": false,
@@ -30,6 +30,8 @@
     "sp": [0],
     "manacost": [0, 0, 0, 0],
     "cpcost": [0],
+    "max_sct": [2000],
+    "max_stack": [4],
     "ctcost": [600],
     "lucost": [0],
     "lwf": "",
@@ -41,12 +43,110 @@
       {"name": "PLUS_STR", "tooltip": "力量加成", "values": [100, 200, 300, 400]}
     ]
   },
-  "SK_PARAM": {
-    "iname": "SK_PARAM",
-    "name": "属性变化·测试",
+  "SK_ATTACK_TYRFINGR": {
+    "iname": "SK_ATTACK_TYRFINGR",
+    "name": "斩击",
+    "expr": "对目标敌人造成无属性·斩攻击·物理伤害（基于力量）",
+    "script": "Skill_TyrfingrAttack",
+    "icon": "none_slash",
+    "passive": false,
+    "ap": 0,
+    "memory": 0,
+    "sp": [0],
+    "modifiers": [],
+    "manacost": [0],
+    "cpcost": [0],
+    "ctcost": [1000],
+    "lwf": "811000009",
+    "global": false,
+    "animation": "attack",
+    "actionPoints": [0.53],
+    "sound": "se_at_slash",
+    "specials": [
+      {
+        "name": "damage_scale",
+        "tooltip": "伤害倍率",
+        "values": [125]
+      }
+    ]
+  },
+  "CR_TYRFINGR_DOUBLE_SLASH": {
+    "iname": "CR_TYRFINGR_DOUBLE_SLASH",
+    "name": "二连斩",
+    "expr": "对目标敌人造成两次无属性·斩攻击·物理伤害（基于力量），容易暴击",
+    "script": "Craft_TyrfingrDoubleSlash",
+    "icon": "none_slash",
+    "passive": false,
+    "ap": 0,
+    "memory": 0,
+    "sp": [0, 3, 6],
+    "modifiers": [],
+    "manacost": [0, 0, 0],
+    "cpcost": [0],
+    "max_sct": [1500],
+    "max_stack": [2, 3, 4],
+    "ctcost": [1000],
+    "lwf": "819004121",
+    "global": false,
+    "animation": "skill2",
+    "actionPoints": [0.4, 0.65],
+    "sound": "se_at_slash",
+    "specials": [
+      {
+        "name": "damage_scale",
+        "tooltip": "每次伤害倍率",
+        "values": [80, 100, 120]
+      },
+      {
+        "name": "extra_crit",
+        "tooltip": "额外暴击率",
+        "values": [30, 50, 70]
+      }
+    ]
+  },
+  "CR_TYRFINGR_FLAME_SLASH": {
+    "iname": "CR_TYRFINGR_FLAME_SLASH",
+    "name": "炎斩",
+    "expr": "对全体敌人造成火属性·斩攻击·物理伤害（基于力量），消耗自身HP（不会致死）",
+    "script": "Craft_TyrfingrFlameSlash",
+    "icon": "none_slash",
+    "passive": false,
+    "ap": 0,
+    "memory": 0,
+    "sp": [0, 3, 6],
+    "modifiers": [],
+    "manacost": [0, 0, 0],
+    "cpcost": [0],
+    "max_sct": [2400],
+    "max_stack": [2, 3, 4],
+    "ctcost": [1000],
+    "lwf": "812000361",
+    "global": false,
+    "animation": "skill3",
+    "actionPoints": [0.36],
+    "sound": "se_skill_slash_as_akane",
+    "specials": [
+      {
+        "name": "damage_scale",
+        "tooltip": "伤害倍率",
+        "values": [150, 200, 250]
+      },
+      {
+        "name": "hprate_cost",
+        "tooltip": "消耗生命值%",
+        "values": [10, 10, 10]
+      }
+    ]
+  },
+  "SK_CRITICAL_UP_S": {
+    "iname": "SK_CRITICAL_UP_S",
+    "name": "暴击率·小",
+    "expr": "暴击率提高",
     "script": "Skill_ParamUp",
-    "icon": "fire",
+    "icon": "critical_up",
     "passive": true,
+    "memory": 2,
+    "ap": 120,
     "modifiers": ["Modifier_ParamUp"],
     "manacost": [0],
     "cpcost": [0],
@@ -54,12 +154,9 @@
     "lucost": [0],
     "specials": [
       {
-        "name": "PLUS_STR",
-        "values": [25]
-      },
-      {
         "name": "SPLUS_CRITICAL_CHANCE",
-        "values": [25]
+        "tooltip": "暴击率增加值(%)",
+        "values": [5]
       }
     ]
   },

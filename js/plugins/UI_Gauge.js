@@ -1,69 +1,82 @@
 class Gauge extends PIXI.Container {
-    constructor(x, y, w, edge, bar, front, back) {
+    static Presets = {
+        config: {
+            empty: 'img/ui/gauge/gauge_config_empty.png',
+            fill: 'img/ui/gauge/gauge_config_fill.png'
+        }
+    }
+    /**
+     * 
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} w 
+     * @param {number} h 
+     * @param {Object} config
+     * @param {string} config.empty 
+     * @param {string} config.fill 
+     * @param {string} config.back 
+     */
+    constructor(x, y, w, h, {empty, fill, back}) {
         super();
         this.x = x;
         this.y = y;
         this._width = w;
-        this._edge = edge;
-        const img_bar = ImageManager.loadBitmap('img/ui/', bar, 0, true);
-        const back_filling = ImageManager.loadBitmap('img/ui/', back, 0, true);
-        const front_filling = ImageManager.loadBitmap('img/ui/', front, 0, true);
+        this._height = h;
+        this._emptyPath = empty;
+        this._fillPath = fill;
+        this._backPath = back;
+        this.Init();
 
-        const bar_bitmap = new Bitmap(w, img_bar.height);
-        bar_bitmap.DrawTexture(img_bar, 0, 0, w, img_bar.height, edge, edge, 0, 0);
-        this._barSprite = new Sprite(bar_bitmap);
-        this.addChild(this._barSprite);
-
-        const back_bitmap = new Bitmap(w, img_bar.height);
-        back_bitmap.DrawTexture(back_filling, 0, 0, w, img_bar.height, edge, edge, 0, 0);
-        this._backSprite = new Sprite(back_bitmap);
-        this.addChild(this._backSprite);
-
-        const front_bitmap = new Bitmap(w, img_bar.height);
-        front_bitmap.DrawTexture(front_filling, 0, 0, w, img_bar.height, edge, edge, 0, 0);
-        this._frontSprite = new Sprite(front_bitmap);
-        this.addChild(this._frontSprite);
-
-        this._textSprite = new Sprite(new Bitmap(w, img_bar.height));
-        this.addChild(this._textSprite);
-
-        this._frontFilling = front_filling;
-        this._backFilling = back_filling;
         this._current = this._max = 100;
-        this._backL = this._frontL = w;
     }
 
+    HasBack() {return this._backPath!==undefined;}
+    /**  @type Spreading*/  _empty;
+    /**  @type Spreading*/  _back;
+    /**  @type Spreading*/  _fill;
+    _inited = false;
+    Init() {
+        let arr =[this._emptyPath, this._fillPath];
+        if(this.HasBack()) {
+            arr.push(this._backPath);
+        }
+        DataUtils.LoadMulti(arr).then(()=>{
+            this._empty = this.addChild(new Spreading(PIXI.Texture.from(this._emptyPath), 0, 0, this._width, this._height, new Paddings(4,0,4,0),1));
+            if (this.HasBack()) this._back = this.addChild(new Spreading(PIXI.Texture.from(this._backPath), 0, 0, this._width, this._height, new Paddings(4,0,4,0),1));
+            this._fill = this.addChild(new Spreading(PIXI.Texture.from(this._fillPath), 0, 0, this._width, this._height, new Paddings(4,0,4,0),1));
+            this._inited = true;
+        });
+    }
+
+    /**
+     * 
+     * @param {number} curr 
+     * @param {number} max 
+     */
     SetValue(curr, max = this._max) {
+        if(curr == this._current && max == this._max) return;
         this._current = curr;
         this._max = max;
-        this.RefreshFront();
     }
 
-    RefreshFront() {
-        const l = this._width * this._current / this._max;
-        const bm = this._frontSprite.bitmap;
-        bm.clear();
-        bm.DrawTexture(this._frontFilling, 0, 0, l, bm.height, this._edge, this._edge, 0, 0);
-        this._frontL = l;
-
-        this._textSprite.bitmap.clear();
-        this._textSprite.bitmap.drawText(this._current + '/' + this._max, 0, 16, length, this.fontSize,'right');
+    UpdateFill() {
+        this._fill.width = this._width * this._current / this._max;
     }
 
     UpdateBack() {
-        const bm = this._backSprite.bitmap;
-        if (this._backL > this._frontL) {
-            this._backL -= 1;
+        if (!this.HasBack()) return;
+        if (this._back.width > this._fill.width) {
+            this._back.width -= 1;
         } else {
-            this._backL = this._frontL;
+            this._back.width = this._fill.width;
         }
-        bm.clear();
-        bm.DrawTexture(this._backFilling, 0, 0, this._backL, bm.height, this._edge, this._edge, 0, 0);
     }
 
     update() {
-        this.UpdateBack();
-        this.visible = Math.abs(this._backL - this._frontL) >= 1;
+        if (this._inited) {
+            this.UpdateFill();
+            this.UpdateBack();
+        }
     }
 
 }
@@ -74,4 +87,86 @@ class HpGauge extends Gauge {
         this._chr = chr;
     }
     get chr() {return this._chr;}
+
+    update() {
+        this.SetValue(this.chr.hp, this.chr.mhp);
+        super.update();
+    }
+}
+
+class SliderController extends Clickable {
+    constructor(x, y, w, h, tex_path) {
+        super(x, y, w, h);
+        this._texPath = tex_path;
+        this.buttonMode = true;
+        this.Init();
+    }
+
+    Init() {
+        DataUtils.Load(this._texPath).then(()=>{
+            this._sprite = new PIXI.Sprite.from(this._texPath);
+            this._sprite.anchor.set(0.5);
+            this.addChild(this._sprite);
+            this.SetHitArea(new Rectangle(-this._sprite.width/2, -this._sprite.height/2, this._sprite.width, this._sprite.height));
+            this.Activate();
+        });
+    }
+
+    OnLeave() {
+        
+    }
+
+    _delta = 0;
+    get delta() {return this._delta;}
+
+    update() {
+        super.update();
+        if (this.IsPressed()) {
+            this._delta = TouchInput.x - this._pressPoint.x;
+            if (TouchInput.isReleased()) this.OnRelease();
+        } else {
+            this._delta = 0;
+        }
+    }
+}
+
+class Slider extends PIXI.Container {
+    constructor(x, y, w, h, gauge_config, ctrl, max) {
+        super();
+        this.x = x;
+        this.y = y;
+        this._height = h;
+        this._width = w;
+        this._max = max;
+        this.CreateParts(gauge_config, ctrl);
+    }
+
+    CreateParts(gauge_config, ctrl) {
+        this._gauge = new Gauge(0, 0, this._width, this._height, gauge_config);
+        this._ctrl = new SliderController(0, this._height/2, 0, 0, ctrl);
+        this.addChild(this._gauge, this._ctrl);
+        this._ctrl.SetHandler(this._ctrl.OnPress,this.OnControllerPress.bind(this));
+    }
+
+    _moveOrigin = 0;
+    OnControllerPress() {
+        this._moveOrigin = this._ctrl.x;
+    }
+
+    _realValue = 0;
+    get value() {return Math.floor(this._realValue);}
+    update() {
+        this.UpdateValue();
+        this._gauge.update();
+        if (this._ctrl.delta !== 0) {
+            this._ctrl.x = Math.min(Math.max(this._moveOrigin + this._ctrl.delta, 0), this._width);
+        }
+        this._ctrl.update();
+    }
+
+    UpdateValue() {
+        this._realValue = Math.floor(this._ctrl.x/this._width * this._max);
+        this._gauge.SetValue(this._realValue, this._max);
+    }
+
 }

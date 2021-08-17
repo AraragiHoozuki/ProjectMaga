@@ -29,7 +29,6 @@ var $dataSkills;
  * @property {number[]} actionPoints - spine animation points
  * @property {string} sound - sound effect
  * @property {[string]} modifiers - intrinsic modifiers of the skill
- * @property {string} animation - animation id
  * @property {string} voice - voice event name(default is 'attack')
  * @property {[SkillSpecialValue]} specials - skill special values
  */
@@ -333,7 +332,6 @@ class Skill {
             if (this.owner) {
                 this.owner.MarkParamChange();
             }
-
         }
     }
     /**
@@ -380,7 +378,7 @@ class Skill {
     _effectPlayed = false;
     SetEffectPlayed() {this._effectPlayed = true;}
 
-    /** @type Character[]*/
+    /** @param {Character[]} targets*/
     PlayLwf(targets) {
         if (this.IsEffectGlobal()) {
             LWFUtils.PlayLwf('lwf/battleLwf/', this.lwf, 300, 400);
@@ -398,7 +396,7 @@ class Skill {
 
 class Craft extends Skill {
     get maxStack() {
-        return this.data.max_stack;
+        return this.data.max_stack[this._level - 1];
     }
 
     _stack = 0;
@@ -407,7 +405,7 @@ class Craft extends Skill {
     }
 
     get maxSct() {
-        return this.data.max_sct;
+        return this.data.max_sct[this._level - 1];
     }
 
     _sct = 0;
@@ -422,12 +420,17 @@ class Craft extends Skill {
         this._sct += val;
         if (this.sct >= this.maxSct) {
             if (this.stack < this.maxStack) {
-                this._sct = 0;
+                this._sct -= this.maxSct;
                 this._stack++;
             } else {
                 this._sct = this.maxSct;
             }
         }
+    }
+
+    ClearSCT() {
+        this._sct = 0;
+        this._stack = 0;
     }
 
     MeetsCustomUseCondition() {

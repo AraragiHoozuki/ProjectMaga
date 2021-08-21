@@ -8,6 +8,10 @@ class Button extends Clickable {
 			{path: 'img/ui/spreading/anaden_btn_hex.png', paddings: [14, 2, 14, 2]},
 			{path: 'img/ui/spreading/anaden_btn_hex_pressed.png', paddings: [14, 2, 14, 2]}
 		],
+		ANADEN_OCT_A: [
+			{path: 'img/ui/spreading/anaden_btn_octA.png', paddings: [30, 30, 26, 22]},
+			{path: 'img/ui/spreading/anaden_btn_octA_pressed.png', paddings: [30, 30, 26, 22]}
+		],
 		ANADEN_BACK: [
 			{path: 'img/ui/spreading/anaden_btn_back.png', paddings: [0]},
 			{path: 'img/ui/spreading/anaden_btn_back_pressed.png', paddings: [0]}

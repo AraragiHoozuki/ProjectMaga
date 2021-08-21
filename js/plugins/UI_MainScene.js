@@ -31,7 +31,7 @@ var $dataStages;
 
 class MainScene extends CustomScene {
 
-	get backgroundImageName() {return 'scene_bg_pattern_black';}
+	get bgiName() {return 'scene_bgi_black.png';}
 	get mapData() {return $dataMaps["World"];}
 
 	CreateCustomContents() {
@@ -42,25 +42,27 @@ class MainScene extends CustomScene {
 
 	start() {
 		super.start();
-		AudioManager.playBgm({name: this.mapData.bgm, pitch: 100, volume : 100});
+		AudioManager.PlayBgm(this.mapData.bgm);
 	}
 
 	//#region Map Locations
-	_mapSprite;
+	_mapView;
 	CreateMap() {
-		let bitmap = ImageManager.loadBitmap('img/maps/', 'world');
-		this._mapSprite = new Sprite(bitmap);
-		this.addChild(this._mapSprite);
+		this._mapView = new MapViewPort(0, 0, Graphics.width, Graphics.height, new Paddings(0), {path:undefined, paddings:[0]});
+		let sprite = this._mapView.AddItem(new PIXI.Sprite(PIXI.Texture.EMPTY));
+		DataUtils.Load('img/maps/world.png').then((res)=>sprite.texture = new PIXI.Texture(new PIXI.BaseTexture(res.data)));
+		this.addChild(this._mapView);
+		this._mapView.EnableXScroll(true);
+		this._mapView.EnableYScroll(true);
 	}
 
 	static LocBtnWidth = 240;
 	AddLandmark(iname) {
-		let l = this.mapData.Landmarks[iname];
-		let x = l.Position[0] - MainScene.LocBtnWidth/2;
-		let y = l.Position[1] + 48;
-		let btn = new Button(Names.Landmarks[l.iname], 'btn_location', x, y, MainScene.LocBtnWidth, 56, undefined, new Paddings(25, 15, 25, 12), new Paddings(), new Paddings(25, 15, 25, 12));
-		this._mapSprite.addChild(btn);
-		btn.SetHandler(btn.OnClick, this.OnLocationClick.bind(this, iname));
+		const l = this.mapData.Landmarks[iname];
+		const x = l.Position[0] - MainScene.LocBtnWidth/2;
+		const y = l.Position[1] + 48;
+		const btn = new Button(x, y, MainScene.LocBtnWidth, 56, Names.Landmarks[l.iname], {path: 'img/ui/spreading/anaden_btn_loc.png', paddings: [0]}, {path: 'img/ui/spreading/anaden_btn_loc.png', paddings: [0]}, TextStyles.KaiWhite);
+		this._mapView.AddItem(btn);
 	}
 
 	CreateLocations() {
@@ -110,129 +112,50 @@ class MainScene extends CustomScene {
 
 	//#region Main Btn
 	CreateMainButtons() {
-		let [x, y] = [16, Graphics.height - 100];
-		let btn = new Button('', 'btn_party', x, y, 96, 91, 'btn_main_hover');
+		let [x, y] = [16, Graphics.height - 96];
+		let btn = new Button(x, y, 96, 96, '', {path:'img/ui/spreading/anaden_btn_party.png', paddings:[0]}, {path: 'img/ui/spreading/anaden_btn_expl_pressed.png', paddings:[0]}, TextStyles.KaiBtnBlack);
 		this.addChild(btn);
-		btn.SetHandler(btn.OnClick, ()=>{SceneManager.push(CharacterListScene);});
-		x += 88;
-
-		btn = new Button('', 'btn_inventory', x, y, 96, 91, 'btn_main_hover');
-		this.addChild(btn);
-		btn.SetHandler(btn.OnClick, ()=>{SceneManager.push(InventoryScene);});
-		x += 88;
-
-		btn = new Button('', 'btn_ark', x, y, 96, 91, 'btn_main_hover');
-		this.addChild(btn);
-		btn.SetHandler(btn.OnClick,()=>{SceneManager.push(ArkListScene);});
-		x += 88;
-
-		btn = new Button('', 'btn_save', x, y, 96, 91, 'btn_main_hover');
-		this.addChild(btn);
-		btn.SetHandler(btn.OnClick,()=>{
-			DataManager.saveGame(0);
-			SoundManager.playSave();
-			toast('保存游戏成功', Colors.Green);
-		});
+		btn.OnClick.add(()=>{SceneManager.push(CharacterListScene);});
 	}
 	//#endregion
 
-
-	update() {
-		this.UpdateTouching();
-		this.ProcessMove();
-		this.UpdateBorderBouncing();
-		this.UpdateMapMove();
-		this.ProcessRelease();
-		super.update();
-	}
 
 	//#region Map Move
-	_moveOrigin = new Point(0, 0);
-	_moving = new Point(0, 0);
-	_displacement = new Point(0, 0);
-	_touched = false;
-	_touching = false;
-
-	get displacement() {
-		return [this._displacement.x + this._moving.x, this._displacement.y + this._moving.y];
-	}
-
-	/**
-	 * returns [xmin, ymin, xmax, ymax]
-	 * @returns {number[]}
-	 */
-	get displacementLimit() {
-		return [Graphics.width - this._mapSprite.width,Graphics.height-this._mapSprite.height,0,0];
-	}
-
-	UpdateTouching() {
-		if (this.HasNoOpenedDialog()) {
-			if (TouchInput.isTriggered()) {
-				this._touched = true;
-				this._moveOrigin.set(TouchInput.x, TouchInput.y);
-			}
-			if (TouchInput.isPressed()) {
-				if (!this._touching) {
-					this._touching = true;
-				}
-			} else {
-				this._touching = false;
-			}
-		} else {
-			this._touching = false;
-		}
-	}
-
-	ProcessMove() {
-		if (this.HasNoOpenedDialog() && this._touching) {
-			let [x, y] = [TouchInput.x, TouchInput.y];
-			this._moving.set(x - this._moveOrigin.x, y - this._moveOrigin.y);
-		}
-	}
-
-	ProcessRelease() {
-		if (this.HasNoOpenedDialog()) {
-			if (!this._touching && this._touched) {
-				this._displacement.set(this._displacement.x + this._moving.x, this._displacement.y + this._moving.y);
-				this._moving.set(0,0);
-				this._touched = false;
-			}
-		} else {
-			this._touching = false;
-		}
-	}
-
-	UpdateMapMove() {
-		this._mapSprite.move(...this.displacement);
-	}
-
-	UpdateBorderBouncing() {
-		let [xmin, ymin, xmax, ymax] = this.displacementLimit;
-		if (this._displacement.x > xmax) {
-			this._displacement.set(this._displacement.x -  (this._displacement.x - xmax) / 3, this._displacement.y);
-			if (this._displacement.x - xmax < 1) this._displacement.set(xmax, this._displacement.y);
-		}
-
-		if (this._displacement.x < xmin) {
-			this._displacement.set(this._displacement.x -  (this._displacement.x - xmin) / 3, this._displacement.y);
-			if (xmin - this._displacement.x < 1) this._displacement.set(xmin, this._displacement.y);
-		}
-
-		if (this._displacement.y > ymax) {
-			this._displacement.set(this._displacement.x, this._displacement.y -  (this._displacement.y - ymax) / 3);
-			if (this._displacement.y - ymax < 1) this._displacement.set(this._displacement.x, ymax);
-		}
-
-		if (this._displacement.y < ymin) {
-			this._displacement.set(this._displacement.x, this._displacement.y -  (this._displacement.y - ymin) / 3);
-			if (ymin - this._displacement.y < 1) this._displacement.set(this._displacement.x, ymin);
-		}
-	}
-
 	MapFocus(x, y) {
-		this._displacement.set(Graphics.width/2 - x, Graphics.height/2 - y);
+		this._mapView.SetScroll(Graphics.width/2 - x, Graphics.height/2 - y);
 	}
 	//#endregion
+}
+
+class MapViewPort extends ViewPort {
+	UpdateBorderBouncing() {
+        if (this.IsPressed()) return;
+        if (this._scrollEnabledY) {
+            if (this._scroll > 0) {
+                this._scroll -= (this._scroll) / 3;
+                if (this._scroll < 1) this._scroll = 0;
+            }
+    
+            const min = -this._contentArea.height + Graphics.height;
+            if (this._scroll < min) {
+                this._scroll -= (this._scroll -min) / 3;
+                if (min - this._scroll < 1) this._scroll = min;
+            }
+        }
+        
+
+        if (this._scrollEnabledX) {
+            if (this._scrollX > 0) {
+                this._scrollX -= (this._scrollX) / 3;
+                if (this._scrollX < 1) this._scrollX = 0;
+            }
+			const min = -this._contentArea.width + Graphics.width;
+            if (this._scrollX < min) {
+                this._scrollX -= (this._scrollX - min) / 3;
+                if (min - this._scrollX < 1) this._scrollX = min;
+            }
+        }
+    }
 }
 
 class StageListWindow extends ScrollListWindow {

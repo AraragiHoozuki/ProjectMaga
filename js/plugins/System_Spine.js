@@ -173,7 +173,16 @@ class AtlasReader {
 /**
  * Battle Sprite Controller
  */
-class BtlSprCtrl extends PIXI.Container{
+class SpineCtrl extends PIXI.Container{
+    /**
+     * 
+     * @param {PlayerChar} chr 
+     */
+    constructor(chr) {
+        super();
+        this._chr = chr;
+        this.Load(chr.model, undefined, chr.weapon_model, chr.weapon_slot);
+    }
 
     _ready = false;
     /** @type PIXI.spine.Spine */
@@ -181,11 +190,16 @@ class BtlSprCtrl extends PIXI.Container{
     _weapon = undefined;
 
     get spine() {return this._spine;}
+    get chr() {return this._chr;}
 
-    async Load(model, path = 'spine/', weapon, slotName) {
+    async Load(model, path = 'spine/', weapon, slotNames) {
         this._spine = await SpineUtils.LoadSpine(model, path);
         if (weapon) {
-            this._weapon = await SpineUtils.MakeWeaponAtlasPage(weapon).then(wep => SpineUtils.SetSpineWeapon(this._spine, slotName, wep));
+            this._weapon = await SpineUtils.MakeWeaponRegions(weapon).then((weps) => {
+                for (let i = 0; i< slotNames.length; i++) {
+                    SpineUtils.SetSpineWeapon(this._spine, slotNames[i], weps[i]);
+                }
+            });
         }
         this.OnReady();
         return this._spine;
@@ -194,6 +208,7 @@ class BtlSprCtrl extends PIXI.Container{
     OnReady() {
         this._ready = true;
         this._spine.controller = this;
+        this.addChild(this._spine);
         this.SetIdle();
         this._spine.state.setAnimationByName(0, this._idleName, true);
     }

@@ -59,6 +59,18 @@ const TextStyles = {
         fontSize: 36,
         strokeThickness: 1
     },
+    KaiWhite: {
+        fontFamily: "kai",
+        fontSize: 36,
+        fill: "white",
+        strokeThickness: 1
+    },
+    KaiWhiteSmall: {
+        fontFamily: "kai",
+        fontSize: 24,
+        fill: "white",
+        strokeThickness: 2
+    },
     CharTitle: {
         "align": "center",
         "dropShadow": true,

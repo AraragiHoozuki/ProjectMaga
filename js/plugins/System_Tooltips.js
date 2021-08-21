@@ -1,6 +1,6 @@
 const Names = {
 	System: {
-		Title: "代号: 魔女"
+		Title: "代号: 没想好"
 	},
     Params: {
 		MHP: "生命",

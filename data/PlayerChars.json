@@ -8,7 +8,7 @@
         "race": "人",
         "tags": ["魔剑"],
         "wept": 0,
-        "wep_model": "211010461",
+        "wep_model": "",
         "wep_slot": "",
         "gender": 0,
         "profile": "    阿特奥斯共和国对内调查、执法机构“裁判所”的骨干人员，领导的第七调查团直属于“七贤臣”之一的高迪芬，因为工作原因常出差在外。",
@@ -41,12 +41,27 @@
         "tags": [],
         "wept": 2,
         "wep_model": "211000021",
-        "wep_slot": "weapon_rod",
+        "wep_slot": ["weapon_rod"],
         "gender": 0,
         "profile": "    奥特奥斯共和国裁判所第七调查团团员，主要担任文字和审问工作，擅长攻破心理防线，是提尔芬格的得力助手。",
         "iniparam": [525, 300, 25, 50, 30, 46, 45, 20],
         "maxparam": [16355, 1500, 790, 1590, 525, 720, 158, 100],
-        "skills": ["SK_THEMIS_BALANCE", "SK_ROZETTA_PURGA_NECROFIRE","SK_ROZETTA_FIRE_JUDGEMENT","SK_ROZETTA_BIBLE","SK_ROZETTA_PURGATORY_FIRE","SK_ROZETTA_BLACK_CODEX","SK_ROZETTA_REGRET"]
+        "attack": "SK_ATTACK_TYRFINGR",
+        "crafts": ["CR_TYRFINGR_DOUBLE_SLASH", "CR_TYRFINGR_FLAME_SLASH", "SK_TEST", "SK_TEST"],
+        "talents": [
+            [0, 1, 2, "SK_TEST", "SK_TEST"],
+            ["SK_TEST", "SK_TEST", 3, "SK_TEST", 2],
+            ["SK_TEST", 1, "SK_TEST", 1, "SK_TEST"],
+            [0, 3, "SK_TEST", 2, "SK_TEST"],
+            ["SK_TEST", "SK_TEST", 0, "SK_TEST", 3]
+        ],
+        "talent_edges": [
+            [0, 0, 0, 1, 1],
+            [2, 2, 4, 8, 2],
+            [2, 2, 1, 1, 2],
+            [2, 4, 4, 4, 2],
+            [2, 1, 1, 1, 1]
+        ]
     },
     "PLC_ISKA": {
         "iname": "PLC_ISKA",
@@ -58,12 +73,27 @@
         "tags": [],
         "wept": 1,
         "wep_model": "211020023",
-        "wep_slot": "weapon_katana",
+        "wep_slot": ["weapon_katana"],
         "gender": 0,
         "profile": "    奥特奥斯共和国裁判所第七调查团团员",
         "iniparam": [590, 130, 69, 32, 30, 22, 60, 35],
         "maxparam": [19255, 650, 1540, 690, 755, 556, 175, 150],
-        "skills": ["SK_SPECULUM_AQUA","SK_FATAL_STRIKE","SK_KATANA_SLASH","SK_ISKA_SIDE_CHANGE","SK_ISKA_ISSEN","SK_ISKA_UKENAGASU","SK_ISKA_BLADEMIRROR","SK_ISKA_CIEL_BREAK_SLASH"]
+        "attack": "SK_ATTACK_TYRFINGR",
+        "crafts": ["CR_TYRFINGR_DOUBLE_SLASH", "CR_TYRFINGR_FLAME_SLASH", "SK_TEST", "SK_TEST"],
+        "talents": [
+            [0, 1, 2, "SK_TEST", "SK_TEST"],
+            ["SK_TEST", "SK_TEST", 3, "SK_TEST", 2],
+            ["SK_TEST", 1, "SK_TEST", 1, "SK_TEST"],
+            [0, 3, "SK_TEST", 2, "SK_TEST"],
+            ["SK_TEST", "SK_TEST", 0, "SK_TEST", 3]
+        ],
+        "talent_edges": [
+            [0, 0, 0, 1, 1],
+            [2, 2, 4, 8, 2],
+            [2, 2, 1, 1, 2],
+            [2, 4, 4, 4, 2],
+            [2, 1, 1, 1, 1]
+        ]
     },
     "PLC_AURELIA": {
         "iname": "PLC_AURELIA",

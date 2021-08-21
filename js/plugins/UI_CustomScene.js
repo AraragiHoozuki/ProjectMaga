@@ -53,10 +53,6 @@ class CustomScene extends Scene_Base {
 		this._backgroundSprite.texture = new PIXI.Texture(tex);
 	}
 
-	HasNoOpenedDialog() {
-		return this._dialogs.length < 1;
-	}
-
 	/**
 	 * @param {Dialog} dialog
 	 * @param {Function} callback

@@ -62,7 +62,7 @@ class CharSet {
         this.battleMembers.forEach(chr => chr.OnBattleEnd());
     }
 }
-/** Party */
+/** @type Party */
 var $gameParty;
 class Party extends CharSet {
     /** @type Item[] */
@@ -78,7 +78,16 @@ class Party extends CharSet {
     /** @returns {PlayerChar[]} */
     get members() { return this._members;}
     /** @returns {PlayerChar[]} */
-    get battleMembers() { return this.members.slice(0, 4);}
+
+    _battleMembers = [undefined, undefined, undefined];
+    get battleMembers() { return this._battleMembers;}
+
+    SetBattleMember(chr, index) {
+        for(let i = 0; i < this.battleMembers.length; i ++) {
+            if(this.battleMembers[i] === chr && i !== index)  this.battleMembers[i] = undefined;
+            if (i === index) this.battleMembers[i] = chr;
+        }
+    }
 
     IsAllDead() {
         return this.battleMembers.every(c => !c.IsAlive())
@@ -112,6 +121,8 @@ class Party extends CharSet {
 
     GameStart() {
         this.MemberJoin('PLC_TYRFINGR');
+        this.MemberJoin('PLC_ROZETTA');
+        this.MemberJoin('PLC_ISKA');
         this.GetArk('ARK_SWORD_AND_SHIELD');
         //this.GetItem('IT_WP_AHURAMAZDA_STAFF', 1);
         //this.GetItem('IT_KAKERA_PLC_ROSELIA', 999);

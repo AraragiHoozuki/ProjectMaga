@@ -3,27 +3,100 @@ class SpineUtils {
      *
      * @param {string} filename
      */
-    static async MakeWeaponAtlasPage(filename) {
-        const path = `spine/weapon/${filename}.png`;
-        const res = await DataUtils.Load(path);
-        const texture = PIXI.BaseTexture.from(res.name);
-        const page = new PIXI.spine.SpineRuntime.AtlasPage();
-        page.width = texture.resource.width;
-        page.height = texture.resource.height;
-        page.format = undefined;
-        page.minFilter = undefined;
-        page.magFilter = undefined;
-        page.uWrap = 1;
-        page.vWrap = 1;
-        page.rendererObject = texture;
-        const region = new PIXI.spine.SpineRuntime.AtlasRegion();
-        region.page = page;
-        region.rotate = false;
-        region.u = region.v = region.u2 = region.v2 = 0;
-        region.width = region.originalWidth = page.width;
-        region.height = region.originalHeight = page.height;
-        region.index = -1;
-        return region;
+    static async MakeWeaponRegions(filename) {
+        const path = `spine/weapon/${filename}.atlas`;
+        let res = await DataUtils.Load(path);
+        const reader = new AtlasReader(res.data);
+        let line, page, region;
+        let regions = [];
+        let tuple = [];
+        tuple.length = 4;
+        while (true) {
+            line = reader.readLine();
+            if (line === null) {
+                return regions;
+            }
+            line = reader.trim(line);
+            if (!line.length)
+                page = null;
+            else if (!page) {
+                page = new PIXI.spine.SpineRuntime.AtlasPage();
+                page.name = line;
+                if (reader.readTuple(tuple) == 2) { // size is only optional for an atlas packed with an old TexturePacker.
+                    page.width = parseInt(tuple[0]);
+                    page.height = parseInt(tuple[1]);
+                    reader.readTuple(tuple);
+                } else {
+                    //old format, detect width and height by texture
+                }
+                page.format = PIXI.spine.SpineRuntime.Atlas.Format[tuple[0]];
+                reader.readTuple(tuple);
+                page.minFilter = PIXI.spine.SpineRuntime.Atlas.TextureFilter[tuple[0]];
+                page.magFilter = PIXI.spine.SpineRuntime.Atlas.TextureFilter[tuple[1]];
+                let direction = reader.readValue();
+                page.uWrap = PIXI.spine.SpineRuntime.Atlas.TextureWrap.clampToEdge;
+                page.vWrap = PIXI.spine.SpineRuntime.Atlas.TextureWrap.clampToEdge;
+                if (direction == "x")
+                    page.uWrap = PIXI.spine.SpineRuntime.Atlas.TextureWrap.repeat;
+                else if (direction == "y")
+                    page.vWrap = PIXI.spine.SpineRuntime.Atlas.TextureWrap.repeat;
+                else if (direction == "xy")
+                    page.uWrap = page.vWrap = PIXI.spine.SpineRuntime.Atlas.TextureWrap.repeat;
+    
+                let texture =  (await DataUtils.Load(`spine/weapon/${filename}.png`)).texture;
+                page.rendererObject = texture;
+                if (!page.width || !page.height) {
+                    page.width = texture.width;
+                    page.height = texture.height;
+                    if (!page.width || !page.height) {
+                        console.log("ERROR spine atlas page " + page.name + ": meshes wont work if you dont specify size in atlas (http://www.html5gamedevs.com/topic/18888-pixi-spines-and-meshes/?p=107121)");
+                    }
+                }
+            } else {
+                region = new PIXI.spine.SpineRuntime.AtlasRegion();
+                //region.name = line;
+                region.page = page;
+                region.rotate = reader.readValue() == "true";
+                reader.readTuple(tuple);
+                let x = parseInt(tuple[0]);
+                let y = parseInt(tuple[1]);
+                reader.readTuple(tuple);
+                let width = parseInt(tuple[0]);
+                let height = parseInt(tuple[1]);
+                region.u = region.u2 = x / page.width;
+                region.v = region.v2 = y / page.height;
+                if (region.rotate) {
+                    region.u2 = (x + height) / page.width;
+                    region.v2 = (y + width) / page.height;
+                } else {
+                    region.u2 = (x + width) / page.width;
+                    region.v2 = (y + height) / page.height;
+                }
+                let resolution = page.rendererObject.resolution;
+                region.x = x / resolution;
+                region.y = y / resolution;
+                region.width = Math.abs(width) / resolution;
+                region.height = Math.abs(height) / resolution;
+
+                if (reader.readTuple(tuple) == 4) { // split is optional
+                    region.splits = [parseInt(tuple[0]), parseInt(tuple[1]), parseInt(tuple[2]), parseInt(tuple[3])];
+
+                    if (reader.readTuple(tuple) == 4) { // pad is optional, but only present with splits
+                        region.pads = [parseInt(tuple[0]), parseInt(tuple[1]), parseInt(tuple[2]), parseInt(tuple[3])];
+                        reader.readTuple(tuple);
+                    }
+                }
+
+                region.originalWidth = region.width;
+                region.originalHeight = region.height;
+                reader.readTuple(tuple);
+                // region.offsetX = parseInt(tuple[0]) / resolution;
+                // region.offsetY = parseInt(tuple[1]) / resolution;
+                region.index = parseInt(reader.readValue());
+                regions.push(region);
+            }
+        }
+
     }
 
     /**
@@ -32,15 +105,15 @@ class SpineUtils {
      * @param {PIXI.spine.SpineRuntime.AtlasRegion} wep
      * @constructor
      */
-    static SetSpineWeapon(spine, slot, wep) {
-        const index = spine.skeleton.findSlotIndex(slot);
-        spine.skeleton.slots[index].attachment.width = wep.width * 10;
-        spine.skeleton.slots[index].attachment.height = wep.height * 10;
-        spine.skeleton.slots[index].attachment.rendererObject = wep;
-        return wep;
-        //spine.skeleton.slots[index].currentSprite._width = wep.width * 10;
-        //spine.skeleton.slots[index].currentSprite._height = wep.height * 10;
-        //console.log(index);
+    static SetSpineWeapon(spine, slotName, wep) {
+        setTimeout(()=> {
+            const index = spine.skeleton.findSlotIndex(slotName);
+            const slot = spine.skeleton.slots[index];
+            slot.attachment.width = wep.width * 10;
+            slot.attachment.height = wep.height * 10;
+            slot.attachment.rendererObject = wep;
+            return wep;
+        }, 0);
     }
 
     /**
@@ -60,6 +133,42 @@ class SpineUtils {
        return spine;
     }
 }
+
+class AtlasReader {
+    constructor(text) {
+        this.lines = text.split(/\r\n|\r|\n/);
+        this.index = 0;
+    }
+
+    trim(value) {
+        return value.replace(/^\s+|\s+$/g, "");
+    }
+    readLine() {
+        if (this.index >= this.lines.length) return null;
+        return this.lines[this.index++];
+    }
+    readValue() {
+        var line = this.readLine();
+        var colon = line.indexOf(":");
+        if (colon == -1) throw "Invalid line: " + line;
+        return this.trim(line.substring(colon + 1));
+    }
+      /** Returns the number of tuple values read (1, 2 or 4). */
+    readTuple(tuple) {
+        var line = this.readLine();
+        var colon = line.indexOf(":");
+        if (colon == -1) throw "Invalid line: " + line;
+        var i = 0, lastMatch = colon + 1;
+        for (; i < 3; i++) {
+          var comma = line.indexOf(",", lastMatch);
+          if (comma == -1) break;
+          tuple[i] = this.trim(line.substr(lastMatch, comma - lastMatch));
+          lastMatch = comma + 1;
+        }
+        tuple[i] = this.trim(line.substring(lastMatch));
+        return i + 1;
+    }
+} 
 
 /**
  * Battle Sprite Controller

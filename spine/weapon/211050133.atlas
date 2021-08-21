@@ -1,0 +1,18 @@
+211050133.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+weapon_bow
+  rotate: false
+  xy: 0,0
+  size: 144,270
+  orig: 144,270
+  offset: 0,0
+  index: -1
+weapon_arrow
+  rotate: false
+  xy: 144,0
+  size: 206,56
+  orig: 206,56
+  offset: 0,0
+  index: -1

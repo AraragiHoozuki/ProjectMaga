@@ -1,0 +1,11 @@
+211029041.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+weapon_katana
+  rotate: false
+  xy: 0,0
+  size: 92,274
+  orig: 92,274
+  offset: 0,0
+  index: -1

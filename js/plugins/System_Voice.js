@@ -16,7 +16,15 @@ AudioManager.PlaySe = function(name) {
     AudioManager.playSe({
         name: name,
         pitch: 100,
-        volume: 200
+        volume: AudioManager.seVolume
+    });
+};
+
+AudioManager.PlayBgm = function(name) {
+    AudioManager.playBgm({
+        name: name,
+        pitch: 100,
+        volume: AudioManager.bgmVolume
     });
 };
 
@@ -35,7 +43,7 @@ AudioManager.PlayVoice = function(name) {
     let vo = {};
     vo.name = name;
     vo.pitch = 100;
-    vo.volume = 200;
+    vo.volume = AudioManager.meVolume;
     if (vo.name) {
         AudioManager._seBuffers = AudioManager._seBuffers.filter(function(audio) {
             return audio.isPlaying();

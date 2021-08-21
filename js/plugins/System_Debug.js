@@ -9,19 +9,27 @@ class VPContentArea extends PIXI.Container {
 }
 
 class VerticalLayoutContentArea extends VPContentArea {
+    _currentH = 0;
     addChild(c) {
-        const h = this.height;
+        c.y = this._currentH;
+        this._currentH += c.height;
         super.addChild(c);
-        c.y = h;
     }
+
+    get currentH() {return this._currentH;}
+    set currentH(val) { this._currentH = val;}
 }
 
 class HorizontalLayoutContentArea extends VPContentArea {
+    _currentW;
     addChild(c) {
-        const w = this.width;
+        c.x = this._currentW;
+        this._currentW += c.width;
         super.addChild(c);
-        c.x = w;
     }
+
+    get currentW() {return this._currentW;}
+    set currentW(val) { this._currentW = val;}
 }
 
 class ViewPort extends Clickable {
@@ -32,7 +40,7 @@ class ViewPort extends Clickable {
      * @param {number} w 
      * @param {number} h 
      * @param {Paddings} p 
-     * @param {string} spr_conf
+     * @param {SpreadingPreset} spr_conf
      */
     constructor(x, y, w, h, p, spr_conf) {
         super(x, y, w, h);
@@ -41,13 +49,14 @@ class ViewPort extends Clickable {
         this.Init();
     }
 
+    get contentWidth() {
+        return this.width - this._bg._paddings.left - this._bg._paddings.right;
+    }
+
+    get contentArea() {return this._contentArea;}
+
     Init() {
-        this._bg = this.addChild(new Spreading(PIXI.Texture.WHITE, 0, 0, this.width, this.height, new Paddings(0),1));
-        if (this._sprConf) {
-            DataUtils.Load(Spreading.Configs[this._sprConf].path).then(() => {
-                this._bg.SetTexture(PIXI.Texture.from(Spreading.Configs[this._sprConf].path),new Paddings(...Spreading.Configs[this._sprConf].paddings));
-            });
-        }
+        this._bg = this.addChild(new Spreading(0, 0, this._width, this._height, this._sprConf, 1));
         this.CreateContentArea();
         this.CreateScroller();
         this.ConfigContentArea();
@@ -61,7 +70,7 @@ class ViewPort extends Clickable {
     }
 
     CreateScroller() {
-        this._scroller = this.addChild(new Spreading(PIXI.Texture.WHITE, this.width - 4 - this._paddings.left, 0, 4, 5, new Paddings(0, 2, 0, 2), 1));
+        this._scroller = this.addChild(new Spreading(this._width - 4 - this._paddings.left, 0, 4, 5, {path: undefined, paddings: [0,2,0,2]}, 1));
     }
 
     ConfigContentArea() {
@@ -69,7 +78,7 @@ class ViewPort extends Clickable {
         this._contentArea.y = this._paddings.top;
         const mask = new PIXI.Graphics()
             .beginFill(0xFFFFFF)
-            .drawRect(this._paddings.left, this._paddings.top, this.width - this._paddings.left - this._paddings.right, this.height - this._paddings.top - this._paddings.bottom)
+            .drawRect(this._paddings.left, this._paddings.top, this._width - this._paddings.left - this._paddings.right, this._height - this._paddings.top - this._paddings.bottom)
             .endFill();
         this.addChild(mask);
         this._contentArea.mask = mask;
@@ -82,6 +91,7 @@ class ViewPort extends Clickable {
     AddItem(it) {
         this._contentArea.addChild(it);
         this._items.push(it);
+        return it;
     }
 
     update() {
@@ -144,8 +154,8 @@ class ViewPort extends Clickable {
         }
     }
 
-    OnRelease() {
-        super.OnRelease();
+    ProcessRelease() {
+        super.ProcessRelease();
         if (this._scrollEnabledY) {
             this._scroll += this._scrolling;
             this._scrolling = 0;
@@ -499,6 +509,33 @@ class BattleMapScene extends CustomScene {
 
 }
 
+class SpinePlayItem extends Spreading {
+    constructor(w, name, mode) {
+        super(0, 0, w, 120, Spreading.Presets.ANADEN_CELL, mode);
+        const tx = new PIXI.Text(name, TextStyles.KaiTitle);
+        this.addChild(tx);
+        tx.anchor.set(0.5);
+        tx.y = this.height/2;
+        tx.x = tx.width/2 + 20;
+        this._btn = new Button(w - 240, 20, 200, 80, '播放', ...Button.Presets.ANADEN_PURPLE, TextStyles.KaiTitle);
+        this.addChild(this._btn);
+        this._btn.OnClick.add(()=> {
+            this._spine?.state.setAnimationByName(0, name, true);
+        });
+    }
+
+    SetSpine(spine) {
+        this._spine = spine;
+    }
+
+
+    update() {
+        this._btn.update();
+    }
+}
+
+
+
 class DebugScene extends MenuBaseScene {
 	CreateCustomContents() {
 		super.CreateCustomContents();
@@ -513,36 +550,23 @@ class DebugScene extends MenuBaseScene {
 		this._charListWindow.Activate();
 	}
 
-	CreateButtons() {
+	async CreateButtons() {
         let btn;
-
-        window.vp = new ViewPortVertical(400, 100, 300, 400, new Paddings(15), 'ANADEN_CELL');
+        window.sp = await SpineUtils.LoadSpine('104050091');
+        const regions = await SpineUtils.MakeWeaponRegions('211050133');
+        sp.state.setAnimationByName(0, 'idleBattle', true);
+        SpineUtils.SetSpineWeapon(sp, 'weapon_bow', regions[0]);
+        SpineUtils.SetSpineWeapon(sp, 'weapon_arrow', regions[1]);
+        sp.x = 150; sp.y = 300;
+        const ct = this.addChild(new PIXI.Container());
+        ct.addChild(sp);
+        window.vp = this.addChild(new ViewPortVertical(400, 100, 700, 520, new Paddings(15), Spreading.Presets.ANADEN_BACK));
         vp._scrollEnabledY = true;
-        this.addChild(vp);
-        for (let i = 0; i < 8; i++) {
-            btn = new Button('特朗普'+i, 'btn_pos', 0, 0, 200, 80, undefined, new Paddings(25), undefined, new Paddings(25));
-            vp.AddItem(btn);
-            btn.SetHandler(btn.OnClick, this.TestFunc.bind(this));
+        for (const ani of sp.skeleton.data.animations) {
+            const spt = new SpinePlayItem(660, ani.name, 1);
+            spt.SetSpine(sp);
+            vp.AddItem(spt);
         }
-        
-		const n = new NumberSprite(1280, 0, 1000, 'number_azure', 'right');
-		this.addChild(n);
-		this._number = n;
-
-
-        window.gauge = new Gauge(100, 50, 200, 10, Gauge.Presets.config);
-        this.addChild(window.gauge);
-
-        window.slider = new Slider(100, 100, 200, 10, Gauge.Presets.config, 'img/ui/control/slider_ctrl.png', 100);
-        this.addChild(window.slider);
-
-        this._sliderV = this.addChild(new PIXI.Text(`${window.slider.value}`, TextStyles.Normal));
-        this._sliderV.position.set(10,80);
-	}
-
-    update() {
-        super.update();
-        this._sliderV.text = `${window.slider.value}`;
     }
 
 	TestFunc() {

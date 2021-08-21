@@ -1,4 +1,7 @@
 const Names = {
+	System: {
+		Title: "代号: 魔女"
+	},
     Params: {
 		MHP: "生命",
 		MMA: "法力",

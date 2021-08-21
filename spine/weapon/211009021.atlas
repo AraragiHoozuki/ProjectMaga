@@ -1,0 +1,11 @@
+211009021.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+weapon_rod
+  rotate: false
+  xy: 0,0
+  size: 101,243
+  orig: 101,243
+  offset: 0,0
+  index: -1

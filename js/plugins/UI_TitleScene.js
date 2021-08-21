@@ -1,22 +1,49 @@
-Scene_Title.prototype.create = function() {
-	Scene_Base.prototype.create.call(this);
-	this.createBackground();
-	this.createForeground();
-	this.createText();
-};
+class Scene_Title extends CustomScene {
 
-Scene_Title.prototype.createText = function() {
-	this._text = new TitleText();
-	this.addChild(this._text);
+	get bgiName() { return 'Castle.png';}
 
-	//for test;
-	let btn = new Button('测试lwf', 'btn_lc_cmn', 0, 0, 200, 60, 'btn_hover_azure', new Paddings(10), new Paddings(16), new Paddings(22));
-	this.addChild(btn);
-	btn.SetHandler(btn.OnClick, ()=>SceneManager.goto(DebugScene));
-};
 
-Scene_Title.prototype.processTouch = function() {
-	if (TouchInput.isClicked()) {
+	CreateCustomContents() {
+		this.CreateTitle();
+		this.CreateStarter();
+		this.CreateOthers();
+		this.PlayTitleMusic();
+	}
+
+	CreateTitle() {
+		this._title = this.addChild(new PIXI.Text(Names.System.Title, TextStyles.Title));
+		this._title.anchor.set(0.5);
+		this._title.x = Graphics.width/2;
+		this._title.y = Graphics.height/2 - this._title.height - 80;
+	}
+
+	CreateStarter() {
+		this._starter = this.addChild(new TitleText('点击此处开始游戏', TextStyles.KaiBtn));
+		this._starter.anchor.set(0.5);
+		this._starter.x = Graphics.width/2;
+		this._starter.y = Graphics.height - this._starter.height - 80;
+		this._starter.on('pointertap', this.StartGame.bind(this));
+		this._starter.interactive = true;
+		this._starter.buttonMode = true;
+	}
+
+	CreateOthers() {
+		let btn = new Button(0, Graphics.height - 60, 200, 60, '设定', ...Button.Presets.ANADEN_HEX, TextStyles.KaiBtnBlack);
+		this.addChild(btn);
+		btn.OnClick.add(()=>this.Dialog(new GameSettingDialog(), undefined, true));
+
+		btn = new Button(200, Graphics.height - 60, 200, 60, '测试', ...Button.Presets.ANADEN_HEX, TextStyles.KaiBtnBlack);
+		this.addChild(btn);
+		btn.OnClick.add(SceneManager.goto.bind(SceneManager, DebugScene));
+	}
+
+	PlayTitleMusic() {
+		AudioManager.PlayBgm('bgm_main_theme_piano');
+		AudioManager.stopBgs();
+		AudioManager.stopMe();
+	}
+
+	StartGame() {
 		if (DataManager.isAnySavefileExists()) {
 			DataManager.loadGame(0);
 			SoundManager.playLoad();
@@ -28,40 +55,12 @@ Scene_Title.prototype.processTouch = function() {
 			SceneManager.goto($dataVersion.time > 0? UpdateScene:MainScene);
 		}
 	}
-
 }
 
-Scene_Title.prototype.isBusy = function() {
-	return Scene_Base.prototype.isBusy.call(this);
-};
 
-Scene_Title.prototype.update = function() {
-	this.processTouch()
-	Scene_Base.prototype.update.call(this);
-};
-
-Scene_Title.prototype.playTitleMusic = function() {
-	AudioManager.playBgm({name: 'bgm_main_theme_piano', pitch: 100, volume: 100});
-	AudioManager.stopBgs();
-	AudioManager.stopMe();
-};
-
-class TitleText extends Sprite {
-	constructor() {
-		super();
-		let padding = 20;
-		let bottom = 120;
-		this.bitmap = new Bitmap(Graphics.boxWidth - 2 * padding, bottom);
-		this.x = padding;
-		this.y = Graphics.height - bottom;
-		this.alpha = 0;
-		this.bitmap.fontSize = 28;
-		this.bitmap.drawText('点击任意区域开始游戏', 0, 0, this.width, 30, 'center');
-		this._fadding = true;
-	}
-
+class TitleText extends PIXI.Text {
+	fadding = true;
 	update() {
-		super.update();
 		this.fadding ? this.alpha -= 0.02 : this.alpha += 0.02;
 		if (this.alpha <= 0) {
 			this.fadding = false

@@ -4,7 +4,7 @@ class DataUtils {
 
     static Load(path, options={}) {
         return new Promise((resolve, reject)=> {
-            if (PIXI.Loader.shared.resources[path]) {
+            if (PIXI.Loader.shared.resources[path] && PIXI.Loader.shared.resources[path].data) {
                 resolve(PIXI.Loader.shared.resources[path]);
             } else {
                 const loader = DataUtils.FirstAvailLoader();
@@ -49,6 +49,7 @@ class DataUtils {
         let ld = this._pool.find((loader)=>loader.loading === false);
         if (ld === undefined) {
             ld = new PIXI.Loader();
+            ld.use(PIXI.spine.loaders.atlasParser());
             DataUtils._pool.push(ld);
         }
         return ld

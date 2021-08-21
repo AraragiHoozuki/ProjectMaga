@@ -69,56 +69,7 @@ class Paddings {
     get bottom() { return this._bottom; }
 }
 
-//#region font
-let _Scene_Boot_prototype_loadGameFonts = Scene_Boot.prototype.loadGameFonts;
-Scene_Boot.prototype.loadGameFonts = function() {
-    _Scene_Boot_prototype_loadGameFonts.call(this);
-    FontManager.load("kai", '魏碑字体.ttf');
-    FontManager.load("xin", 'zhulangbaoren.otf');
-};
 
-const TextStyles = {
-    Normal: {
-        "dropShadowAlpha": 0.8,
-        "dropShadowAngle": -16.2,
-        "dropShadowBlur": 3,
-        "dropShadowDistance": 4,
-        "fill": "white",
-        "fontFamily": "rmmz-mainfont",
-        "fontSize": 36,
-        "strokeThickness": 2
-    },
-    KaiTitle: {
-        "dropShadow": true,
-        "dropShadowAlpha": 0.8,
-        "dropShadowAngle": -16,
-        "dropShadowBlur": 3,
-        "dropShadowDistance": 4,
-        "fill": [
-            "white",
-            "#ededed"
-        ],
-        "fontFamily": "kai",
-        "fontSize": 45,
-        "strokeThickness": 2
-    },
-    CharTitle: {
-        "align": "center",
-        "dropShadow": true,
-        "dropShadowAlpha": 0.8,
-        "dropShadowAngle": -16,
-        "dropShadowBlur": 3,
-        "dropShadowDistance": 4,
-        "fill": [
-            "white",
-            "#ededed"
-        ],
-        "fontFamily": "xin",
-        "fontSize": 64,
-        "strokeThickness": 2
-    },
-}
-//#endregion
 
 class Clickable extends PIXI.Container {
     constructor(x = 0, y = 0, w = 0, h = 0) {
@@ -175,11 +126,21 @@ class Clickable extends PIXI.Container {
 
     InitiateEvents() {
         this.SetHitArea(new PIXI.Rectangle(0, 0, this.w, this.h));
-        this.on('pointerdown', this.OnPress.bind(this));
-        this.on('pointerout', this.OnLeave.bind(this));
-        this.on('pointertap', this.OnClick.bind(this));
-        this.on('pointerup', this.OnRelease.bind(this));
+        this.SetSignals();
+        this.on('pointerdown', this.ProcessPress.bind(this));
+        this.on('pointerout', this.ProcessLeave.bind(this));
+        this.on('pointertap', this.ProcessClick.bind(this));
+        this.on('pointerup', this.ProcessRelease.bind(this));
     }
+
+    /**
+	 * @param {number} x - target x coordinate
+	 * @param {number} y - target y coordinate
+	 */
+	Move(x, y) {
+		this.x = x;
+		this.y = y;
+	}
 
     /**
      * @param {PIXI.Graphics} area 
@@ -192,103 +153,57 @@ class Clickable extends PIXI.Container {
         if (!this.IsEnabled()) return;
         if (this.IsPressed()) {
             this._pressTimer++;
-            if (this._pressTimer >= this._longPressThreshold && !this._longPressed) this.OnLongPress();
+            if (this._pressTimer >= this._longPressThreshold && !this._longPressed) this.ProcessLongPress();
         }
         for (const child of [...this.children].reverse()) {
             if (child.update) {
                 child.update();
             }
         }
-        // if (this._pressed) {
-        //     if (this.IsMouseOver()) {
-        //         if (!this._longPressed && TouchInput.isLongPressed()) {
-        //             this._longPressed = true;
-        //             this.OnLongPress();
-        //         }
-        //         if(TouchInput.isReleased()) {
-        //             if(this._longPressed) {
-        //                 this.OnLongPressRelease(true);
-        //             } else if(TouchInput.isClicked()){
-        //                 this.OnClick();
-        //             }
-        //             this._pressed = false;
-        //             this._longPressed = false;
-        //             this.OnRelease();
-        //         }
-        //     } else {
-        //         if(this._longPressed) {
-        //             this.OnLongPressRelease(false);
-        //         }
-        //         this._pressed = false;
-        //         this._longPressed = false;
-        //         this.OnRelease();
-        //     }
-        // } else if (TouchInput.isTriggered()&&this.IsMouseOver()) {
-        //     this._pressed = true;
-        //     this.OnPress();
-        // }
     }
 
-    OnPress() {
+    SetSignals() {
+        this.OnClick = new PIXI.Signal();
+        this.OnPress = new PIXI.Signal();
+        this.OnLeave = new PIXI.Signal();
+        this.OnRelease = new PIXI.Signal();
+        this.OnLongPress = new PIXI.Signal();
+        this.OnLongPressRelease = new PIXI.Signal();
+    }
+
+    ProcessPress() {
         this._pressPoint.set(TouchInput.x, TouchInput.y);
-        console.log('press');
         this._pressTimer = 0;
-        this.CallHandler(this.OnPress.name);
-        
+        this.OnPress.dispatch();
     }
 
-    OnLeave() {
-        if (this.IsPressed()) this.OnRelease();
+    ProcessLeave() {
+        if (this.IsPressed()) this.ProcessRelease();
     }
 
-    OnRelease() {
+    ProcessRelease() {
         this._releasePoint.set(TouchInput.x, TouchInput.y);
         this._pressTimer = false;
         this._longPressed = false;
         const long = this._pressTimer >= this._longPressThreshold?true:false;
         if (long) {
-            this.OnLongPressRelease();
+            this.ProcessLongPressRelease();
         } else {
-            console.log('release');
-            this.CallHandler(this.OnRelease.name);
+            this.OnRelease.dispatch();
         }
     }
 
-    OnClick() {
-        console.log('click');
-        this.CallHandler(this.OnClick.name);
+    ProcessClick() {
+        this.OnClick.dispatch();
     }
 
-    OnLongPress() {
-        console.log('long press start');
+    ProcessLongPress() {
         this._longPressed = true;
-        this.CallHandler(this.OnLongPress.name);
+        this.OnLongPress.dispatch();
     }
 
-    OnLongPressRelease() {
-        console.log(`long press release`);
-        this.CallHandler(this.OnLongPressRelease.name);
-    }
-
-    _handlers = {};
-
-    /**
-     * @param {Function} func
-     * @param {Function} handle_func
-     * @param args
-     */
-    SetHandler(func, handle_func, ...args) {
-        if(!this[func.name]) {
-            throw new Error(`No method named ${func.name} found!`);
-        } else {
-            this._handlers[func.name] = handle_func.bind(this, ...args);
-        }
-    }
-
-    CallHandler(name) {
-        if(this._handlers[name]) {
-            this._handlers[name]();
-        }
+    ProcessLongPressRelease() {
+        this.OnLongPressRelease.dispatch();
     }
 }
 
@@ -297,28 +212,18 @@ class Clickable extends PIXI.Container {
  */
 class Spreading extends PIXI.Container {
     /**
-     * 
-     * @param {PIXI.Texture} tex 
-     * @param {number} y 
-     * @param {number} x 
-     * @param {number} w 
-     * @param {number} h 
-     * @param {Paddings} p 
-     * @param {number} mode - 0 for tiling, 1 for stretching
-     */
-    constructor(tex, x, y, w, h, p, mode = Spreading.Mode.Tile) {
-        super();
-        this.x = x;
-        this.y = y;
-        this._width = w;
-        this._height = h;
-        this._paddings = p;
-        this._texture = tex;
-        this._mode = mode;
-        for (let i = 0; i < 9; i++) {
-            this._sprites.push(this.addChild(new PIXI.Sprite()));
-        }
-        this.RefreshSprites();
+ * @typedef {Object} SpreadingPreset
+ * @property {string} path
+ * @property {[number]} paddings
+ */
+
+     static Presets = {
+        ANADEN_CELL: { path: 'img/ui/spreading/anaden_cell_cmn.png', paddings: [15]},
+        ANADEN_BACK: { path: 'img/ui/spreading/anaden_back.png', paddings: [15]},
+        ANADEN_BTN_PURPLE: {path: 'img/ui/spreading/anaden_btn_purple.png', paddings: [0]},
+        ANADEN_BTN_PRESSED: {path: 'img/ui/spreading/anaden_btn_pressed.png', paddings: [0]},
+
+        TEAL_BACK : {path: 'img/ui/spreading/back_teal.png', paddings: [2]}
     }
 
     static Mode = {
@@ -326,17 +231,50 @@ class Spreading extends PIXI.Container {
         Stretch: 1
     }
 
-/**
- * @typedef {Object} SpreadingConfig
- * @property {string} path
- * @property {[number]} paddings
- */
-    static Configs = {
-        ANADEN_CELL: {
-            path: 'img/ui/spreading/cell_cmn.png',
-            paddings: [15]
+    /**
+     * 
+     * @param {PIXI.Texture} tex 
+     * @param {number} y 
+     * @param {number} x 
+     * @param {number} w 
+     * @param {number} h 
+     * @param {Object} preset
+     * @param {string} preset.path 
+     * @param {number[]} preset.paddings 
+     * @param {number} mode - 0 for tiling, 1 for stretching
+     */
+    constructor(x, y, w, h, {path, paddings}, mode = Spreading.Mode.Tile) {
+        super();
+        this.x = x;
+        this.y = y;
+        this._width = w;
+        this._height = h;
+        this._paddings = new Paddings(...paddings);
+        this._texPath = path;
+        this._mode = mode;
+        for (let i = 0; i < 9; i++) {
+            this._sprites.push(this.addChild(new PIXI.Sprite()));
+        }
+        this.Init();
+    }
+
+    _inited = false;
+    Init() {
+        
+        if (this._texPath === undefined) {
+            this._texture = PIXI.Texture.EMPTY;
+            this._inited = true;
+            this.RefreshSprites();
+        } else {
+            DataUtils.Load(this._texPath).then((res) => {
+                this._texture = res.texture;
+                this._inited = true;
+                this.RefreshSprites();
+            });
         }
     }
+
+
 
     _width;
     get width() {return this._width;}
@@ -344,6 +282,8 @@ class Spreading extends PIXI.Container {
     _height;
     get height() {return this._height;}
     set height(val) {if (val !== this._height) this._height = val; this.RefreshSprites();}
+
+    get paddings() { return this._paddings;}
 
     _sprites = [];
 
@@ -359,6 +299,7 @@ class Spreading extends PIXI.Container {
     }
 
     RefreshSprites() {
+        if (!this._inited) return;
         const p = this._paddings;
         const tex = this._texture;
         let sp, ft;
@@ -410,6 +351,7 @@ class Spreading extends PIXI.Container {
 
 
 
+//# region bitmap
 /**
  * @param {Bitmap} bitmap 
  * @param {number} dx 
@@ -445,7 +387,6 @@ Bitmap.prototype.DrawTexture = function(bitmap, dx, dy, dw, dh, lx, rx = lx, uy,
     //center
     this.blt(bitmap, lx, uy, w, h, dx + lx, dy + uy, dw - lx - rx, dh - uy - by);
 };
-
 /**
  *
  * @param folder {string}
@@ -464,7 +405,6 @@ Bitmap.prototype.DrawImage = function(folder, filename, pw, ph, dx, dy, dw = pw,
     ph = ph || bitmap.height;
     this.blt(bitmap, 0, 0, pw, ph, dx + pd.left, dy + pd.top, dw - pd.left - pd.right, dh - pd.top - pd.bottom);
 };
-
 /**
  *
  * @param folder {string}
@@ -477,7 +417,6 @@ Bitmap.prototype.DrawImage = function(folder, filename, pw, ph, dx, dy, dw = pw,
 Bitmap.prototype.DrawImageInRect = function(folder, filename, pw, ph, rect, pd= new Paddings()) {
     this.DrawImage(folder, filename, pw, ph, rect.x, rect.y, rect.width, rect.height, pd);
 }
-
 /**
  * @param bitmap {Bitmap}
  * @param pw {number}
@@ -493,8 +432,6 @@ Bitmap.prototype.DrawBitmap = function(bitmap, pw, ph, dx, dy, dw = pw, dh = ph,
     ph = ph || bitmap.height;
     this.blt(bitmap, 0, 0, pw, ph, dx + pd.left, dy + pd.top, dw - pd.left - pd.right, dh - pd.top - pd.bottom);
 };
-
-
 /**
  *
  * @param {string} name
@@ -525,3 +462,4 @@ Bitmap.prototype.DrawProgressBar = function(name, edge = 0, x, y, length, value,
     this.drawText(value + '/' + max, x, y + this.fontSize/4, length, this.fontSize,'right');
     this.fontSize += 4;
 };
+//#endregion

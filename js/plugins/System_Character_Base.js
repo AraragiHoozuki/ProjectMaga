@@ -8,10 +8,9 @@ const ParamType = {
     MMA: 1,
     STR: 2,
     INT: 3,
-    DEF: 4,
+    CON: 4,
     MND: 5,
-    SPD: 6,
-    LUK: 7
+    SPD: 6
 }
 
 /**

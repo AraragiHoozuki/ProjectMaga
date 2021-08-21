@@ -1,31 +1,45 @@
 class Button extends Clickable {
+	static Presets = {
+		ANADEN_PURPLE: [
+			{path: 'img/ui/spreading/anaden_btn_purple.png', paddings: [0]},
+			{path: 'img/ui/spreading/anaden_btn_purple_pressed.png', paddings: [0]}
+		],
+		ANADEN_HEX: [
+			{path: 'img/ui/spreading/anaden_btn_hex.png', paddings: [14, 2, 14, 2]},
+			{path: 'img/ui/spreading/anaden_btn_hex_pressed.png', paddings: [14, 2, 14, 2]}
+		],
+		ANADEN_BACK: [
+			{path: 'img/ui/spreading/anaden_btn_back.png', paddings: [0]},
+			{path: 'img/ui/spreading/anaden_btn_back_pressed.png', paddings: [0]}
+		],
+		ANADEN_CLOSE: [
+			{path: 'img/ui/spreading/anaden_btn_close.png', paddings: [0]},
+			{path: 'img/ui/spreading/anaden_btn_close_pressed.png', paddings: [0]}
+		]
+	}
+	
 	/**
-	 *
-	 * @param text {string}
-	 * @param image {string}
-	 * @param x {number}
-	 * @param y {number}
-	 * @param w {number}
-	 * @param h {number}
-	 * @param pressed_image {string}
-	 * @param  {Paddings} pd - image sprite texture paddings
-	 * @param  {Paddings} pressed_pd - image hovered paddings
-	 * @param  {Paddings} pressed_texture_pd - image hovered texture paddings
-	 * @param  {string} image_folder
+	 * 
+	 * @param {number} x 
+	 * @param {number} y 
+	 * @param {number} w 
+	 * @param {number} h 
+	 * @param {string} text 
+	 * @param {SpreadingPreset} normal_spr_preset 
+	 * @param {SpreadingPreset} pressed_spr_preset 
+	 * @param {Object} style - text style
 	 */
-	constructor(text, image, x, y, w, h, pressed_image = image + '_hover' , pd= new Paddings(), pressed_pd = new Paddings(), pressed_texture_pd = new Paddings(), image_folder = undefined) {
+	constructor(x, y, w, h, text, normal_spr_preset, pressed_spr_preset = normal_spr_preset, style = TextStyles.Normal) {
 		super(x, y, w, h);
 		this.x = x;
 		this.y = y;
 		this.width = w;
 		this.height = h;
-		this._paddings = pd;
-		this._hoverPaddings = pressed_pd;
-		this._hoverTexturePaddings = pressed_texture_pd;
-		this.CreateImage(image, image_folder);
-		this.CreatePressedSprite(pressed_image);
-		this.CreateText(text);
-		this.Activate();
+		this._text = text;
+		this._style = style;
+		this._normalSprConf = normal_spr_preset;
+		this._pressedSprConf = pressed_spr_preset;
+		this.Init();
 	}
 	/** @type Paddings */
 	_paddings;
@@ -39,12 +53,16 @@ class Button extends Clickable {
 	set width(value) {this._width = value;}
 	set height(value) {this._height = value;}
 
-	get paddings() { return this._paddings; }
-	get hoverPaddings() { return this._hoverPaddings; }
-	get hoverTexturePaddings() { return this._hoverTexturePaddings; }
+	Init() {
+		this._normalSpr = this.addChild(new Spreading(0, 0, this.width, this.height, this._normalSprConf, Spreading.Mode.Stretch));
+		this._pressedSpr = this.addChild(new Spreading(0, 0, this.width, this.height, this._pressedSprConf, Spreading.Mode.Stretch));
+		this._textSprite = this.addChild(new PIXI.Text(this._text, this._style));
+		this._textSprite.anchor.set(0.5);
+		this._textSprite.x = this.width/2;
+		this._textSprite.y = this.height/2;
+		this.Activate();
+	}
 
-
-	_active = true;
 	/**
 	 * @returns {boolean}
 	 */
@@ -59,96 +77,18 @@ class Button extends Clickable {
 		this.Activate();
 	}
 
-
-	/** @type Sprite */
-	_imageSprite;
-	CreateImage(image, image_folder) {
-		/** @type Bitmap */
-		let texture = ImageManager.LoadUIBitmap(image_folder, image);
-		if (this.width <= 0) {
-			this.width = texture.width;
-		}
-		if (this.height <= 0) {
-			this.height = texture.height;
-		}
-
-		let bitmap = new Bitmap(this.width, this.height);
-		bitmap.DrawTexture(texture, 0, 0, this.width, this.height, this.paddings.left, this.paddings.right, this.paddings.top, this.paddings.bottom);
-		this._imageSprite = new Sprite(bitmap);
-		this.addChild(this._imageSprite);
-	}
-
-	/** @type Sprite */
-	_textSprite;
-	CreateText(text) {
-		this._textSprite = new Sprite(new Bitmap(this.width, this.height));
-		this._textSprite.bitmap.drawText(text, 0, 0, this.width, this.height,'center');
-		this.addChild(this._textSprite);
-	}
-
-	/** @type Sprite */
-	_pressedSprite;
-	CreatePressedSprite(image) {
-		let bitmap = ImageManager.LoadUIBitmap(undefined, image);
-		this._pressedSprite = new Sprite(new Bitmap(this.width + this.hoverPaddings.left + this.hoverPaddings.right, this.height + this.hoverPaddings.top + this.hoverPaddings.bottom));
-		this._pressedSprite.bitmap.DrawTexture(bitmap, 0, 0, this._pressedSprite.width, this._pressedSprite.height, this.hoverTexturePaddings.left, this.hoverTexturePaddings.right, this.hoverTexturePaddings.top, this.hoverTexturePaddings.bottom);
-		this.addChild(this._pressedSprite);
-		this._pressedSprite.move(-this.hoverPaddings.left, -this.hoverPaddings.top);
-		this._pressedSprite.visible = false;
-	}
-
-	/**
-	 * @param {number} x - target x coordinate
-	 * @param {number} y - target y coordinate
-	 */
-	Move(x, y) {
-		this.x = x;
-		this.y = y;
-	}
-
-
-	OnPress() {
-		super.OnPress();
-		this._pressedSprite.visible = true;
-	}
-
-	OnRelease() {
-		super.OnRelease();
-		this._pressedSprite.visible = false;
-	}
-
-	OnLongPressRelease(isClick) {
-		super.OnLongPressRelease(isClick);
-		if (!this._handlers[this.OnLongPress.name]) {
-			this.OnRelease();
-			if (isClick) this.OnClick();
-		}
-	}
-
-	/**
-	 * function called when click
-	 * @type function
-	 */
-	_clickHandler;
-
-	/**
-	 *
-	 * @param {function} method
-	 * @constructor
-	 */
-	SetClickHandler(method) {
-		this._clickHandler = method;
-	}
+	SetSignals() {
+        super.SetSignals();
+		this.OnClick.add(()=> {if(this.OnClick.handlers().length > 1) AudioManager.playSe({name: this._clickSe, pitch: 100, volume: 200}); })
+    }
 
 	_clickSe = '$btn_click';
 	SetClickSe(name) {
 		this._clickSe = name;
 	}
 
-	OnClick() {
-		super.OnClick();
-		if (this._handlers[this.OnClick.name]) {
-			AudioManager.playSe({name: this._clickSe, pitch: 100, volume: 200});
-		}
+	update() {
+		super.update();
+		this._pressedSpr.visible = this.IsPressed();
 	}
 }

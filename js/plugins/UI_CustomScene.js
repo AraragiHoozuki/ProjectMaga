@@ -25,17 +25,11 @@ class CustomScene extends Scene_Base {
 
 
 	CreateTopThings() {
-		this.CreateDialogMask();
 		this.CreateToaster();
-	}
-
-	_dialogMask;
-	CreateDialogMask() {
-		this._dialogMask = new Sprite(new Bitmap(Graphics.width, Graphics.height));
-		let bitmap = ImageManager.LoadUIBitmap(undefined, 'mask_dark');
-		this._dialogMask.bitmap.DrawTexture(bitmap, -50, -50, Graphics.width + 100, Graphics.height + 100, 22, 22, 22, 22);
-		this._dialogMask.visible = false;
-		this.addChild(this._dialogMask);
+		this._dialogLayerTex = PIXI.Texture.EMPTY;
+		DataUtils.Load('img/ui/spreading/dialog_layer.png').then((res)=>{
+			this._dialogLayerTex = res.texture;
+		});
 	}
 
 	/** @type Toaster */
@@ -51,99 +45,54 @@ class CustomScene extends Scene_Base {
 
 	/** @type {Sprite} */
 	_backgroundSprite;
-	get backgroundImageName() {return 'scene_bg_pattern';}
-	CreateBackground() {
-		this._backgroundSprite = new Sprite(new Bitmap(Graphics.width, Graphics.height));
-		let x = 0, y = 0;
-		const bitmap = ImageManager.LoadUIBitmap(undefined, this.backgroundImageName);
-		while (x < Graphics.width) {
-			while (y < Graphics.height) {
-				this._backgroundSprite.bitmap.DrawBitmap(bitmap, 0, 0, x, y, bitmap.width, bitmap.height);
-				y += bitmap.height;
-			}
-			x += bitmap.width;
-			y = 0;
-		}
+	get bgiName() {return 'anaden_scene_bgi.png';}
+	async CreateBackground() {
+		this._backgroundSprite = new PIXI.TilingSprite(PIXI.Texture.EMPTY, Graphics.width, Graphics.height);
 		this.addChild(this._backgroundSprite);
+		const tex = new PIXI.BaseTexture((await DataUtils.Load('img/bgi/' + this.bgiName)).data);
+		this._backgroundSprite.texture = new PIXI.Texture(tex);
 	}
-
-	/** @type CustomWindow[] */
-	_dialogs = [];
-	_activeChildrenLog = [];
-	get dialogBtnWidth() {return 220;}
 
 	HasNoOpenedDialog() {
 		return this._dialogs.length < 1;
 	}
 
 	/**
-	 * @param {CustomWindow} window
-	 * @param {boolean} withConfirm
-	 * @param {boolean} withCancel
+	 * @param {Dialog} dialog
 	 * @param {Function} callback
-	 * @param {boolean} closeOnReturn
 	 */
-	Dialog(window, withConfirm = false, withCancel= false, callback, closeOnReturn = true) {
-		this._dialogMask.visible = true;
-		let log = [];
-		this._activeChildrenLog.push(log)
-		this.children.forEach(child => {
-			if (child.active) {
-				log.push(child);
-				child.Deactivate();
-			}
-		});
-		this._dialogs.push(window);
-		this.addChild(window);
-		window.Activate();
-		let cob, cab;
-		if (withConfirm) {
-			cob = new Button('确定', 'btn_pos', Graphics.width/2 + 50, Graphics.height - 94, this.dialogBtnWidth, 80, undefined, new Paddings(25), undefined, new Paddings(25));
-			this.addChild(cob);
+	Dialog(dialog, callback, with_layer = true) {
+		if (with_layer) {
+			this.addChild(new DialogLayer(this._dialogLayerTex, dialog));
+		} else {
+			this.addChild(dialog);
 		}
-
-		if (withCancel) {
-			cab = new Button('取消', 'btn_neg', Graphics.width/2 - 50 - this.dialogBtnWidth, Graphics.height - 94, this.dialogBtnWidth, 80, undefined, new Paddings(25), undefined, new Paddings(25));
-			cab.SetClickSe('se_cancel');
-			this.addChild(cab);
-			cab.SetHandler(cab.OnClick, (()=> {
-				this.DialogReturn(false, callback, true);
-				this.removeChild(cob);
-				this.removeChild(cab);
-			}));
-		}
-		if (withConfirm) {
-			cob.SetHandler(cob.OnClick, (()=> {
-				this.DialogReturn(true, callback, closeOnReturn);
-				if (closeOnReturn) {
-					this.removeChild(cob);
-					this.removeChild(cab);
-				}
-			}));
-		}
-
+		if (callback) dialog.OnReturn.add((...args)=> callback(...args));
 	}
 
+	DialogAsync(dialog, with_layer = true) {
+
+	}
+}
+
+class DialogLayer extends PIXI.Container {
 	/**
-	 * @param {boolean} confirm
-	 * @param {Function} callback
-	 * @param {boolean} closeOnReturn
+	 * 
+	 * @param {PIXI.Texture} texture 
+	 * @param {Dialog} dialog 
 	 */
-	DialogReturn(confirm, callback, closeOnReturn = true) {
-		let w = this._dialogs[this._dialogs.length - 1];
-		if (closeOnReturn) {
-			this._dialogs.pop();
-			if (w) {
-				w.Close();
-				this.removeChild(w);
-			}
-			let log = this._activeChildrenLog.pop();
-			log.forEach(child => child.Activate());
-			if (this._dialogs.length <= 0) {
-				this._dialogMask.visible = false;
-			}
-		}
-		callback(confirm, w);
+	constructor(texture = PIXI.Texture.EMPTY, dialog) {
+		super();
+		this._sprite = this.addChild(new PIXI.Sprite(texture));
+		this._sprite.scale.set(Graphics.width/texture.width, Graphics.height/texture.height);
+		this._dialog = this.addChild(dialog);
+		this._sprite.on('pointertap', ()=> {this._dialog.Cancel();});
+		this._dialog.OnCancel.add(()=> {$scene().removeChild(this);})
+		this._sprite.interactive = true;
+	}
+
+	update() {
+		this._dialog.update();
 	}
 }
 
@@ -302,21 +251,12 @@ class MenuBaseScene extends CustomScene {
 	_backBtn;
 	_closeBtn;
 	CreateBackBtn() {
-		this._backBtn = new Button('', 'btn_back', 0, 0, 108, 48);
+		this._backBtn = new Button(0, 0, 108, 48, '',...Button.Presets.ANADEN_BACK, 1);
 		this._backBtn.SetClickSe('se_cancel');
 		this.addChild(this._backBtn);
-		this._closeBtn = new Button('', 'btn_close', Graphics.width - 108, 0, 108, 48);
+		this._closeBtn = new Button(Graphics.width - 108, 0, 108, 48, '', ...Button.Presets.ANADEN_CLOSE, 1);
 		this.addChild(this._closeBtn);
-		this._backBtn.SetHandler(this._backBtn.OnClick, SceneManager.pop.bind(SceneManager));
-		this._closeBtn.SetHandler(this._closeBtn.OnClick,()=>{SceneManager.goto(MainScene);});
+		this._backBtn.OnClick.add( SceneManager.pop.bind(SceneManager));
+		this._closeBtn.OnClick.add(()=>{SceneManager.goto(MainScene);});
 	}
 }
-
-
-
-Scene_Title.prototype.commandNewGame = function() {
-	DataManager.setupNewGame();
-	this._commandWindow.close();
-	this.fadeOutAll();
-	SceneManager.goto(MainScene);
-};

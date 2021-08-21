@@ -45173,6 +45173,7 @@ var PIXI = (function (exports) {
 	exports.RopeGeometry = RopeGeometry;
 	exports.RoundedRectangle = RoundedRectangle;
 	exports.Runner = Runner;
+	exports.Signal = Signal; //TODO
 	exports.Shader = Shader;
 	exports.SimpleMesh = SimpleMesh;
 	exports.SimplePlane = SimplePlane;

@@ -267,7 +267,9 @@ class Spreading extends PIXI.Container {
         ANADEN_CHR_SLOT_FRAME_PRESSED: {path: 'img/ui/spreading/anaden_char_slot_pressed.png', paddings: [14]},
 
         PARTY_SLOT_EMPTY: {path: 'img/ui/spreading/party_slot_empty.png', paddings: [10]},
+
         TEAL_BACK : {path: 'img/ui/spreading/back_teal.png', paddings: [2]},
+        PINK_BACK : {path: 'img/ui/spreading/back_pink.png', paddings: [2]},
 
 
         TAB_RIGHT_AREA : {path: 'img/ui/spreading/tab_left_right_area.png', paddings: [4,12,11,11]}
@@ -403,6 +405,10 @@ class VPContentArea extends PIXI.Container {
                 child.update();
             }
         }
+    }
+
+    clear() {
+        this.removeChildren();
     }
 }
 

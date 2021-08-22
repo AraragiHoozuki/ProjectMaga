@@ -8,11 +8,25 @@ Scene_Boot.prototype.loadGameFonts = function() {
 };
 
 const TextStyles = {
+    /**
+     * 注意只能覆盖直接值（数组无法覆盖）
+     * @param {Object} style 
+     * @param {Object} override 
+     */
+    Restyle: function(style, override) {
+        let keys = Object.keys(override);
+        let result = {...style};
+        for (const key of keys) {
+            result[key] = override[key];
+            return result;
+        }
+    },
     SmallBlack : {
         breakWords: true,
         fontFamily: "rmmz-mainfont",
         fontSize: 18,
         miterLimit: 1,
+        strokeThickness: 1,
         wordWrap: true,
         wordWrapWidth: 200
     },
@@ -121,8 +135,8 @@ class TextArea extends PIXI.Container {
         this._text = new PIXI.Text(text, style);
         this._text.y = text_p.top;
         this._text.x = text_p.left;
-        if (this._height < this._text.height + text_p.top + text_p.bottom) {
-            this._height = this._text.height + text_p.top + text_p.bottom;
+        if (this._height < this._text.height + text_p.top + text_p.bottom + 2) {
+            this._height = this._text.height + text_p.top + text_p.bottom + 2;
         }
         this._spr = this.addChild(new Spreading(0, 0, w, this._height, spr_conf, spr_mode));
         this.addChild(this._text);

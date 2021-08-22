@@ -10,7 +10,8 @@ const ParamType = {
     INT: 3,
     CON: 4,
     MND: 5,
-    SPD: 6
+    PER: 6, //感知
+    SPD: 7
 }
 
 /**
@@ -19,40 +20,9 @@ const ParamType = {
  * @enum {number}
  */
 const SecParamType = {
-    ASSIST_PYRO: 0,
-    ASSIST_HYDRO: 1,
-    ASSIST_AIR: 2,
-    ASSIST_GEO: 3,
-    ASSIST_NECRO: 4,
-    ASSIST_DIVINE: 5,
-    ASSIST_SOURCE: 6,
-    RESIST_PYRO: 7,
-    RESIST_HYDRO: 8,
-    RESIST_AIR: 9,
-    RESIST_GEO: 10,
-    RESIST_NECRO: 11,
-    RESIST_DIVINE: 12,
-    RESIST_SOURCE: 13,
-
-    ASSIST_SLASH: 14,
-    ASSIST_PIERCE: 15,
-    ASSIST_BLOW: 16,
-    ASSIST_MAGIC: 17,
-    RESIST_SLASH: 18,
-    RESIST_PIERCE: 19,
-    RESIST_BLOW: 20,
-    RESIST_MAGIC: 21,
-
-    CRITICAL_CHANCE: 22,
-    CRITICAL_DAMAGE: 23,
-    ASSIST_HEAL: 24,
-    RESIST_HEAL: 25,
-    ASSIST_PHYSICAL: 26,
-    RESIST_PHYSICAL: 27,
-    ASSIST_MAGICAL: 28,
-    RESIST_MAGICAL: 29,
-
-    CP_AUTO_REGEN: 30
+    ARMOR: 0,
+    CRITICAL_CHANCE: 1,
+    CRITICAL_DAMAGE: 2
 }
 
 class Status {
@@ -131,7 +101,9 @@ class Status {
     }
 
     Floor() {
-        this._values = this._values.map(v => Math.floor(v));
+        for (let i = 0; i < this._values.length; i++) {
+            this._values[i] = Math.floor(this._values[i]);
+        }
     }
 
     Clear() {
@@ -446,11 +418,7 @@ class Character {
     CalcLevelStatus() {
         this._homePStatus.Clear();
         this._homeSStatus.Clear();
-        let arr = [];
-        for (let i = 0; i < this.data.iniparam.length; i++) {
-            arr.push(this.data.iniparam[i] + (this.data.maxparam[i] - this.data.iniparam[i]) * (this.level - 1) / (this.MaxLevel - 1));
-        }
-        this._homePStatus.SetValues(arr);
+        this._homePStatus.SetValues(this.data.iniparam);
         this._homeSStatus.Clear();
     }
 

@@ -85,11 +85,12 @@ class TabView extends PIXI.Container {
 	 * @param {string[]} texts 
 	 * @param {PIXI.DisplayObject[]} contents 
 	 */
-	Setup(texts, contents) {
+	Setup(texts, contents = []) {
 		this._texts = texts;
 		this._contents = contents;
 		this.CreateViewArea();
 		this.CreateTabBtns();
+		this.OnSelect(this._btns[0]);
 	}
 
 	CreateTabBtns() {
@@ -97,7 +98,10 @@ class TabView extends PIXI.Container {
 	}
 
 	CreateViewArea() {
-
+		for(const c of this._contents) {
+			this.addChild(c);
+			c.visible = false;
+		}
 	}
 
 	/**
@@ -106,8 +110,13 @@ class TabView extends PIXI.Container {
 	 */
 	OnSelect(btn) {
 		AudioManager.PlaySe(btn._clickSe)
-		for (const b of this._btns) {
-			if (b !== btn && b.IsSelected()) b.Deselect();
+		for (let i = 0; i < this._btns.length; i++) {
+			if (this._btns[i] !== btn ) {
+				if (this._btns[i].IsSelected()) this._btns[i].Deselect();
+				if (this._contents[i]) this._contents[i].visible = false;
+			} else {
+				if (this._contents[i]) this._contents[i].visible = true;
+			}
 		}
 	}
 
@@ -124,6 +133,7 @@ class TabViewLR extends TabView {
 		this._btnWidth = btn_width;
 	}
 	CreateTabBtns() {
+		super.CreateTabBtns();
 		const n = this._texts.length;
 		/** 上下按钮高度, 中间按钮高度 */
 		let btnh, btnmh;
@@ -153,6 +163,7 @@ class TabViewLR extends TabView {
 	}
 
 	CreateViewArea() {
-		this.addChild(new Spreading(this._btnWidth - 5, 0, this.width - this._btnWidth + 5, this.height, Spreading.Presets.TAB_RIGHT_AREA, 1));
+		this.addChild(new Spreading(this._btnWidth - 4, 0, this.width - this._btnWidth + 4, this.height, Spreading.Presets.TAB_RIGHT_AREA, 1));
+		super.CreateViewArea();
 	}
 }

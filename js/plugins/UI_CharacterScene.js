@@ -235,8 +235,74 @@ class CharacterDetailScene extends MenuBaseScene {
 	static TabNames = ['属性', '技能', '装备', '其他', '其他2'];
 
 	CreateTabView() {
-		this._tabView = new TabViewLR(Graphics.width - Graphics.width/1.6, this.headerHeight, Graphics.width/1.6, Graphics.height - this.headerHeight, 100);
+		this._tabView = new TabViewLR(Graphics.width - Graphics.width/1.6, this.headerHeight, Graphics.width/1.6, Graphics.height - this.headerHeight, 80);
 		this.addChild(this._tabView);
-		this._tabView.Setup(CharacterDetailScene.TabNames);
+		const x = 80;
+		const w = this._tabView.width - 80;
+		const h = this._tabView.height;
+		const vp_stats = new VPStats(x, 0, w, h, new Paddings(10), {path: undefined, paddings: [0]}, 1); vp_stats.SetCharacter(CharacterDetailScene.character);
+		this._tabView.Setup(CharacterDetailScene.TabNames, [
+			vp_stats
+		]);
+	}
+}
+
+class VPStats extends ViewPortVertical {
+	/**
+	 * 
+	 * @param {Character} chr 
+	 */
+	SetCharacter(chr) {
+		this._chr = chr;
+		this.CreatePrimaryStats();
+	}
+
+	CreatePrimaryStats() {
+		this.AddItem(new TextArea('主要属性', TextStyles.Restyle(TextStyles.SmallBlack, {fontSize: 24}), new Paddings(4,0), 0, 0, this.width, 0, Spreading.Presets.TEAL_BACK, 1));
+		for (let i = 0; i < Object.keys(ParamType).length; i++) {
+			this.AddItem(new ParamEntry(this._chr, i, false));
+		}
+		this.AddItem(new TextArea('额外属性', TextStyles.Restyle(TextStyles.SmallBlack, {fontSize: 24}), new Paddings(4,0), 0, 0, this.width, 0, Spreading.Presets.PINK_BACK, 1));
+		for (let i = 0; i < Object.keys(SecParamType).length; i++) {
+			this.AddItem(new ParamEntry(this._chr, i, true));
+		}
+	}
+}
+
+class ParamEntry extends PIXI.Container {
+	/**
+	 * 
+	 * @param {Character} chr 
+	 * @param {number} index 
+	 * @param {boolean} isSecondary
+	 */
+	constructor(chr, index, isSecondary = false) {
+		super();
+		this._chr = chr;
+		this._index = index;
+		this._isSecondary = isSecondary === true;
+		this.CreateText();
+	}
+
+	get name() {
+		if (!this._isSecondary) {
+			return Names.Params[Object.keys(ParamType)[this._index]];
+		} else {
+			return Names.Params[Object.keys(SecParamType)[this._index]];
+		}
+	}
+
+	get value() {
+		return this._chr.GetParam(this._index, this._isSecondary);
+	}
+
+	CreateText() {
+		this._nameText = this.addChild(new PIXI.Text(this.name, TextStyles.Restyle(TextStyles.SmallBlack, {fontSize: 24})));
+		this._numberText = this.addChild(new PIXI.Text(0, TextStyles.Restyle(TextStyles.SmallBlack, {fontSize: 24})));
+		this._numberText.x = 200;
+	}
+
+	update() {
+		this._numberText.text = this.value;
 	}
 }

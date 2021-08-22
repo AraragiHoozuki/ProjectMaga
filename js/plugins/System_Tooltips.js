@@ -7,7 +7,7 @@ const Names = {
 		MMA: "法力",
 		STR: "力量",
 		INT: "智慧",
-		DEF: "防御",
+		CON: "体质",
 		MND: "精神",
 		SPD: "速度",
 		LUK: "幸运",

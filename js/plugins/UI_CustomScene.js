@@ -46,11 +46,18 @@ class CustomScene extends Scene_Base {
 	/** @type {Sprite} */
 	_backgroundSprite;
 	get bgiName() {return 'anaden_scene_bgi.png';}
-	async CreateBackground() {
-		this._backgroundSprite = new PIXI.TilingSprite(PIXI.Texture.EMPTY, Graphics.width, Graphics.height);
+	CreateBackground() {
+		const res = PIXI.Loader.shared.resources['img/bgi/' + this.bgiName];
+		if (PIXI.Loader.shared.resources['img/bgi/' + this.bgiName]) {
+			this._backgroundSprite = new PIXI.TilingSprite(new PIXI.Texture(new PIXI.BaseTexture(res.data)), Graphics.width, Graphics.height);
+		} else {
+			this._backgroundSprite = new PIXI.TilingSprite(PIXI.Texture.EMPTY, Graphics.width, Graphics.height);
+			DataUtils.Load('img/bgi/' + this.bgiName).then((res)=> {
+				const tex = new PIXI.BaseTexture(res.data);
+				this._backgroundSprite.texture = new PIXI.Texture(tex);
+			});
+		}
 		this.addChild(this._backgroundSprite);
-		const tex = new PIXI.BaseTexture((await DataUtils.Load('img/bgi/' + this.bgiName)).data);
-		this._backgroundSprite.texture = new PIXI.Texture(tex);
 	}
 
 	/**

@@ -129,7 +129,6 @@ class Clickable extends PIXI.Container {
         this.SetSignals();
         this.on('pointerdown', this.ProcessPress.bind(this));
         this.on('pointerout', this.ProcessLeave.bind(this));
-        this.on('pointertap', this.ProcessClick.bind(this));
         this.on('pointerup', this.ProcessRelease.bind(this));
     }
 
@@ -190,6 +189,7 @@ class Clickable extends PIXI.Container {
             this.ProcessLongPressRelease();
         } else {
             this.OnRelease.dispatch();
+            if (this._releasePoint.x - this._pressPoint.x + this._releasePoint.y - this._pressPoint.y == 0) this.ProcessClick(); 
         }
     }
 
@@ -216,6 +216,10 @@ class Draggable extends Clickable {
     SetSignals() {
         super.SetSignals();
         this.OnDragEnd = new PIXI.Signal();
+    }
+
+    ProcessLeave() {
+        if (!this._isDragging) super.ProcessLeave();
     }
 
     ProcessLongPress() {
@@ -263,7 +267,10 @@ class Spreading extends PIXI.Container {
         ANADEN_CHR_SLOT_FRAME_PRESSED: {path: 'img/ui/spreading/anaden_char_slot_pressed.png', paddings: [14]},
 
         PARTY_SLOT_EMPTY: {path: 'img/ui/spreading/party_slot_empty.png', paddings: [10]},
-        TEAL_BACK : {path: 'img/ui/spreading/back_teal.png', paddings: [2]}
+        TEAL_BACK : {path: 'img/ui/spreading/back_teal.png', paddings: [2]},
+
+
+        TAB_RIGHT_AREA : {path: 'img/ui/spreading/tab_left_right_area.png', paddings: [4,12,11,11]}
     }
 
     static Mode = {

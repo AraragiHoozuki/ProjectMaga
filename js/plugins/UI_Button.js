@@ -19,6 +19,19 @@ class Button extends Clickable {
 		ANADEN_CLOSE: [
 			{path: 'img/ui/spreading/anaden_btn_close.png', paddings: [0]},
 			{path: 'img/ui/spreading/anaden_btn_close_pressed.png', paddings: [0]}
+		],
+
+		TAB_LEFT_TOP: [
+			{path: 'img/ui/spreading/tab_left_btn_top.png', paddings: [12,10,0,20]},
+			{path: 'img/ui/spreading/tab_left_btn_fill.png', paddings: [12,10,2,10]}
+		],
+		TAB_LEFT_MID: [
+			{path: 'img/ui/spreading/tab_left_btn_middle.png', paddings: [12,20,0,20]},
+			{path: 'img/ui/spreading/tab_left_btn_fill.png', paddings: [12,10,2,10]}
+		],
+		TAB_LEFT_BOTTOM: [
+			{path: 'img/ui/spreading/tab_left_btn_bottom.png', paddings: [12,20,0,10]},
+			{path: 'img/ui/spreading/tab_left_btn_fill.png', paddings: [12,10,2,10]}
 		]
 	}
 	
@@ -58,13 +71,25 @@ class Button extends Clickable {
 	set height(value) {this._height = value;}
 
 	Init() {
+		this.CreateNormalSpr();
+		this.CreatePressedSpr();
+		this.CreateText();
+		this.Activate();
+	}
+
+	CreateNormalSpr() {
 		this._normalSpr = this.addChild(new Spreading(0, 0, this.width, this.height, this._normalSprConf, Spreading.Mode.Stretch));
+	}
+
+	CreatePressedSpr() {
 		this._pressedSpr = this.addChild(new Spreading(0, 0, this.width, this.height, this._pressedSprConf, Spreading.Mode.Stretch));
+	}
+
+	CreateText() {
 		this._textSprite = this.addChild(new PIXI.Text(this._text, this._style));
 		this._textSprite.anchor.set(0.5);
 		this._textSprite.x = this.width/2;
 		this._textSprite.y = this.height/2;
-		this.Activate();
 	}
 
 	/**
@@ -83,7 +108,7 @@ class Button extends Clickable {
 
 	SetSignals() {
         super.SetSignals();
-		this.OnClick.add(()=> {if(this.OnClick.handlers().length > 1) AudioManager.playSe({name: this._clickSe, pitch: 100, volume: 200}); })
+		this.OnClick.add(()=> {if(this.OnClick.handlers().length > 1) AudioManager.PlaySe(this._clickSe);});
     }
 
 	_clickSe = '$btn_click';
@@ -93,6 +118,12 @@ class Button extends Clickable {
 
 	update() {
 		super.update();
+		this.UpdatePressedSpr();
+	}
+
+	UpdatePressedSpr() {
 		this._pressedSpr.visible = this.IsPressed();
 	}
 }
+
+

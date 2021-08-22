@@ -71,6 +71,15 @@ const TextStyles = {
         fill: "white",
         strokeThickness: 2
     },
+    KaiVertical: {
+        fontFamily: "kai",
+        fontSize: 36,
+        strokeThickness: 1,
+        lineHeight: 36,
+        wordWrap: true,
+        breakWords: true,
+        wordWrapWidth: 0
+    },
     CharTitle: {
         "align": "center",
         "dropShadow": true,

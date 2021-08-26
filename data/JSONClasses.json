@@ -1,0 +1,70 @@
+{
+  "CL_HELIOS": {
+    "iname": "CL_HELIOS",
+    "name": "赫利俄斯",
+    "expr": "",
+    "icon": "helios",
+    "fixed_skills": [
+      "SK_STAFF_HIT"
+    ],
+    "fixed_skill_ranks": [
+      1
+    ],
+    "free_skills": [],
+    "free_skill_ranks": [],
+    "bonus_params": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "req_params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "CL_NYX": {
+    "iname": "CL_NYX",
+    "name": "尼克斯",
+    "expr": "",
+    "icon": "nyx",
+    "fixed_skills": [
+      "SK_WAIT"
+    ],
+    "fixed_skill_ranks": [
+      1
+    ],
+    "free_skills": [],
+    "free_skill_ranks": [],
+    "bonus_params": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "req_params": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

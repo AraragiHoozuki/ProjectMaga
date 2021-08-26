@@ -1,0 +1,33 @@
+{
+  "PLC_ROZETTA": {
+    "iname": "PLC_ROZETTA",
+    "name": "罗泽塔",
+    "model": "104000241",
+    "voice": "rosetta",
+    "race": "人",
+    "tags": [
+      "杖"
+    ],
+    "wept": 2,
+    "wep_model": "211000021",
+    "wep_slot": [
+      "weapon_rod"
+    ],
+    "gender": 0,
+    "iniparam": [
+      480,
+      300,
+      24,
+      66,
+      30,
+      49,
+      35,
+      34
+    ],
+    "classes": [
+      "CL_HELIOS",
+      "CL_NYX"
+    ],
+    "talents": []
+  }
+}

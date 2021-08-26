@@ -232,7 +232,7 @@ class CharacterDetailScene extends MenuBaseScene {
 		});
 	}
 
-	static TabNames = ['属性', '技能', '装备', '其他', '其他2'];
+	static TabNames = ['属性', '职业', '技能', '装备', '其他'];
 
 	CreateTabView() {
 		this._tabView = new TabViewLR(Graphics.width - Graphics.width/1.6, this.headerHeight, Graphics.width/1.6, Graphics.height - this.headerHeight, 80);
@@ -240,16 +240,33 @@ class CharacterDetailScene extends MenuBaseScene {
 		const x = 80;
 		const w = this._tabView.width - 80;
 		const h = this._tabView.height;
-		const vp_stats = new VPStats(x, 0, w, h, new Paddings(10), {path: undefined, paddings: [0]}, 1); vp_stats.SetCharacter(CharacterDetailScene.character);
+
+		
+
+		const vp_stats = new VPStats(x, 0, w, h, new Paddings(10), {path: undefined, paddings: [0]}, 1); vp_stats.SetCharacter(CharacterDetailScene.character); vp_stats.EnableYScroll(true);
+		const vp_classes = this._vp_classes = new VPClasses(x, 0, w, h, new Paddings(10), {path: undefined, paddings: [0]}, 1); vp_classes.SetCharacter(CharacterDetailScene.character, this.RefreshClassInfo.bind(this)); vp_classes.EnableYScroll(true);
 		this._tabView.Setup(CharacterDetailScene.TabNames, [
-			vp_stats
+			vp_stats,
+			vp_classes
 		]);
+
+		this._classInfo = new VPClassInfo(0, this.headerHeight, this._tabView.x, h, new Paddings(12), Spreading.Presets.ANADEN_BACK, 1);
+		this.addChild(this._classInfo);
+	}
+
+	RefreshClassInfo(iname) {
+		this._classInfo.SetClass(CharacterDetailScene.character, iname);
+		this._classInfo.visible = true;
+	}
+
+	update() {
+		super.update();
+		if (!this._vp_classes.visible) this._classInfo.visible = false;
 	}
 }
 
 class VPStats extends ViewPortVertical {
 	/**
-	 * 
 	 * @param {Character} chr 
 	 */
 	SetCharacter(chr) {
@@ -268,7 +285,6 @@ class VPStats extends ViewPortVertical {
 		}
 	}
 }
-
 class ParamEntry extends PIXI.Container {
 	/**
 	 * 
@@ -305,4 +321,178 @@ class ParamEntry extends PIXI.Container {
 	update() {
 		this._numberText.text = this.value;
 	}
+}
+
+class VPClasses extends ViewPortVertical {
+	/**
+	 * @param {Character} chr 
+	 * @param {Function} func 
+	 */
+	 SetCharacter(chr, func) {
+		this._chr = chr;
+		this.CreateClassEntries(func);
+	}
+
+	CreateClassEntries(func) {
+		for(const iname of this._chr.data.classes) {
+			const entry = new ClassEntry(0, 0, this.contentWidth, 100, this._chr, iname);
+			entry._btn.OnClick.add(() => func(iname));
+			this.AddItem(entry);
+		}
+	}
+}
+
+class ClassEntry extends PIXI.Container {
+	constructor(x, y, w, h, chr, iname) {
+		super();
+		this.x = x;
+		this.y = y;
+		this._width = w;
+		this._height = h;
+		this._chr = chr;
+		this._classIname = iname;
+		this.CreateButton();
+		this.CreateStars();
+		this.CreateNameAndIcon();
+		this.CreateEquipIndicator();
+	}
+
+	get width() {return this._width;}
+    get height() {return this._height;}
+
+	get btn() {return this._btn;}
+
+	CreateButton() {
+		this._btn = this.addChild(new Button(0, 0, this.width, this.height, '', ...Button.Presets.ANADEN_OCT_A));
+		
+	}
+
+	CreateStars() {
+		this._stars;
+		const size = 36;
+		const ct = new PIXI.Container();
+		for (let i = 0; i < 5; i++) {
+			const s = new PIXI.Sprite(PIXI.Texture.EMPTY);
+			s.x = i * size;
+			ct.addChild(s);
+			DataUtils.Load(`img/ui/other/${i<this._chr.GetClassRank(this._classIname)?'star_on':'star_off'}.png`).then((res) => {
+				const texture = new PIXI.Texture(new PIXI.BaseTexture(res.data));
+				s.texture = texture;
+				s.scale.set(size/texture.width, size/texture.height);
+			});
+		}
+		this.addChild(ct);
+		ct.x = this.width * 2/3 - size*5/2;
+		ct.y = this.height * 1/3 - size/2;
+	}
+
+	CreateNameAndIcon() {
+		const t = new PIXI.Text($dataClasses[this._classIname].name, TextStyles.KaiBtnBlack);
+		this.addChild(t);
+		t.anchor.set(0.5);
+		t.x = this.width * 2/3;
+		t.y = this.height * 2/3;
+
+		this._icon = new PIXI.Sprite(PIXI.Texture.EMPTY);
+		this.addChild(this._icon);
+		this._icon.anchor.set(0.5);
+		this._icon.x = this.width * 1/4; this._icon.y = this.height/2;
+		DataUtils.Load(`img/icons/class/${$dataClasses[this._classIname].icon}.png`).then((res) => {
+			const tex = new PIXI.Texture(new PIXI.BaseTexture(res.data));
+			this._icon.texture = tex;
+		});
+	}
+
+	CreateEquipIndicator() {
+		this._eqpIdc = new PIXI.Sprite(PIXI.Texture.EMPTY);
+		this._eqpIdc.anchor.set(0.5);
+		this._eqpIdc.scale.set(0.8);
+		this._eqpIdc.position.set(60, this.height/2);
+		this.addChild(this._eqpIdc);
+
+		DataUtils.Load('img/ui/other/checkbox_on.png').then(res => this._idcOnTex = new PIXI.Texture(new PIXI.BaseTexture(res.data)));
+		DataUtils.Load('img/ui/other/checkbox_off.png').then(res => this._idcOffTex = new PIXI.Texture(new PIXI.BaseTexture(res.data)));
+	}
+
+	update() {
+		this._btn.update();
+		if (this._idcOnTex && this._classIname === this._chr.currentClass.iname) this._eqpIdc.texture = this._idcOnTex;
+		else if (this._idcOffTex && this._classIname !== this._chr.currentClass.iname) this._eqpIdc.texture = this._idcOffTex;
+	}
+}
+
+class VPClassInfo extends ViewPortVertical {
+	/**
+	 * 
+	 * @param {Character} chr 
+	 * @param {string} classIname 
+	 */
+	SetClass(chr, classIname) {
+		this._chr = chr;
+		this._class = $dataClasses[classIname];
+		this.contentArea.Clear();
+		this.CreateContents();
+	}
+
+	CreateContents() {
+		this.CreateTitle();
+		this.CreateReqParam();
+		this.CreateBonusParam();
+		this.CreateFixedSkills();
+	}
+
+	CreateTitle() {
+		const sp = new PIXI.Sprite(PIXI.Texture.EMPTY);
+		sp.anchor.set(0.5, 0);
+		sp.x = this.width / 2;
+		sp.height = 128;
+		this.AddItem(sp);
+		DataUtils.Load(`img/icons/class/${this._class.icon}.png`).then((res) => {
+			const tex = new PIXI.Texture(new PIXI.BaseTexture(res.data));
+			sp.texture = tex;
+		});
+		const t = new PIXI.Text(this._class.name, TextStyles.KaiBtnBlack);
+		t.anchor.set(0.5, 0);
+		t.x = this.width/2;
+		this.AddItem(t);
+	}
+
+	CreateReqParam() {
+		this.AddItem(new TextArea('需求属性', TextStyles.SmallBlack, new Paddings(4), 0, 0, this.contentWidth, 0, Spreading.Presets.TEAL_BACK, 1));
+		let text = '';
+		const names = Object.keys(ParamType);
+		for (let i = 0; i< names.length; i++) {
+			text += `${Names.Params[names[i]]}: ${this._class.req_params[i]}`.padEnd(10);
+			if (i===3) text += '\n';
+		}
+		const sp = new PIXI.Text(text, TextStyles.SmallBlack);
+		sp.x = 4;
+		this.AddItem(sp);
+	}
+
+	CreateBonusParam() {
+		this.AddItem(new TextArea('加成属性', TextStyles.SmallBlack, new Paddings(4), 0, 0, this.contentWidth, 0, Spreading.Presets.TEAL_BACK, 1));
+		let text = '';
+		const names = Object.keys(ParamType);
+		for (let i = 0; i< names.length; i++) {
+			text += `${Names.Params[names[i]]}: ${this._class.bonus_params[i]}%`.padEnd(10);
+			if (i===3) text += '\n';
+		}
+		const sp = new PIXI.Text(text, TextStyles.SmallBlack);
+		sp.x = 4;
+		this.AddItem(sp);
+	}
+
+	CreateFixedSkills() {
+		this.AddItem(new TextArea('固有技能', TextStyles.SmallBlack, new Paddings(4), 0, 0, this.contentWidth, 0, Spreading.Presets.TEAL_BACK, 1));
+		for (let i = 0; i < this._class.fixed_skills.length; i++) {
+			const data = $dataSkills[this._class.fixed_skills[i]];
+			const text = `${data.name}`
+			this.AddItem(
+				new TextArea(Skill.PreviewSkillDescription(data), TextStyles.SmallBlack, new Paddings(4), 0, 0, this.contentWidth, 0, Spreading.Presets.TEAL_BACK, 1)
+			);
+		}
+		
+	}
+
 }

@@ -3,8 +3,7 @@ var $dataSkills;
 /**
  * @typedef {Object} SkillSpecialValue
  * @property {string} name - special value key
- * @property {string} tooltip - special value tooltip
- * @property {[number]} values - special level values
+ * @property {number} value - special value
  */
 
 /**
@@ -12,17 +11,12 @@ var $dataSkills;
  * @property {string} name - skill name
  * @property {string} expr - skill basic description
  * @property {string} script - skill script class name
- * @property {string} icon - skill icon name
  * @property {boolean} passive - passive skill or not
- * @property {number} ap - ap required to learn skill
- * @property {number} memory - memory cost of the skill
- * @property {[number]} sp - skill points required when learned by talent
- * @property {[number]} manacost - mana cost of the skill
- * @property {[number]} cpcost - cp cost of the skill
- * @property {[number]} max_sct - skill charge time (only for crafts)
- * @property {[number]} max_stack - max stack times (only for crafts)
- * @property {[number]} ctcost - ct cost of the skill
- * @property {[number]} lucost - lv up cost of the skill
+ * @property {number} manacost - mana cost of the skill
+ * @property {number} for_ally - 1 for ally, 0 for enemy
+ * @property {number} target_type - 0 前排, 1 后排,  2 自己, 3 选择, 4 随机
+ * @property {number} aoe - 0 单体, 1 aoe
+ * @property {number} for_dead - 0 不能选择死亡目标, 1 能选择死亡目标, 2 只能选择死亡目标
  * @property {string} lwf - lwf effect name
  * @property {boolean} global - lwf effect is global or target only
  * @property {string} animation - spine animation name
@@ -39,110 +33,19 @@ var $dataSkills;
 class Skill {
     /** @type Character */
     _owner;
-    /** @type number */
-    _level;
     /** @type Modifier[] */
     _modifiers = [];
     /** @type PlayerChar */
     static tempChar;
 
-    static TARGET = {
-        SELF: 0b1,
-        ALLY: 0b10,
-        AOE: 0b100,
-        RANDOM: 0b1000,
-        DEAD: 0b10000
-    }
-
     /**
-     *
-     * @param {SkillJSON} data
-     * @param {number} level
-     * @param {number} next_level
+     * 
+     * @param {SkillJSON} sk 
      */
-    static GetDescription(data, level, next_level= -1) {
-        let str = '';
-        str += data.name + (level>0?`【等级${level}】\n`:'【尚未习得】\n');
-        next_level = Math.min(data.manacost.length, next_level);
-        if (next_level > level) {
-            str += `升级 \\${Colors.Blue}${level}\\${Colors.White} → \\${Colors.Pink}${next_level}\\${Colors.White}\n`
-        }
-        str += '\n';
-        str += `记忆: ${data.memory}\n`;
-        str += `AP: ${data.ap}\n`;
-        str += '法力消耗: ';
-        for (let i = 0; i < data.manacost.length; i++) {
-            const value = data.manacost[i];
-            if (i === level - 1) {
-                str += `\\${Colors.Blue}`;
-            } else if (i === next_level - 1) {
-                str += `\\${Colors.Pink}`;
-            }
-            str += value;
-            str += ' ';
-            if (i === level - 1||i === next_level - 1) str += `\\${Colors.White}`;
-        }
-        str += '\n';
-        str += 'CT消耗: ';
-        for (let i = 0; i < data.manacost.length; i++) {
-            const value = data.ctcost.length > i?data.ctcost[i]:data.ctcost[data.ctcost.length-1];
-            if (i === level - 1) {
-                str += `\\${Colors.Blue}`;
-            } else if (i === next_level - 1) {
-                str += `\\${Colors.Pink}`;
-            }
-            str += value;
-            str += ' ';
-            if (i === level - 1||i === next_level - 1) str += `\\${Colors.White}`;
-        }
-        str += '\n';
-        if (data.max_sct) {
-            str += '充能时间: ';
-            for (let i = 0; i < data.manacost.length; i++) {
-                const value = data.max_sct.length > i?data.max_sct[i]:data.max_sct[data.max_sct.length-1];
-                if (i === level - 1) {
-                    str += `\\${Colors.Blue}`;
-                } else if (i === next_level - 1) {
-                    str += `\\${Colors.Pink}`;
-                }
-                str += value;
-                str += ' ';
-                if (i === level - 1||i === next_level - 1) str += `\\${Colors.White}`;
-            }
-            str += '\n';
-            str += '最大储存: ';
-            for (let i = 0; i < data.manacost.length; i++) {
-                const value = data.max_stack.length > i?data.max_stack[i]:data.max_stack[data.max_stack.length-1];
-                if (i === level - 1) {
-                    str += `\\${Colors.Blue}`;
-                } else if (i === next_level - 1) {
-                    str += `\\${Colors.Pink}`;
-                }
-                str += value;
-                str += ' ';
-                if (i === level - 1||i === next_level - 1) str += `\\${Colors.White}`;
-            }
-            str += '\n';
-        }
-
-        str += '\n';
-        str += data.expr + '\n';
-        for (const sp of data.specials) {
-            str += sp.tooltip + ': ';
-            for (let i = 0; i < data.manacost.length; i++) {
-                const value = sp.values.length > i?sp.values[i]:sp.values[sp.values.length-1];
-                if (i === level - 1) {
-                    str += `\\${Colors.Blue}`;
-                } else if (i === next_level - 1) {
-                    str += `\\${Colors.Pink}`;
-                }
-                str += value;
-                str += ' ';
-                if (i === level - 1||i === next_level - 1) str += `\\${Colors.White}`;
-            }
-            str += '\n';
-        }
-        return str;
+    static PreviewSkillDescription(sk) {
+        return sk.expr.replace(/(\{)(.+?)(\})/g, (match,p1,p2,p3,offset,string)=>{
+            return sk.specials.find(sp=>sp.name === p2)?.value??0;
+        });
     }
 
 
@@ -155,7 +58,6 @@ class Skill {
     constructor(iname, owner) {
         this._iname = iname;
         this._owner = owner;
-        this._level = 1;
         this.OnCreate();
     }
 
@@ -164,47 +66,13 @@ class Skill {
     get data() {return $dataSkills[this._iname];}
     get name() {return this.data.name;}
     get expr() {return this.data.expr;}
-    get icon() { return this.data.icon;}
-    get level() {return this._level;}
-    get maxLevel() {return this.data.manacost.length;}
     get owner() {return this._owner ? this._owner : Skill.tempChar;}
-    get spNeeded() {
-        if (this.level === this.maxLevel) {
-            return 0;
-        } else {
-            if (this.data.sp.length > this.level) {
-                return this.data.sp[this.level];
-            } else {
-                return this.data.sp[this.data.sp.length - 1];
-            }
-        }
-    }
+
     get manacost() {
-        return this.data.manacost[this.level - 1];
-    }
-    get cpcost() {
-        if (this.data.cpcost.length >= this.level) {
-            return this.data.cpcost[this.level - 1];
-        } else {
-            return this.data.cpcost[this.data.cpcost.length - 1];
-        }
-    }
-    get ctcost() {
-        if (this.data.ctcost.length >= this.level) {
-            return this.data.ctcost[this.level - 1];
-        } else {
-            return this.data.ctcost[this.data.ctcost.length - 1];
-        }
+        return this.data.manacost;
     }
     /** @returns {Modifier[]} */
     get intrinsicModifiers() {return this._modifiers;}
-    get levelUpCost() {
-        if (this.data.lucost.length > this.level) {
-            return this.data.lucost[this.level];
-        } else {
-            return this.data.lucost[this.data.lucost.length];
-        }
-    }
 
     get animation() {return this.data.animation;}
     get actionPoints() {return this.data.actionPoints;}
@@ -219,33 +87,31 @@ class Skill {
         return this.data.passive === true;
     }
 
-    _isTalent = false;
-    IsTalent() {
-        return this._isTalent === true;
+    GSV(name = '') {
+        const sp = this.data.specials.find(sp=>sp.name === name);
+        return sp?.value??0;
     }
-    SetTalent() {
-        this._isTalent = true;
-    }
-    get memory() { return this.IsTalent()?0:this.data.memory;}
 
-    _equipped = false;
-    Equip(bEorU = true) {
-        this._equipped = bEorU;
+    
+    GetDescription() {
+        return this.data.expr.replace(/(\{)(.+?)(\})/g, (match,p1,p2,p3,offset,string)=>{
+            return this.GSV(p2);
+        });
     }
-    IsEquipped() {return this._equipped;}
+
 
     /**
      * @param {Character} chr
      */
     SetOwner(chr) {
         this._owner = chr;
-        for (let mod of this.intrinsicModifiers) {
+        for (const mod of this.intrinsicModifiers) {
             mod._owner = chr;
         }
     }
 
     CanPayCost() {
-        return this.owner.mana >= this.manacost && this.owner.cp >= this.cpcost;
+        return this.owner.mana >= this.manacost;
     }
 
     MeetsCustomUseCondition() {
@@ -256,68 +122,27 @@ class Skill {
         return this.CanPayCost() && this.MeetsCustomUseCondition();
     }
 
-    get targeting() {return 0;}
-    get targetCount() {return 1;}
+    /**
+     * 目标选项
+     * - 敌/我
+     * - 锁定目标：前排 后排 自己 自由选择 随机
+     * - 是否 AOE
+     * - 是否可以选择死亡目标
+     */
     IsForSelf() {
-        return (this.targeting & Skill.TARGET.SELF) === Skill.TARGET.SELF;
+        return this.data.target_type === 2;
     }
     IsForAlly() {
-        return (this.targeting & Skill.TARGET.ALLY) === Skill.TARGET.ALLY;
+        return this.data.for_ally === 1;
     }
     IsForAll() {
-        return (this.targeting & Skill.TARGET.AOE) === Skill.TARGET.AOE;
+        return this.data.aoe === 1;
     }
     IsForDead() {
-        return (this.targeting & Skill.TARGET.DEAD) === Skill.TARGET.DEAD;
+        return this.data.for_dead === 1;
     }
     IsRandom() {
         return (this.targeting & Skill.TARGET.RANDOM) === Skill.TARGET.RANDOM;
-    }
-
-    /**
-     * Get the special value of this skill by name and level
-     * @param {string} name - special value name
-     * @param {number} level - skill level 
-     */
-    GetSpecialValue(name, level = this.level) {
-        let sp = this.data.specials.find(obj => obj.name === name);
-        if (sp) {
-            if (sp.values.length >= level) {
-                return sp.values[level - 1];
-            } else {
-                return sp.values[sp.values.length - 1];
-            }
-        } else {
-            console.log(`special value '${name}' not found`);
-            return 0;
-        }
-    }
-
-    /**
-     * Get the special value of this skill by name and level
-     * @param {string} name - special value name
-     * @param {number} level - skill level
-     */
-    GSV(name, level = this.level) {
-        return this.GetSpecialValue(name, level)
-    }
-
-    GetDescription() {
-        return Skill.GetDescription(this.data, this.level);
-    }
-
-    /** @param {number} val */
-    SetLevel(val) {
-        if (this._level !== val) {
-            val = Math.min(Math.max(val, 1), this.maxLevel);
-            this._level = val;
-            this.owner.MarkParamChange();
-        }
-    }
-
-    LevelUp() {
-        this.SetLevel(this.level + 1);
-        this.owner.MarkParamChange();
     }
 
 
@@ -345,21 +170,8 @@ class Skill {
         }
     }
 
-    _costedCp = 0;
-    /**
-     * record cp costed by all cp cost skills(100 cp skills)
-     * @returns {number}
-     */
-    get costedCp() {return this._costedCp;}
     OnSkillCost() {
         this.owner.AddMana(-this.manacost);
-        this.owner.AddCt(-this.ctcost);
-        if (this.cpcost === 100) {
-            this._costedCp = this.owner.cp;
-            this.owner.AddCp(-this.owner.cp);
-        } else {
-            this.owner.AddCp(-this.cpcost);
-        }
     }
 
     /**
@@ -393,56 +205,6 @@ class Skill {
         AudioManager.PlaySe(this.sound);
     }
 }
-
-class Craft extends Skill {
-    get maxStack() {
-        return this.data.max_stack[this._level - 1];
-    }
-
-    _stack = 0;
-    get stack() {
-        return this._stack;
-    }
-
-    get maxSct() {
-        return this.data.max_sct[this._level - 1];
-    }
-
-    _sct = 0;
-    get sct() {
-        return this._sct;
-    }
-
-    /**
-     * @param {number} val
-     */
-    Charge(val) {
-        this._sct += val;
-        if (this.sct >= this.maxSct) {
-            if (this.stack < this.maxStack) {
-                this._sct -= this.maxSct;
-                this._stack++;
-            } else {
-                this._sct = this.maxSct;
-            }
-        }
-    }
-
-    ClearSCT() {
-        this._sct = 0;
-        this._stack = 0;
-    }
-
-    MeetsCustomUseCondition() {
-        return this.stack > 0;
-    }
-
-    OnSkillStart(action) {
-        super.OnSkillStart(action);
-        this._stack --;
-    }
-}
-
 
 class Skill_Wait extends Skill {
     get targeting() {

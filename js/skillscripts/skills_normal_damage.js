@@ -1,11 +1,4 @@
-class Skill_DvasiaDarkSphere extends Skill {
-    get targeting() {
-        return Skill.TARGET.AOE;
-    }
-
-    GetDescription() {
-        return `对全体敌人造成${this.GetSpecialValue('damage_scale')}%的暗属性·魔法攻击·魔法伤害`;
-    }
+class Skill_StaffHit extends Skill {
 
     OnSkillAnimation(action) {
         super.OnSkillAnimation(action);

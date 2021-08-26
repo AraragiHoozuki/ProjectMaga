@@ -407,7 +407,7 @@ class VPContentArea extends PIXI.Container {
         }
     }
 
-    clear() {
+    Clear() {
         this.removeChildren();
     }
 }
@@ -422,6 +422,11 @@ class VerticalLayoutContentArea extends VPContentArea {
 
     get currentH() {return this._currentH;}
     set currentH(val) { this._currentH = val;}
+
+    Clear() {
+        super.Clear();
+        this._currentH = 0;
+    }
 }
 
 class HorizontalLayoutContentArea extends VPContentArea {
@@ -434,6 +439,11 @@ class HorizontalLayoutContentArea extends VPContentArea {
 
     get currentW() {return this._currentW;}
     set currentW(val) { this._currentW = val;}
+
+    Clear() {
+        super.Clear();
+        this._currentW = 0;
+    }
 }
 
 class TilingLayoutContentArea extends VPContentArea {
@@ -465,6 +475,12 @@ class TilingLayoutContentArea extends VPContentArea {
         }
         super.addChild(c);
     }
+
+    Clear() {
+        super.Clear();
+        this._startPoint.set(0, 0);
+        this._maxPoint.set(0, 0);
+    }
 }
 
 class ViewPort extends Clickable {
@@ -487,7 +503,7 @@ class ViewPort extends Clickable {
     }
 
     get contentWidth() {
-        return this.width - this._bg._paddings.left - this._bg._paddings.right;
+        return this.width - this._paddings.left - this._paddings.right;
     }
 
     get contentArea() {return this._contentArea;}

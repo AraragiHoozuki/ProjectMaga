@@ -21,6 +21,11 @@ class Button extends Clickable {
 			{path: 'img/ui/spreading/anaden_btn_close_pressed.png', paddings: [0]}
 		],
 
+		CLASS_ENTRY: [
+			{path: 'img/ui/spreading/btn_class_entry.png', paddings: [21,20,20,23]},
+			{path: 'img/ui/spreading/btn_class_entry_pressed.png', paddings: [21,20,20,23]}
+		],
+
 		TAB_LEFT_TOP: [
 			{path: 'img/ui/spreading/tab_left_btn_top.png', paddings: [12,10,0,20]},
 			{path: 'img/ui/spreading/tab_left_btn_fill.png', paddings: [12,10,2,10]}

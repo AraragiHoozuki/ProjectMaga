@@ -120,10 +120,7 @@ class Party extends CharSet {
     }
 
     GameStart() {
-        this.MemberJoin('PLC_TYRFINGR');
         this.MemberJoin('PLC_ROZETTA');
-        this.MemberJoin('PLC_ISKA');
-        this.GetArk('ARK_SWORD_AND_SHIELD');
         //this.GetItem('IT_WP_AHURAMAZDA_STAFF', 1);
         //this.GetItem('IT_KAKERA_PLC_ROSELIA', 999);
     }
